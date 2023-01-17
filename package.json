@@ -14,6 +14,7 @@
         "lint": "eslint .",
         "prepare": "husky install",
         "serve": "docusaurus serve",
+        "setup": "npm ci && lerna init",
         "start": "docusaurus start",
         "swizzle": "docusaurus swizzle",
         "test": "jest",
