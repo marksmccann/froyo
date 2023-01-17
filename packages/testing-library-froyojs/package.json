@@ -1,6 +1,6 @@
 {
     "name": "testing-library-froyojs",
-    "version": "0.0.0",
+    "version": "0.1.0-alpha.0",
     "description": "Extends @testing-library/dom by adding API's that work with Froyo",
     "main": "dist/lib/index.js",
     "module": "dist/es/index.js",
@@ -20,8 +20,8 @@
         "url": "https://github.com/marksmccann/froyo"
     },
     "dependencies": {
-        "froyojs": "*",
-        "@testing-library/dom": "^8.20.0"
+        "@testing-library/dom": "^8.20.0",
+        "froyojs": "^0.1.0-alpha.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.20.7",
