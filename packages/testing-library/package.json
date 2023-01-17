@@ -9,6 +9,7 @@
     "author": "Mark McCann <marksmccann@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@froyo/core": "*"
+        "@froyo/core": "*",
+        "@testing-library/dom": "^8.20.0"
     }
 }
