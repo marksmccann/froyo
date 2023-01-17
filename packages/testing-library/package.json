@@ -1,0 +1,14 @@
+{
+    "name": "@froyo/testing-library",
+    "version": "0.0.0",
+    "description": "Extends @testing-library/dom by adding API's that work with Froyo",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Mark McCann <marksmccann@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@froyo/core": "*"
+    }
+}
