@@ -19,28 +19,6 @@ export default class Component {
         return Object.from(this.#components);
     }
 
-    get displayName() {
-        const { name, displayName } = this.constructor;
-
-        return displayName ?? name;
-    }
-
-    get listeners() {
-        return Object.from(this.#listeners);
-    }
-
-    get metadata() {
-        return { ...this.#metadata };
-    }
-
-    get rootElement() {
-        return this.#rootElement;
-    }
-
-    get state() {
-        return { ...this.#state };
-    }
-
     set components(newComponents) {
         Object.entries(newComponents).forEach(([key, value]) => {
             if (!(value instanceof Component)) {
@@ -58,6 +36,16 @@ export default class Component {
         });
     }
 
+    get displayName() {
+        const { name, displayName } = this.constructor;
+
+        return displayName ?? name;
+    }
+
+    get listeners() {
+        return Object.from(this.#listeners);
+    }
+
     set listeners(newListeners) {
         Object.entries(newListeners).forEach(([key, value]) => {
             if (typeof value.destroy !== 'function') {
@@ -73,6 +61,18 @@ export default class Component {
 
             this.#listeners.set(key, value);
         });
+    }
+
+    get metadata() {
+        return { ...this.#metadata };
+    }
+
+    get rootElement() {
+        return this.#rootElement;
+    }
+
+    get state() {
+        return { ...this.#state };
     }
 
     set state(newState) {
@@ -205,6 +205,8 @@ export default class Component {
             this.#observers.delete(observer);
         }
     }
+
+    /* eslint-disable class-methods-use-this */
 
     initialize() {}
 

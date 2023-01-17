@@ -10,3 +10,5 @@ function createMutationObserver(target, callback, options) {
         },
     };
 }
+
+export default createMutationObserver;

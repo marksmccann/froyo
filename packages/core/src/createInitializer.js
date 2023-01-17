@@ -1,5 +1,5 @@
-import Component from './Component';
 import loglevel from 'loglevel';
+import Component from './Component';
 
 function createInitializer(ComponentList = {}) {
     Object.entries(ComponentList).forEach(([name, Constructor]) => {
@@ -10,7 +10,6 @@ function createInitializer(ComponentList = {}) {
             loglevel.error(
                 `Warning: "Constructor" for "${name}" must be a class that extends from "Component"`
             );
-            return;
         }
     });
 
@@ -26,6 +25,7 @@ function createInitializer(ComponentList = {}) {
                 loglevel.error(
                     `Warning: there is no constructor for the component "${name}"`
                 );
+
                 return;
             }
 

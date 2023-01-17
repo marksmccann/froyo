@@ -1,14 +1,13 @@
 # Dependencies
-/node_modules
+node_modules
 
 # Production
-/build
+dist
 
 # Generated files
 .docusaurus
 .cache-loader
 coverage
-dist
 
 # Misc
 .DS_Store

@@ -4,7 +4,9 @@
     "private": true,
     "scripts": {
         "build": "docusaurus build",
+        "build:packages": "lerna run build",
         "clear": "docusaurus clear",
+        "clean": "lerna run clean",
         "commit": "cz",
         "deploy": "docusaurus deploy",
         "docusaurus": "docusaurus",
