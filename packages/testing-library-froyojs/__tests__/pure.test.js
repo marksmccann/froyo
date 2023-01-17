@@ -1,4 +1,4 @@
-// import Component, { createElement } from '@froyo/core';
+// import Component, { createElement } from 'froyojs';
 // import { render, cleanup } from '../src/pure';
 
 describe('render and cleanup', () => {

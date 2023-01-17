@@ -1,5 +1,5 @@
 {
-    "name": "@froyo/testing-library",
+    "name": "testing-library-froyojs",
     "version": "0.0.0",
     "description": "Extends @testing-library/dom by adding API's that work with Froyo",
     "main": "dist/lib/index.js",
@@ -12,8 +12,15 @@
     },
     "author": "Mark McCann <marksmccann@gmail.com>",
     "license": "MIT",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marksmccann/froyo"
+    },
     "dependencies": {
-        "@froyo/core": "*",
+        "froyojs": "*",
         "@testing-library/dom": "^8.20.0"
     },
     "devDependencies": {
