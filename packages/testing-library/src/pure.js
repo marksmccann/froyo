@@ -7,7 +7,7 @@ function render(html, initialize, options = {}) {
     const { queries } = options;
     let { container, baseElement } = options;
     // let instances = {};
-    let instance;
+    // let instance;
 
     if (!baseElement) {
         baseElement = container ?? document.body;
@@ -32,14 +32,12 @@ function render(html, initialize, options = {}) {
     }
 
     if (initialize) {
-        const results = initialize(container);
-
+        // const results = initialize(container);
         // a single instance
         // if (results.render) {
         //     instance = results;
         //     return;
         // }
-
         // multiple named instances
         // Object.entries(([key, value]) => {
         //     if (value.render) {
@@ -54,28 +52,25 @@ function render(html, initialize, options = {}) {
         container,
         baseElement,
         ...getQueriesForElement(baseElement, queries),
-        rerender(...args) {
-            const name = args.length > 1 ? args[0] : null;
-            const newState = args[args.length > 1 ? 1 : 0];
-
-            if (name && instances[name]) {
-                instances[name].setState(newState);
-            } else if (instance) {
-                instance.setState(newState);
-            }
+        rerender() {
+            // const name = args.length > 1 ? args[0] : null;
+            // const newState = args[args.length > 1 ? 1 : 0];
+            // if (name && instances[name]) {
+            //     instances[name].setState(newState);
+            // } else if (instance) {
+            //     instance.setState(newState);
+            // }
         },
         destroy: () => {
-            Object.values(instances).forEach((component) => {
-                component.destroy();
-            });
-
-            if (instance) {
-                instance.destroy();
-            }
-
-            if (container.parentNode === document.body) {
-                container.remove();
-            }
+            // Object.values(instances).forEach((component) => {
+            //     component.destroy();
+            // });
+            // if (instance) {
+            //     instance.destroy();
+            // }
+            // if (container.parentNode === document.body) {
+            //     container.remove();
+            // }
         },
     };
 
