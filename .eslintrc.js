@@ -20,6 +20,7 @@ module.exports = {
     rules: {
         'jest/no-hooks': 'off',
         'jest/prefer-expect-assertions': 'off',
+        'jest/max-expects': 'off',
     },
     overrides: [
         {
@@ -32,6 +33,9 @@ module.exports = {
             files: ['packages/**/*'],
             rules: {
                 'react/require-render-return': 'off',
+                'react/prefer-stateless-function': 'off',
+                'react/no-unused-class-component-methods': 'off',
+                'react/sort-comp': 'off',
             },
         },
     ],

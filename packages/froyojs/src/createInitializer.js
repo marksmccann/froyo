@@ -1,29 +1,18 @@
 import loglevel from 'loglevel';
 import Component from './Component';
 
-function createInitializer(ComponentList = {}) {
-    Object.entries(ComponentList).forEach(([name, Constructor]) => {
-        if (
-            Constructor !== Component &&
-            !(Constructor.prototype instanceof Component)
-        ) {
-            loglevel.error(
-                `Warning: "Constructor" for "${name}" must be a class that extends from "Component"`
-            );
-        }
-    });
-
+function createInitializer(componentList) {
     return function initialize() {
         const rootElements = document.querySelectorAll('[data-initialize]');
         const instances = [];
 
         Array.from(rootElements).forEach((rootElement) => {
             const name = rootElement.getAttribute('data-initialize');
-            const Constructor = ComponentList[name];
+            const Constructor = componentList[name];
 
-            if (!Constructor) {
+            if (!(Constructor.prototype instanceof Component)) {
                 loglevel.error(
-                    `Warning: there is no constructor for the component "${name}"`
+                    `Warning: "${name}" is not a valid "Component" constructor`
                 );
 
                 return;

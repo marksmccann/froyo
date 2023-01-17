@@ -16,7 +16,7 @@ export default class Component {
     #state = {};
 
     get components() {
-        return Object.from(this.#components);
+        return Object.fromEntries(this.#components);
     }
 
     set components(newComponents) {
@@ -25,6 +25,7 @@ export default class Component {
                 loglevel.error(
                     `Warning: component "${key}" is not an instance of "Component"`
                 );
+
                 return;
             }
 
@@ -43,15 +44,16 @@ export default class Component {
     }
 
     get listeners() {
-        return Object.from(this.#listeners);
+        return Object.fromEntries(this.#listeners);
     }
 
     set listeners(newListeners) {
         Object.entries(newListeners).forEach(([key, value]) => {
-            if (typeof value.destroy !== 'function') {
+            if (typeof value?.destroy !== 'function') {
                 loglevel.error(
-                    `Warning: listener "${key}" is missing a "destroy" method`
+                    `Warning: listener "${key}" is missing a "destroy" function`
                 );
+
                 return;
             }
 
@@ -89,8 +91,13 @@ export default class Component {
     constructor(rootElement, initialState = {}) {
         let htmlInitialState = {};
 
-        if (!(rootElement instanceof HTMLElement)) {
+        if (!(rootElement instanceof Element)) {
             loglevel.error('Warning: the root element must be an HTML element');
+            return;
+        }
+
+        if (!this.render) {
+            loglevel.error('Warning: components must have a "render" method');
             return;
         }
 
@@ -102,7 +109,7 @@ export default class Component {
                 );
             } catch {
                 loglevel.error(
-                    'Warning: expected the value of "data-initial-state" to be valid JSON'
+                    'Warning: "data-initial-state" must contain valid JSON'
                 );
             }
         }
@@ -132,8 +139,7 @@ export default class Component {
         this.render(this.state, {}, this);
         this.update(this.state, {}, this);
 
-        // rootElement.setAttribute('data-initialized');
-        this.#metadata = { initialized: true };
+        this.#metadata.initialized = true;
     }
 
     destroy() {
@@ -211,8 +217,6 @@ export default class Component {
     initialize() {}
 
     validate() {}
-
-    render() {}
 
     update() {}
 }
