@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkfroyo=self.webpackChunkfroyo||[]).push([[570],{4018:o=>{o.exports=JSON.parse('{"label":"docusaurus","permalink":"/froyo/blog/tags/docusaurus","allTagsPath":"/froyo/blog/tags","count":4}')}}]);
