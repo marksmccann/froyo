@@ -4,6 +4,7 @@ node_modules
 # Production
 build
 dist
+bundles
 
 # Generated files
 .docusaurus

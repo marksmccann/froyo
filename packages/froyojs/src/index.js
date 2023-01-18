@@ -1,6 +1,4 @@
-/* eslint-disable no-restricted-exports */
-
-export { default } from './Component';
+export { default as Component } from './Component';
 export { default as createInitializer } from './createInitializer';
 export { default as addEventListener } from './addEventListener';
 export { default as createMutationObserver } from './createMutationObserver';

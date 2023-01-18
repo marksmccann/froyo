@@ -37,6 +37,7 @@
         "@commitlint/cli": "^17.4.2",
         "@commitlint/config-conventional": "^17.4.2",
         "@docusaurus/module-type-aliases": "2.2.0",
+        "@rollup/plugin-replace": "^5.0.2",
         "@testing-library/jest-dom": "^5.16.5",
         "commitizen": "^4.2.6",
         "cz-conventional-changelog": "^3.3.0",

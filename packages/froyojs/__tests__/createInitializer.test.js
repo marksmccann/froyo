@@ -21,7 +21,7 @@ describe('createInitializer', () => {
     });
 
     it('should fail if class is not valid', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         const initialize = createInitializer({ Foo: {} });
         const rootElement = document.createElement('div');
@@ -32,8 +32,8 @@ describe('createInitializer', () => {
         const instances = initialize();
 
         expect(instances).toHaveLength(0);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not a valid "Component" constructor')
         );
 

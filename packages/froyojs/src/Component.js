@@ -1,4 +1,5 @@
-import loglevel from 'loglevel';
+/* eslint-disable no-console */
+
 import { nanoid } from 'nanoid';
 import checkPropTypes from 'prop-types/checkPropTypes';
 
@@ -22,7 +23,7 @@ export default class Component {
     set components(newComponents) {
         Object.entries(newComponents).forEach(([key, value]) => {
             if (!(value instanceof Component)) {
-                loglevel.error(
+                console.error(
                     `Warning: component "${key}" is not an instance of "Component"`
                 );
 
@@ -50,7 +51,7 @@ export default class Component {
     set listeners(newListeners) {
         Object.entries(newListeners).forEach(([key, value]) => {
             if (typeof value?.destroy !== 'function') {
-                loglevel.error(
+                console.error(
                     `Warning: listener "${key}" is missing a "destroy" function`
                 );
 
@@ -79,7 +80,7 @@ export default class Component {
 
     set state(newState) {
         if (this.#metadata.initialized) {
-            loglevel.error(
+            console.error(
                 'Warning: state can only be updated via "setState" after initialization'
             );
             return;
@@ -92,12 +93,12 @@ export default class Component {
         let htmlInitialState = {};
 
         if (!(rootElement instanceof Element)) {
-            loglevel.error('Warning: the root element must be an HTML element');
+            console.error('Warning: the root element must be an HTML element');
             return;
         }
 
         if (!this.render) {
-            loglevel.error('Warning: components must have a "render" method');
+            console.error('Warning: components must have a "render" method');
             return;
         }
 
@@ -108,7 +109,7 @@ export default class Component {
                     rootElement.getAttribute('data-initial-state')
                 );
             } catch {
-                loglevel.error(
+                console.error(
                     'Warning: "data-initial-state" must contain valid JSON'
                 );
             }
@@ -195,7 +196,7 @@ export default class Component {
 
     subscribe(observer) {
         if (typeof observer !== 'function') {
-            loglevel.error(
+            console.error(
                 'Warning: a function must be provided to "subscribe"'
             );
             return;

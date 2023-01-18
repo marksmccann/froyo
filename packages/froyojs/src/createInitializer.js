@@ -1,4 +1,5 @@
-import loglevel from 'loglevel';
+/* eslint-disable no-console */
+
 import Component from './Component';
 
 function createInitializer(componentList) {
@@ -11,7 +12,7 @@ function createInitializer(componentList) {
             const Constructor = componentList[name];
 
             if (!(Constructor.prototype instanceof Component)) {
-                loglevel.error(
+                console.error(
                     `Warning: "${name}" is not a valid "Component" constructor`
                 );
 

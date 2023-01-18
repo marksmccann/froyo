@@ -24,7 +24,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ['jest-setup.js'],
+            files: ['jest-setup.js', 'rollup.config.js'],
             rules: {
                 'import/no-extraneous-dependencies': 'off',
             },

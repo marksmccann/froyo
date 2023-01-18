@@ -11,14 +11,14 @@ This page contains a detailed API reference for the `Component` class definition
 <TabItem value="es6" label="ES6" default>
 
 ```js
-import Component from 'froyojs';
+import { Component } from 'froyojs';
 ```
 
 </TabItem>
 <TabItem value="commonjs" label="CommonJS">
 
 ```js
-const Component = require('froyojs');
+const { Component } = require('froyojs');
 ```
 
 </TabItem>

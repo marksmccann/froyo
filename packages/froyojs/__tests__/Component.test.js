@@ -8,7 +8,7 @@ import addEventListener from '../src/addEventListener';
 
 describe('component', () => {
     it('should fail if root element is missing', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             render() {}
@@ -16,8 +16,8 @@ describe('component', () => {
         const instance = new Foo();
 
         expect(instance.metadata.id).toBeUndefined();
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('root element must be an HTML element')
         );
 
@@ -25,15 +25,15 @@ describe('component', () => {
     });
 
     it('should fail if render method is missing', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
         expect(instance.metadata.id).toBeUndefined();
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('must have a "render" method')
         );
 
@@ -83,7 +83,7 @@ describe('component', () => {
     });
 
     it('should fail if HTML initial state is invalid JSON', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             render() {}
@@ -94,8 +94,8 @@ describe('component', () => {
         const instance = new Foo(rootElement);
 
         expect(instance.state).toStrictEqual(expect.objectContaining({}));
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('must contain valid JSON')
         );
 
@@ -159,7 +159,7 @@ describe('component', () => {
     });
 
     it('should fail if property assignments are invalid', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             initialize() {
@@ -174,11 +174,11 @@ describe('component', () => {
 
         expect(instance.components.foo).toBeUndefined();
         expect(instance.listeners.foo).toBeUndefined();
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(2);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(2);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not an instance of "Component"')
         );
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is missing a "destroy" function')
         );
 
@@ -186,7 +186,7 @@ describe('component', () => {
     });
 
     it('should fail if state is updated directly', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             render() {}
@@ -199,8 +199,8 @@ describe('component', () => {
         instance.state = { foo: 'bar' };
 
         expect(instance.state.foo).toBeUndefined();
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('only be updated via "setState"')
         );
 
@@ -337,7 +337,7 @@ describe('component', () => {
     });
 
     it('should fail if observer is invalid', () => {
-        global.loglevelErrorSpy.mockImplementation(() => {});
+        global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             render() {}
@@ -347,8 +347,8 @@ describe('component', () => {
 
         instance.subscribe();
 
-        expect(global.loglevelErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.loglevelErrorSpy).toHaveBeenCalledWith(
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('a function must be provided')
         );
 
