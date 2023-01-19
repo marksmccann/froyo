@@ -9,6 +9,21 @@ module.exports = {
                     id: 'getting-started/introduction',
                     label: 'Introduction',
                 },
+                {
+                    type: 'doc',
+                    id: 'getting-started/installation',
+                    label: 'Installation',
+                },
+                {
+                    type: 'doc',
+                    id: 'getting-started/creating-a-component',
+                    label: 'Creating a Component',
+                },
+                {
+                    type: 'doc',
+                    id: 'getting-started/component-example',
+                    label: 'Component Example',
+                },
             ],
         },
         {
