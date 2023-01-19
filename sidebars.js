@@ -28,6 +28,17 @@ module.exports = {
         },
         {
             type: 'category',
+            label: 'Guides',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'guides/dynamic-rendering',
+                    label: 'Dynamic Rendering',
+                },
+            ],
+        },
+        {
+            type: 'category',
             label: 'API',
             items: [
                 {
