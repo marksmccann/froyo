@@ -101,8 +101,7 @@ Now that we have a valid component, we can instantiate it with the root element.
     }
 
     /* highlight-start */
-    const rootElement = document.getElementById('root');
-    const instance = new IceCream(rootElement);
+    const instance = new IceCream(document.getElementById('root'));
     /* highlight-end */
 </script>
 ```

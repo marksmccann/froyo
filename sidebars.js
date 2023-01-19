@@ -32,8 +32,8 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'guides/dynamic-rendering',
-                    label: 'Dynamic Rendering',
+                    id: 'guides/conditional-rendering',
+                    label: 'Conditional Rendering',
                 },
                 {
                     type: 'doc',
