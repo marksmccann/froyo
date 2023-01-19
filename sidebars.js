@@ -35,6 +35,11 @@ module.exports = {
                     id: 'guides/dynamic-rendering',
                     label: 'Dynamic Rendering',
                 },
+                {
+                    type: 'doc',
+                    id: 'guides/component-lifecycle',
+                    label: 'Component Lifecycle',
+                },
             ],
         },
         {
