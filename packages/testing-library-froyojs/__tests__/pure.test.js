@@ -1,123 +1,116 @@
-// import Component, { createElement } from 'froyojs';
-// import { render, cleanup } from '../src/pure';
+import { Component, createElement } from 'froyojs';
+import { render, cleanup } from '../src/pure';
 
 describe('render and cleanup', () => {
-    // class Test extends Component {
-    //     render() {
-    //         const { rootElement, state } = this;
+    class Test extends Component {
+        render() {
+            const { rootElement, state } = this;
 
-    //         rootElement.innerHTML = state.text || 'foo';
-    //     }
-    // }
+            rootElement.innerHTML = state.text || 'foo';
+        }
+    }
 
-    // afterEach(() => {
-    //     cleanup();
-    // });
-
-    it('should ...', () => {
-        expect(true).toBe(true);
+    afterEach(() => {
+        cleanup();
     });
 
-    // ('should return expected results', () => {
-    //     const result = render('');
+    it('should return expected results', () => {
+        const result = render('');
 
-    //     expect(result.baseElement).toStrictEqual(document.body);
-    //     expect(result.container).toBeInstanceOf(window.HTMLElement);
-    //     expect(typeof result.getByText).toStrictEqual('function');
-    //     expect(typeof result.destroy).toStrictEqual('function');
-    // });
+        expect(result.baseElement).toStrictEqual(document.body);
+        expect(result.container).toBeInstanceOf(window.HTMLElement);
+        expect(typeof result.getByText).toBe('function');
+        expect(typeof result.rerender).toBe('function');
+        expect(typeof result.destroy).toBe('function');
+    });
 
-    // ('should render string', () => {
-    //     const result = render('foo');
+    it('should render string', () => {
+        const result = render('foo');
 
-    //     expect(result.baseElement).toStrictEqual(document.body);
-    //     expect(document.body).toContainElement(result.container);
-    //     expect(result.container).toHaveTextContent('foo');
-    // });
+        expect(result.baseElement).toStrictEqual(document.body);
+        expect(document.body).toContainElement(result.container);
+        expect(result.container).toHaveTextContent('foo');
+    });
 
-    // ('should render DOM element', () => {
-    //     const div = createElement('div', null, 'foo');
-    //     const result = render(div);
+    it('should render DOM element', () => {
+        const div = createElement('div', null, 'foo');
+        const result = render(div);
 
-    //     expect(result.baseElement).toStrictEqual(document.body);
-    //     expect(document.body).toContainElement(result.container);
-    //     expect(result.container).toHaveTextContent('foo');
-    // });
+        expect(result.baseElement).toStrictEqual(document.body);
+        expect(document.body).toContainElement(result.container);
+        expect(result.container).toHaveTextContent('foo');
+    });
 
-    // ('should support custom container', () => {
-    //     const container = createElement('div');
-    //     const result = render('foo', null, { container });
+    it('should support custom container', () => {
+        const container = createElement('div');
+        const result = render('foo', null, { container });
 
-    //     expect(result.container).toHaveTextContent('foo');
-    //     expect(result.baseElement).toStrictEqual(result.container);
-    //     expect(document.body).not.toContainElement(result.container);
-    // });
+        expect(result.container).toHaveTextContent('foo');
+        expect(result.baseElement).toStrictEqual(result.container);
+        expect(document.body).not.toContainElement(result.container);
+    });
 
-    // ('should support custom base element', () => {
-    //     const baseElement = createElement('div');
-    //     const result = render('foo', null, { baseElement });
+    it('should support custom base element', () => {
+        const baseElement = createElement('div');
+        const result = render('foo', null, { baseElement });
 
-    //     expect(result.baseElement).toStrictEqual(baseElement);
-    //     expect(result.baseElement).toContainElement(result.container);
-    //     expect(document.body).not.toContainElement(result.baseElement);
-    // });
+        expect(result.baseElement).toStrictEqual(baseElement);
+        expect(result.baseElement).toContainElement(result.container);
+        expect(document.body).not.toContainElement(result.baseElement);
+    });
 
-    // ('should call initialize callback', () => {
-    //     const callback = jest.fn();
-    //     const result = render('', (container) => {
-    //         callback(container);
-    //         return new Test(container);
-    //     });
+    it('should call initialize callback', () => {
+        const callback = jest.fn();
+        const result = render('', (container) => {
+            callback(container);
+            return new Test(container);
+        });
 
-    //     expect(callback).toHaveBeenCalledTimes(1);
-    //     expect(callback).toHaveBeenCalledWith(result.container);
-    // });
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(result.container);
+    });
 
-    // ('should initialize a single component', () => {
-    //     const { container } = render(
-    //         '<div></div>', ({ firstChild }) => new Test(firstChild),
-    //     );
+    it('should fail if the initialize callback does not return instance', () => {
+        global.consoleErrorSpy.mockImplementation(() => {});
 
-    //     expect(container.firstChild).toHaveTextContent('foo');
-    // });
+        const results = render('', () => {});
 
-    // ('should retrieve previous result', () => {
-    //     const container = createElement('div');
-    //     const results1 = render('<div></div>', null, { container });
-    //     const results2 = render('<div></div>', null, { container });
+        expect(results.rerender).not.toThrow();
+        expect(results.destroy).not.toThrow();
+        expect(results.destroy).not.toThrow();
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+            expect.stringContaining('must return a Froyo component')
+        );
+    });
 
-    //     expect(results1.destroy).toStrictEqual(results2.destroy);
-    // });
+    it('should initialize a single component', () => {
+        const { container } = render(
+            '<div></div>',
+            ({ firstChild }) => new Test(firstChild)
+        );
 
-    // ('should rerender a component', () => {
-    //     const { container, rerender } = render(
-    //         '<div></div>',
-    //         ({ firstChild }) => new Test(firstChild),
-    //     );
+        expect(container.firstChild).toHaveTextContent('foo');
+    });
 
-    //     expect(container.firstChild).toHaveTextContent('foo');
+    it('should retrieve previous result', () => {
+        const container = createElement('div');
+        const results1 = render('<div></div>', null, { container });
+        const results2 = render('<div></div>', null, { container });
 
-    //     rerender({ text: 'bar' });
+        expect(results1.destroy).toStrictEqual(results2.destroy);
+    });
 
-    //     expect(container.firstChild).toHaveTextContent('bar');
-    // });
+    it('should rerender a component', () => {
+        const { container, rerender } = render(
+            '<div></div>',
+            ({ firstChild }) => new Test(firstChild)
+        );
 
-    // ('should rerender multiple components', () => {
-    //     const { container, rerender } = render(
-    //         '<div></div><div></div>',
-    //         ({ children }) => ({
-    //             foo: new Test(children[0]),
-    //             bar: new Test(children[1])
-    //         })
-    //     );
+        expect(container.firstChild).toHaveTextContent('foo');
 
-    //     expect(container.children[0]).toHaveTextContent('foo');
-    //     expect(container.children[1]).toHaveTextContent('foo');
+        rerender({ text: 'bar' });
 
-    //     rerender('foo', { text: 'bar' });
-    //     rerender('bar', { text: 'baz' });
-
-    //     expect(container.children[0]).toHaveTextContent('bar');
-    //     expect(container.children[1]).toHaveTextContent('baz');
-    // });
+        expect(container.firstChild).toHaveTextContent('bar');
+    });
 });

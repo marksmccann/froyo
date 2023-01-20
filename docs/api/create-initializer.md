@@ -57,7 +57,7 @@ The names from `componentList` are used to identify root elements in the HTML vi
 <div data-initialize="IceCream"></div>
 ```
 
-The value corresponding to each name, which is the `Component` subclass is then used to initialize the components. An array of the instances generated is returned.
+The value corresponding to each name, which is the `Component` subclass, is then used to initialize the components with those root elements. An array of the instances generated is returned.
 
 ```js
 const instances = initialize();

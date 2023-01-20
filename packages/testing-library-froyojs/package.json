@@ -7,7 +7,7 @@
     "scripts": {
         "build": "run-s clean build:*",
         "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist/lib",
-        "build:es": "babel src --out-dir dist/es",
+        "build:es": "cross-env BABEL_ENV=es babel src --out-dir dist/es",
         "clean": "rimraf dist"
     },
     "author": "Mark McCann <marksmccann@gmail.com>",

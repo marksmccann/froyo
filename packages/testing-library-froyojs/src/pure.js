@@ -1,13 +1,14 @@
+/* eslint-disable no-console */
+
 import { getQueriesForElement } from '@testing-library/dom';
-// import Component from '@vanillajs/core';
+import { Component } from 'froyojs';
 
 const renderedContainers = new Map();
 
 function render(html, initialize, options = {}) {
     const { queries } = options;
     let { container, baseElement } = options;
-    // let instances = {};
-    // let instance;
+    let instance;
 
     if (!baseElement) {
         baseElement = container ?? document.body;
@@ -32,45 +33,36 @@ function render(html, initialize, options = {}) {
     }
 
     if (initialize) {
-        // const results = initialize(container);
-        // a single instance
-        // if (results.render) {
-        //     instance = results;
-        //     return;
-        // }
-        // multiple named instances
-        // Object.entries(([key, value]) => {
-        //     if (value.render) {
-        //         instances[key] = value;
-        //     } else {
-        //         // console error
-        //     }
-        // });
+        instance = initialize(container);
+
+        if (!(instance instanceof Component)) {
+            console.error(
+                'Warning: the initialize callback must return a Froyo component'
+            );
+        }
     }
 
     const data = {
         container,
         baseElement,
         ...getQueriesForElement(baseElement, queries),
-        rerender() {
-            // const name = args.length > 1 ? args[0] : null;
-            // const newState = args[args.length > 1 ? 1 : 0];
-            // if (name && instances[name]) {
-            //     instances[name].setState(newState);
-            // } else if (instance) {
-            //     instance.setState(newState);
-            // }
+        rerender(newState = {}) {
+            if (instance) {
+                instance.setState(newState);
+            }
         },
-        destroy: () => {
-            // Object.values(instances).forEach((component) => {
-            //     component.destroy();
-            // });
-            // if (instance) {
-            //     instance.destroy();
-            // }
-            // if (container.parentNode === document.body) {
-            //     container.remove();
-            // }
+        destroy() {
+            if (instance) {
+                instance.destroy();
+            }
+
+            if (renderedContainers.has(container)) {
+                renderedContainers.delete(container);
+            }
+
+            if (container.parentNode === document.body) {
+                container.remove();
+            }
         },
     };
 
@@ -81,7 +73,6 @@ function render(html, initialize, options = {}) {
 
 function cleanup() {
     renderedContainers.forEach(({ destroy }) => destroy());
-    renderedContainers.clear();
 }
 
 export { render, cleanup };

@@ -294,13 +294,13 @@ const instance = new IceCream(rootElement, { flavor: 'Chocolate' });
 ```
 
 ```html
-The best ice cream is: <span class="flavor">Chocolate<span>.</span></span>
+The best ice cream is: <span class="flavor">Chocolate</span>.
 ```
 
 And when the button is clicked, it should render "Vanilla".
 
 ```html
-The best ice cream is: <span class="flavor">Vanilla<span>.</span></span>
+The best ice cream is: <span class="flavor">Vanilla</span>.
 ```
 
 ## Conclusion
