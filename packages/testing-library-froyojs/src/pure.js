@@ -1,78 +1,87 @@
 /* eslint-disable no-console */
 
 import { getQueriesForElement } from '@testing-library/dom';
-import { Component } from 'froyojs';
+import { Component, createElement } from 'froyojs';
 
-const renderedContainers = new Map();
+const renderedRootElements = new Map();
 
-function render(html, initialize, options = {}) {
-    const { queries } = options;
-    let { container, baseElement } = options;
+function render(root, initialize, options = {}) {
+    const { queries, container } = options;
+    let { baseElement } = options;
+    let rootElement = root;
     let instance;
+
+    if (typeof root === 'string') {
+        const element = createElement('div', null, root.trim());
+
+        rootElement = element.firstElementChild;
+    }
+
+    if (!(rootElement instanceof HTMLElement)) {
+        console.error(
+            'Warning: the root element must be a valid HTML element or string'
+        );
+
+        return {};
+    }
 
     if (!baseElement) {
         baseElement = container ?? document.body;
     }
 
-    if (!container) {
-        container = document.createElement('div');
-        baseElement.appendChild(container);
-    }
-
-    // append the markup to the container
-    if (typeof html === 'string') {
-        container.innerHTML = html.trim();
+    if (container) {
+        container.appendChild(rootElement);
     } else {
-        container.appendChild(html);
+        baseElement.appendChild(rootElement);
     }
 
-    // if the container was rendered previously
+    // if the root element was rendered previously
     // return the saved data from before
-    if (renderedContainers.has(container)) {
-        return renderedContainers.get(container);
+    if (renderedRootElements.has(rootElement)) {
+        return renderedRootElements.get(rootElement);
     }
 
     if (initialize) {
-        instance = initialize(container);
+        instance = initialize(rootElement);
+    }
 
-        if (!(instance instanceof Component)) {
-            console.error(
-                'Warning: the initialize callback must return a Froyo component'
-            );
-        }
+    if (!(instance instanceof Component)) {
+        console.error(
+            'Warning: initialize must be a function that returns a Froyo component'
+        );
+
+        return {};
     }
 
     const data = {
-        container,
         baseElement,
+        rootElement,
         ...getQueriesForElement(baseElement, queries),
         rerender(newState = {}) {
-            if (instance) {
-                instance.setState(newState);
-            }
+            instance.setState(newState);
         },
         destroy() {
-            if (instance) {
-                instance.destroy();
-            }
+            instance.destroy();
+            rootElement.remove();
 
-            if (renderedContainers.has(container)) {
-                renderedContainers.delete(container);
-            }
-
-            if (container.parentNode === document.body) {
+            // only remove the container if it has no content
+            if (/^[\n\r\s]*$/.test(container?.innerHTML)) {
                 container.remove();
+            }
+
+            if (renderedRootElements.has(rootElement)) {
+                renderedRootElements.delete(rootElement);
             }
         },
     };
 
-    renderedContainers.set(container, data);
+    renderedRootElements.set(rootElement, data);
 
     return data;
 }
 
 function cleanup() {
-    renderedContainers.forEach(({ destroy }) => destroy());
+    renderedRootElements.forEach(({ destroy }) => destroy());
 }
 
 export { render, cleanup };

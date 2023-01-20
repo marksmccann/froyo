@@ -84,7 +84,7 @@ Froyo components are defined with [ES6 class syntax](https://developer.mozilla.o
 
 ```html
 <script>
-    class IceCream extends froyojs.Component {
+    class FrozenYogurt extends froyojs.Component {
         render() {}
     }
 </script>
@@ -96,12 +96,12 @@ Now that we have a valid component, we can instantiate it with the root element.
 
 ```html
 <script>
-    class IceCream extends froyojs.Component {
+    class FrozenYogurt extends froyojs.Component {
         render() {}
     }
 
     /* highlight-start */
-    const instance = new IceCream(document.getElementById('root'));
+    const instance = new FrozenYogurt(document.getElementById('root'));
     /* highlight-end */
 </script>
 ```
@@ -112,14 +112,14 @@ We have a component, but it doesn't do anything. Update the `render` method to r
 
 ```js
 render() {
-    this.rootElement.innerHTML = 'Vanilla is the best ice cream.';
+    this.rootElement.innerHTML = 'Vanilla is the best flavor.';
 }
 ```
 
 After initializing, the root element should look like this:
 
 ```html
-<div id="root">Vanilla is the best ice cream.</div>
+<div id="root">Vanilla is the best flavor.</div>
 ```
 
 ### Render Something with State
@@ -133,10 +133,10 @@ Every instance of component has an internal "state"; a simple object that stores
 :::
 
 ```js
-class IceCream extends froyojs.Component {
+class FrozenYogurt extends froyojs.Component {
     render() {
         // highlight-next-line
-        this.rootElement.innerHTML = `${this.state.flavor} is the best ice cream.`;
+        this.rootElement.innerHTML = `${this.state.flavor} is the best flavor.`;
     }
 }
 ```
@@ -144,18 +144,18 @@ class IceCream extends froyojs.Component {
 To instantiate the component with state, pass an object as the second argument of the constructor. This sets the initial state of the instance.
 
 ```js
-const instance = new IceCream(rootElement, { flavor: 'Chocolate' });
+const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
 ```
 
 This time, the rendered output should be:
 
 ```html
-<div id="root">Chocolate is the best ice cream.</div>
+<div id="root">Chocolate is the best flavor.</div>
 ```
 
 ## Add Functionality
 
-Now, let's learn how make the component functional. Our goal for this section is to create component with a button that will toggle the ice cream flavor when clicked.
+Now, let's learn how make the component functional. Our goal for this section is to create component with a button that will toggle the flavor flavor when clicked.
 
 ### Update the Initial HTML
 
@@ -171,7 +171,7 @@ As a general rule, static content or markup structure that takes up visual space
 <div id="root">
     <!-- highlight-start -->
     <button>Toggle</button><br />
-    The best ice cream is: <span class="flavor">Vanilla<span>.
+    The best flavor is: <span class="flavor">Vanilla<span>.
     <!-- highlight-end -->
 </div>
 ```
@@ -181,7 +181,7 @@ As a general rule, static content or markup structure that takes up visual space
 We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`initialize`](../api/component.md#initialize) method. This method is called once during initialization and is the designation location for performing setup tasks like those previously mentioned.
 
 ```js
-class IceCream extends froyojs.Component {
+class FrozenYogurt extends froyojs.Component {
     // highlight-start
     initialize() {
         /* setup tasks go here */
@@ -189,7 +189,7 @@ class IceCream extends froyojs.Component {
     // highlight-end
 
     render() {
-        this.rootElement.innerHTML = `The best ice cream flavor is ${this.state.flavor}.`;
+        this.rootElement.innerHTML = `The best flavor flavor is ${this.state.flavor}.`;
     }
 }
 ```
@@ -261,7 +261,7 @@ handleClick() => {
 At this point, the component should be fully functional and should look like this:
 
 ```js
-class IceCream extends froyojs.Component {
+class FrozenYogurt extends froyojs.Component {
     initialize() {
        this.elements = {
             button: this.rootElement.querySelector('button');
@@ -282,7 +282,7 @@ class IceCream extends froyojs.Component {
     };
 
     render() {
-        this.rootElement.innerHTML = `The best ice cream flavor is ${this.state.flavor}.`;
+        this.rootElement.innerHTML = `The best flavor flavor is ${this.state.flavor}.`;
     }
 }
 ```
@@ -290,17 +290,17 @@ class IceCream extends froyojs.Component {
 When initialized the component should render "Chocolate".
 
 ```js
-const instance = new IceCream(rootElement, { flavor: 'Chocolate' });
+const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
 ```
 
 ```html
-The best ice cream is: <span class="flavor">Chocolate</span>.
+The best flavor is: <span class="flavor">Chocolate</span>.
 ```
 
 And when the button is clicked, it should render "Vanilla".
 
 ```html
-The best ice cream is: <span class="flavor">Vanilla</span>.
+The best flavor is: <span class="flavor">Vanilla</span>.
 ```
 
 ## Conclusion

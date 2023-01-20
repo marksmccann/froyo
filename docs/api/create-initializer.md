@@ -42,19 +42,19 @@ createInitializer(componentList: object)
 Creates an "initializer" function that will initialize components from the HTML when called. The function takes a named list of `Component` subclasses as its only argument.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     render() {
-        this.rootElement.innerHTML = 'I love ice cream!';
+        this.rootElement.innerHTML = 'I love frozen yogurt!';
     }
 }
 
-const initialize = createInitializer({ IceCream });
+const initialize = createInitializer({ FrozenYogurt });
 ```
 
 The names from `componentList` are used to identify root elements in the HTML via the `data-initialize` attribute.
 
 ```html
-<div data-initialize="IceCream"></div>
+<div data-initialize="FrozenYogurt"></div>
 ```
 
 The value corresponding to each name, which is the `Component` subclass, is then used to initialize the components with those root elements. An array of the instances generated is returned.
@@ -64,7 +64,7 @@ const instances = initialize();
 ```
 
 ```html
-<div>I love ice cream!</div>
+<div>I love frozen yogurt!</div>
 ```
 
 :::tip

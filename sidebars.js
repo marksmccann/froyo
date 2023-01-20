@@ -68,5 +68,16 @@ module.exports = {
                 },
             ],
         },
+        {
+            type: 'category',
+            label: 'Ecosystem',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'ecosystem/testing-library-froyojs',
+                    label: 'testing-library-froyojs',
+                },
+            ],
+        },
     ],
 };

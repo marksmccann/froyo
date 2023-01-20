@@ -44,9 +44,9 @@ new Component(rootElement: HTMLElement, initialState: object)
 When defining a `Component` subclass, the [`render`](#render) method is the only required method:
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     render() {
-        this.rootElement.innerHTML = `"${this.state.flavor}" is the best ice cream.`;
+        this.rootElement.innerHTML = `"${this.state.flavor}" is the best flavor.`;
     }
 }
 ```
@@ -55,8 +55,8 @@ When instantiated, the first argument of the constructor is required and must be
 
 ```js
 const rootElement = document.createElement('div');
-const instance = new IceCream(rootElement, { flavor: 'Vanilla' });
-// will produce: '<div>"Vanilla" is the best ice cream</div>'
+const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
+// will produce: '<div>"Vanilla" is the best flavor</div>'
 ```
 
 ## Instance properties
@@ -72,7 +72,7 @@ class Topping extends Component {
     ...
 }
 
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     initialize() {
         this.components = {
             topping: new Topping(...),
@@ -94,7 +94,7 @@ Review our [DOM utilities](dom-utilities) to see how they can help you apply ele
 :::
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     initialize() {
         this.elements = {
             toppings: this.rootElement.querySelectorAll('.topping'),
@@ -116,7 +116,7 @@ Review our [listener utilities](listener-utilities) to see how they can help you
 :::
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     initialize() {
         this.listeners = {
             click: {
@@ -136,7 +136,7 @@ class IceCream extends Component {
 An object which contains read-only information about the instance.
 
 ```js
-const instance = new IceCream(...);
+const instance = new FrozenYogurt(...);
 // instance.metadata.id will be something like "NSLZypdy"
 ```
 
@@ -155,7 +155,7 @@ A read-only reference to the `HTMLElement` that was used to initialize the compo
 
 ```js
 const div = document.createElement('div');
-const instance = new IceCream(div);
+const instance = new FrozenYogurt(div);
 // instance.rootElement will equal "div"
 ```
 
@@ -166,7 +166,7 @@ const instance = new IceCream(div);
 A user-defined object to store data about the instance. This data is used to conditionally control the output and behavior of the component.
 
 ```js
-const instance = new IceCream(rootElement, { flavor: 'Vanilla' });
+const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 // instance.state will be "{ flavor: 'Vanilla' }"
 ```
 
@@ -185,7 +185,7 @@ destroy();
 A lifecycle method responsible for performing cleanup tasks. If included, make sure to call `super.destroy` so that the parent class is properly destroyed.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     destroy() {
         // perform cleanup tasks ...
 
@@ -203,7 +203,7 @@ initialize();
 A lifecycle method that is called once during initialization before other lifecycle methods (e.g. `render`). It should be used to perform setup tasks including: creating event listeners, storing DOM references, and setting the initial state. It should never be called directly.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     initialize() {
         // perform setup tasks ...
     }
@@ -219,11 +219,11 @@ setState(newState: object)
 Updates the component state and calls all registered observers including the lifecycle methods (e.g. `render`, `update`, `validate`). Only the properties that are changing need to be included in `newState`.
 
 ```js
-const instance = new IceCream(rootElement, { flavor: 'Vanilla' });
-// <div>"Vanilla" is the best ice cream</div>
+const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
+// <div>"Vanilla" is the best flavor</div>
 
 instance.setState({ flavor: 'Chocolate' });
-// <div>"Chocolate" is the best ice cream</div>
+// <div>"Chocolate" is the best flavor</div>
 ```
 
 ### `subscribe`
@@ -235,7 +235,7 @@ subscribe(observer: function(stateChanges: object, previousState: object, instan
 Registers a callback function which is called when the state changes, after the lifecycle methods.
 
 ```js
-const instance = new IceCream(rootElement);
+const instance = new FrozenYogurt(rootElement);
 
 instance.subscribe((stateChanges) => {
     // do something when the state changes ...
@@ -251,7 +251,7 @@ unsubscribe(observer: function)
 Un-registers a callback function that was previously subscribed to the instance. The observer callback must be a direct reference to the same function passed to `subscribe`. Use of this method is uncommon because all registered observers are automatically cleared when the component is destroyed.
 
 ```js
-const instance = new IceCream(rootElement);
+const instance = new FrozenYogurt(rootElement);
 
 function observer() {}
 
@@ -268,7 +268,7 @@ render(stateChanges: object, previousState: object, instance: object)
 A lifecycle method that is called when the state updates. It should be used exclusively to update the DOM. The arguments provided should be used to perform conditional updates. It should never be called directly.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     render() {
         // update the DOM ...
     }
@@ -284,7 +284,7 @@ update(stateChanges: object, previousState: object, instance: object)
 The `update` method is lifecycle method that is called after every render. It should be used exclusively to perform miscellaneous tasks after a component update including subsequent state updates. It should never be called directly.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     update() {
         // perform tasks after update ...
     }
@@ -300,7 +300,7 @@ validate(stateChanges: object, previousState: object, instance: object)
 The `update` method is lifecycle method that is called before every render. It should be used exclusively to perform validation tasks relative to the component and its state. It should never be called directly.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     validate() {
         // perform validation before update ...
     }
@@ -322,7 +322,7 @@ Class properties should be defined with a [getter](https://developer.mozilla.org
 Used to define default values for the state. Values are defaulted when their value is `undefined`, not `null`.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     static get defaultState() {
         return {
             flavor: 'vanilla',
@@ -334,14 +334,14 @@ class IceCream extends Component {
 For example, if `state.flavor` is not set, it will be `'vanilla'` by default:
 
 ```js
-const instance = new IceCream(rootElement);
+const instance = new FrozenYogurt(rootElement);
 // instance.state.flavor will be "vanilla"
 ```
 
 If `state.flavor` is set to `null`, it will be `null`:
 
 ```js
-const instance = new IceCream(rootElement, { flavor: null });
+const instance = new FrozenYogurt(rootElement, { flavor: null });
 // instance.state.flavor will be "null"
 ```
 
@@ -352,9 +352,9 @@ const instance = new IceCream(rootElement, { flavor: null });
 A human-friendly name of the component used in debugging messages. Generally, this property does not need to be set explicitly because it is inferred from the name of the class.
 
 ```js
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     static get displayName() {
-        return 'IceCream';
+        return 'FrozenYogurt';
     }
 }
 ```
@@ -368,7 +368,7 @@ Used to perform for [typechecking](https://www.geeksforgeeks.org/type-checking-i
 ```js
 import PropTypes from 'prop-types';
 
-class IceCream extends Component {
+class FrozenYogurt extends Component {
     static get stateTypes() {
         return {
             flavor: PropTypes.string,
