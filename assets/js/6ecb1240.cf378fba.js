@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkfroyo=self.webpackChunkfroyo||[]).push([[979],{9089:o=>{o.exports=JSON.parse('{"permalink":"/froyo/blog/tags/hello","page":1,"postsPerPage":10,"totalPages":1,"totalCount":2,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
