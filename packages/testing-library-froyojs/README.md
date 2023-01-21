@@ -1,3 +1,3 @@
 # Froyo Testing Library
 
-Extends `@testing-library/dom` by adding API's that work with `Froyo`.
+`testing-library-froyo` extends [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro/) to work with `Froyo`

@@ -159,7 +159,7 @@ Destroys all instances that created with `render`. Failing to call cleanup when 
 
 :::info
 
-Please note that this is done automatically if the testing framework you're using supports the `afterEach` global and it is injected to your testing environment (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global and it is injected into your testing environment (like mocha, Jest, and Jasmine). If not, you will need to manually perform cleanups after each test.
 
 :::
 

@@ -1,7 +1,7 @@
 {
     "name": "testing-library-froyojs",
     "version": "0.1.0-beta.1",
-    "description": "Extends @testing-library/dom by adding API's that work with Froyo",
+    "description": "A package that extends DOM Testing Library to work with Froyo",
     "main": "dist/lib/index.js",
     "module": "dist/es/index.js",
     "scripts": {

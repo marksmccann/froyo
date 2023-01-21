@@ -67,6 +67,12 @@ const instances = initialize();
 <div>I love frozen yogurt!</div>
 ```
 
+:::info
+
+Use the `data-initial-state` attribute on the root element to configure each instance. See ["Determining the Initial State"](../guides/component-lifecycle.md#determining-the-initial-state) to learn more.
+
+:::
+
 :::tip
 
 Create an initializer for a library of Froyo components by importing them all at once.

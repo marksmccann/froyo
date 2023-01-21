@@ -9,11 +9,11 @@ Froyo is an extremely lightweight and capable framework for building user interf
 ## Features
 
 -   📖 Easy to learn
--   🐭 Extremely lightweight (<2k gzipped)
+-   🐭 Extremely small (<2k gzipped)
+-   ❤ For vanilla JavaScript lovers
+-   🏋 Robust and scalable
 -   🚀 Browser-ready (no tech stack required)
 -   🐇 Great for rapid prototyping
--   🏋 Robust, capable, and scalable
--   ❤ For lovers of vanilla JavaScript
 
 ## Who is Froyo for?
 

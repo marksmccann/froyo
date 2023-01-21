@@ -28,17 +28,54 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'Guides',
+            label: 'Fundamentals',
             items: [
                 {
                     type: 'doc',
-                    id: 'guides/conditional-rendering',
+                    id: 'fundamentals/conditional-rendering',
                     label: 'Conditional Rendering',
                 },
                 {
                     type: 'doc',
-                    id: 'guides/component-lifecycle',
+                    id: 'fundamentals/component-lifecycle',
                     label: 'Component Lifecycle',
+                },
+                {
+                    type: 'doc',
+                    id: 'fundamentals/handling-events',
+                    label: 'Handling Events',
+                },
+            ],
+        },
+
+        {
+            type: 'category',
+            label: 'Advanced',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'advanced/observer-pattern',
+                    label: 'Observer Pattern',
+                },
+                {
+                    type: 'doc',
+                    id: 'advanced/typechecking-state',
+                    label: 'Typechecking State',
+                },
+                {
+                    type: 'doc',
+                    id: 'advanced/external-control',
+                    label: 'External Control',
+                },
+                {
+                    type: 'doc',
+                    id: 'advanced/handling-subcomponents',
+                    label: 'Handling Subcomponents',
+                },
+                {
+                    type: 'doc',
+                    id: 'advanced/component-validation',
+                    label: 'Component Validation',
                 },
             ],
         },

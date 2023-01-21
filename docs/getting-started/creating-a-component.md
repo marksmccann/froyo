@@ -68,7 +68,7 @@ Every Froyo component is required to have a root element. The root element is an
 </body>
 ```
 
-## Component Creation
+## Creating the Component
 
 Learn how to define a new component and get it to render some content.
 
@@ -147,13 +147,19 @@ To instantiate the component with state, pass an object as the second argument o
 const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
 ```
 
+:::info
+
+Alternatively, the initial state can also be set by with the `data-initial-state` attribute on the root element. See ["Determining the Initial State"](../guides/component-lifecycle.md#determining-the-initial-state) to learn more.
+
+:::
+
 This time, the rendered output should be:
 
 ```html
 <div id="root">Chocolate is the best flavor.</div>
 ```
 
-## Add Functionality
+## Adding Functionality
 
 Now, let's learn how make the component functional. Our goal for this section is to create component with a button that will toggle the flavor flavor when clicked.
 

@@ -83,6 +83,7 @@ export default class Component {
             console.error(
                 'Warning: state can only be updated via "setState" after initialization'
             );
+
             return;
         }
 

@@ -2,7 +2,7 @@
 
 This guide explains how to implement conditional rendering in Froyo.
 
-## Using Operators
+## Using Basic Operators
 
 Basic JavaScript operators like [if](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else) or the [conditional operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) should be used to update the DOM relative to the current state. In the following example, a different message is rendered relative to value of the `flavor` state.
 
@@ -15,6 +15,10 @@ render() {
     }
 }
 ```
+
+<br />
+
+---
 
 ## Working with Multiple States
 
@@ -58,26 +62,44 @@ render(stateChanges) {
 }
 ```
 
-## The Initial Render
+<br />
 
-There are times when you need to know if the component is being rendered for the first time. "initialized" on the [`metadata`](../api/component.md#metadata) class property exists for this reason. It is `false` when the component initially renders (during initialization), but is `true` for subsequent updates. It can be used to isolate or skip updates relative to the initial render.
+---
+
+## Handling the First Render
+
+There are times when you need to know if the component is being rendered for the first time. "initialized" on the [`metadata`](../api/component.md#metadata) class property exists for this reason. It is `false` when the component renders for the first time (during initialization), but is `true` for subsequent updates. It can be used to perform tasks for the first render only.
 
 ```js
 render(stateChanges) {
     if (!this.metadata.initialized) {
-        /* do something for the first render only ...  */
+        /* first render only */
     }
 }
 ```
 
-## The Previous State
+It can be used to skip the first render.
+
+```js
+render(stateChanges) {
+    if (this.metadata.initialized) {
+        /* skip the first render */
+    }
+}
+```
+
+<br />
+
+---
+
+## Using the Previous State
 
 In less common scenarios, the data from the previous state may be required to determine what to render. If needed, the previous state is passed as the second argument of the `render` method.
 
 ```js
 render(stateChanges, previousState) {
     if (this.state.flavor !== previousState.flavor) {
-        /* do something ...  */
+        /* do something ... */
     }
 }
 ```
