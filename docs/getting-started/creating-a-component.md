@@ -149,7 +149,7 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
 
 :::info
 
-Alternatively, the initial state can also be set by with the `data-initial-state` attribute on the root element. See ["Determining the Initial State"](../guides/component-lifecycle.md#determining-the-initial-state) to learn more.
+Alternatively, the initial state can also be set by with the `data-initial-state` attribute on the root element. See ["Determining the Initial State"](../fundamentals/component-lifecycle.md#determining-the-initial-state) to learn more.
 
 :::
 

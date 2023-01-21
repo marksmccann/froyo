@@ -69,7 +69,7 @@ const instances = initialize();
 
 :::info
 
-Use the `data-initial-state` attribute on the root element to configure each instance. See ["Determining the Initial State"](../guides/component-lifecycle.md#determining-the-initial-state) to learn more.
+Use the `data-initial-state` attribute on the root element to configure each instance. See ["Determining the Initial State"](../fundamentals/component-lifecycle.md#determining-the-initial-state) to learn more.
 
 :::
 
