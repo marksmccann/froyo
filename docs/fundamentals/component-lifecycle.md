@@ -1,10 +1,10 @@
 # Component Lifecycle
 
-This guide introduces the concept of the component lifecycle in Froyo.
+This guide introduces the concept of the component lifecycle.
 
 ## The Lifecycle Methods
 
-When a Froyo component is initialized, or when the state changes, a series of "lifecycle" methods are called in a particular order. Each method has a designated responsibility relative to its position in the lifecycle.
+When a component is initialized, or when the state changes, a series of "lifecycle" methods are called in a particular order. Each method has a designated responsibility relative to its position in the lifecycle.
 
 The methods are: [`initialize`](../api/component.md#initialize), [`validate`](../api/component.md#validate), [`render`](../api/component.md#render), [`update`](../api/component.md#update), [`destroy`](../api/component.md#destroy).
 
@@ -21,7 +21,7 @@ Every time the component state is updated (via [`setState`](../api/component.md#
 1. `render`
 1. `update`
 
-When the component needs to be removed, the `destroy` must be called manually.
+When the component needs to be removed, `destroy` must be called manually.
 
 <br />
 
@@ -29,7 +29,7 @@ When the component needs to be removed, the `destroy` must be called manually.
 
 ## Adding Lifecycle Methods to a Class
 
-When defining a Froyo component, the `render` method is required. However, the other lifecycle methods are optional and should only be included when needed. See [the API reference](../api/component.md#instance-methods) to learn more.
+When defining a component, the `render` method is required. However, the other lifecycle methods are optional and should only be included when needed. See the [API reference](../api/component.md#instance-methods) to learn more.
 
 ```js
 class FrozenYogurt extends Component {
@@ -114,7 +114,7 @@ class FrozenYogurt extends Component {
 
 :::info
 
-The value of this attribute must be valid JSON and therefore only supports primitive types. Despite this limitation, this feature is particularly useful when paired with the ["Create Initializer"](../api/create-initializer.md) tool. Together, you are able to both instantiate and configure the components from the HTML.
+The value of this attribute must be valid JSON. See ["HTML-only Usage"](./html-only-usage.md) to learn more about this feature and its particular usefulness when paired with the ["Create Initializer"](../api/create-initializer.md) tool.
 
 :::
 
@@ -130,11 +130,11 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 
 <br />
 
-By the time `initialize` is called, the data from the sources above have been merged and are available on `this.state`. While in this method, the state can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` from here extend the existing state object, they do not replace it.
+By the time `initialize` is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
 
 :::info
 
-Sometimes, initial state properties must be set dynamically (e.g. referencing the viewport width to determine the initial layout of a component). This is the appropriate place to perform that logic. Alternatively, `update` would also be appropriate, if the logic can wait until after the initial render of the component.
+Sometimes, initial state properties must be set dynamically (e.g. referencing the viewport width to determine the initial layout of a component). This is the appropriate place to perform that logic. Alternatively, calling `setState` from the `update` method would also be appropriate, if the logic can wait until after the initial render of the component.
 
 :::
 

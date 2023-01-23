@@ -155,11 +155,11 @@ destroy(); // the component is destroyed and now: document.body.innerHTML === ''
 
 ### `cleanup`
 
-Destroys all instances that created with `render`. Failing to call cleanup when you've called render could result in a memory leak and tests which are not pure (which can lead to errors that are difficult to debug).
+Destroys all instances that were created with `render`. Failing to call cleanup when you've called render could result in a memory leak and a test environment that is not pure (which can lead to errors that are difficult to debug).
 
 :::info
 
-Please note that this is done automatically if the testing framework you're using supports the `afterEach` global and it is injected into your testing environment (like mocha, Jest, and Jasmine). If not, you will need to manually perform cleanups after each test.
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global and it is injected into your testing environment (like mocha, Jest, and Jasmine). If not, you will need to manually perform cleanups after each test by calling this function.
 
 :::
 

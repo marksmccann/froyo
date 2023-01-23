@@ -19,6 +19,7 @@ coverage
 *.code-workspace
 lerna-debug.log
 /*.txt
+assets
 
 npm-debug.log*
 yarn-debug.log*

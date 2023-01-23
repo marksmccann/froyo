@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'Build user interfaces with vanilla JavaScript',
+    title: 'An ultra lightweight framework for building user interfaces',
     tagline:
         'A framework for building user interfaces with vanilla JavaScript.',
     url: 'https://marksmccann.github.io',

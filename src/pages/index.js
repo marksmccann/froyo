@@ -40,6 +40,18 @@ export default function Home() {
             <main>
                 <HomepageFeatures />
             </main>
+            <div style={{ width: '500px', margin: '0 auto' }}>
+                What is Froyo JS?
+                <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/gspaoaecNAg?clip=UgkxIxhD0UHDM9DqSBwAKZf0ON1KHoWnFiVM&amp;clipt=EN3ECxjB3gw"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                ></iframe>
+            </div>
         </Layout>
     );
 }

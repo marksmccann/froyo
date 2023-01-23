@@ -6,31 +6,34 @@ import styles from './styles.module.css';
 
 const FeatureList = [
     {
-        title: 'Extremely lightweight',
+        title: '"Extremely lightweight"',
         Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
         description: (
-            <>Less than 2k gzipped; no that's some non-fat frozen yogurt!</>
-        ),
-    },
-    {
-        title: 'Focus on What Matters',
-        Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-        description: (
             <>
-                Docusaurus lets you focus on your docs, and we&apos;ll do the
-                chores. Go ahead and move your docs into the <code>docs</code>{' '}
-                directory.
+                Less than 2k gzipped; no that's some non-fat frozen yogurt!
+                "totes the best hun-cal froyo"
             </>
         ),
     },
     {
-        title: 'Powered by React',
+        title: 'Build with 100%, all natural, vanilla JavaScript. No sugar added',
+        Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+        description: (
+            <>
+                Froyo let's you build user interface components with plain-old,
+                browser-ready, vanilla JavaScript; no custom build tooling
+                required.
+            </>
+        ),
+    },
+    {
+        title: 'Implement components directly from the HTML, no JavaScript required',
         Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
         description: (
             <>
-                Extend or customize your website layout by reusing React.
-                Docusaurus can be extended while reusing the same header and
-                footer.
+                Froyo components can be initialized and configured directly from
+                the HTML. Consumers don't need JavaScript experience to use
+                them.
             </>
         ),
     },

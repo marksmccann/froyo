@@ -72,15 +72,3 @@ const instances = initialize();
 Use the `data-initial-state` attribute on the root element to configure each instance. See ["Determining the Initial State"](../fundamentals/component-lifecycle.md#determining-the-initial-state) to learn more.
 
 :::
-
-:::tip
-
-Create an initializer for a library of Froyo components by importing them all at once.
-
-```js
-import * as components from './components';
-
-const initialize = createInitializer(components);
-```
-
-:::

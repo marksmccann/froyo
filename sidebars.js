@@ -32,8 +32,8 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'fundamentals/conditional-rendering',
-                    label: 'Conditional Rendering',
+                    id: 'fundamentals/handling-updates',
+                    label: 'Handling Updates',
                 },
                 {
                     type: 'doc',
@@ -42,8 +42,13 @@ module.exports = {
                 },
                 {
                     type: 'doc',
-                    id: 'fundamentals/handling-events',
-                    label: 'Handling Events',
+                    id: 'fundamentals/creating-listeners',
+                    label: 'Creating Listeners',
+                },
+                {
+                    type: 'doc',
+                    id: 'fundamentals/html-only-usage',
+                    label: 'HTML-only Usage',
                 },
             ],
         },
@@ -54,8 +59,8 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'advanced/observer-pattern',
-                    label: 'Observer Pattern',
+                    id: 'advanced/component-validation',
+                    label: 'Component Validation',
                 },
                 {
                     type: 'doc',
@@ -64,18 +69,18 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    id: 'advanced/observer-pattern',
+                    label: 'Observer Pattern',
+                },
+                {
+                    type: 'doc',
                     id: 'advanced/external-control',
                     label: 'External Control',
                 },
                 {
                     type: 'doc',
-                    id: 'advanced/handling-subcomponents',
-                    label: 'Handling Subcomponents',
-                },
-                {
-                    type: 'doc',
-                    id: 'advanced/component-validation',
-                    label: 'Component Validation',
+                    id: 'advanced/subcomponents',
+                    label: 'Subcomponents',
                 },
             ],
         },
