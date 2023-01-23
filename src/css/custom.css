@@ -1,30 +1,70 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
-:root {
-    --ifm-color-primary: #2e8555;
-    --ifm-color-primary-dark: #29784c;
-    --ifm-color-primary-darker: #277148;
-    --ifm-color-primary-darkest: #205d3b;
-    --ifm-color-primary-light: #33925d;
-    --ifm-color-primary-lighter: #359962;
-    --ifm-color-primary-lightest: #3cad6e;
-    --ifm-code-font-size: 95%;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/static/fonts/OpenSans/OpenSans-Regular.ttf') format('woff');
+    font-weight: 400;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/static/fonts/OpenSans/OpenSans-Medium.ttf') format('woff');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/static/fonts/OpenSans/OpenSans-SemiBold.ttf') format('woff');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/static/fonts/OpenSans/OpenSans-Bold.ttf') format('woff');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/static/fonts/OpenSans/OpenSans-ExtraBold.ttf') format('woff');
+    font-weight: 800;
+}
+
+:root {
+    --ifm-font-family-base: OpenSans, system-ui, -apple-system, Segoe UI, Roboto,
+        Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI',
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+    --ifm-color-primary: #e2348b;
+    --ifm-color-primary-dark: #db1f7d;
+    --ifm-color-primary-darker: #cf1e76;
+    --ifm-color-primary-darkest: #aa1861;
+    --ifm-color-primary-light: #e54c99;
+    --ifm-color-primary-lighter: #e758a0;
+    --ifm-color-primary-lightest: #ec7db5;
+}
+
 [data-theme='dark'] {
-    --ifm-color-primary: #25c2a0;
-    --ifm-color-primary-dark: #21af90;
-    --ifm-color-primary-darker: #1fa588;
-    --ifm-color-primary-darkest: #1a8870;
-    --ifm-color-primary-light: #29d5b0;
-    --ifm-color-primary-lighter: #32d8b4;
-    --ifm-color-primary-lightest: #4fddbf;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+    --ifm-color-primary: #e2348b;
+    --ifm-color-primary-dark: #db1f7d;
+    --ifm-color-primary-darker: #cf1e76;
+    --ifm-color-primary-darkest: #aa1861;
+    --ifm-color-primary-light: #e54c99;
+    --ifm-color-primary-lighter: #e758a0;
+    --ifm-color-primary-lightest: #ec7db5;
+}
+
+.hero--primary {
+    --ifm-hero-background-color: var(--ifm-background-surface-color);
+    --ifm-hero-text-color: var(--ifm-heading-color);
+}
+
+.hero__title {
+    font-weight: 800;
+}
+
+.theme-code-block-highlighted-line {
+    --docusaurus-highlighted-code-line-bg: #d8d8d8;
+}
+
+[data-theme='dark'] .theme-code-block-highlighted-line {
+    --docusaurus-highlighted-code-line-bg: #3d3d3d;
 }

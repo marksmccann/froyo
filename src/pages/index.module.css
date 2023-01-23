@@ -12,6 +12,7 @@
 
 @media screen and (max-width: 996px) {
     .heroBanner {
+        text-align: center;
         padding: 2rem;
     }
 }
@@ -20,4 +21,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.video {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
 }

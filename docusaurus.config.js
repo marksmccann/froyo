@@ -6,9 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'An ultra lightweight framework for building user interfaces',
-    tagline:
-        'A framework for building user interfaces with vanilla JavaScript.',
+    title: 'Froyo',
+    tagline: 'An ultra lightweight framework for building user interfaces',
     url: 'https://marksmccann.github.io',
     baseUrl: '/froyo/',
     onBrokenLinks: 'throw',
@@ -50,8 +49,7 @@ const config = {
                 },
                 items: [
                     {
-                        type: 'doc',
-                        docId: 'getting-started/introduction',
+                        to: 'docs/',
                         position: 'right',
                         label: 'Docs',
                     },
@@ -64,51 +62,7 @@ const config = {
             },
             footer: {
                 style: 'dark',
-                links: [
-                    // {
-                    //     title: 'Docs',
-                    //     items: [
-                    //         {
-                    //             label: 'Getting Started',
-                    //             to: '/docs',
-                    //         },
-                    //         {
-                    //             label: 'API',
-                    //             to: '/docs/api/component',
-                    //         },
-                    //     ],
-                    // },
-                    // {
-                    //     title: 'Community',
-                    //     items: [
-                    //         {
-                    //             label: 'Stack Overflow',
-                    //             href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-                    //         },
-                    //         {
-                    //             label: 'Discord',
-                    //             href: 'https://discordapp.com/invite/docusaurus',
-                    //         },
-                    //         {
-                    //             label: 'Twitter',
-                    //             href: 'https://twitter.com/docusaurus',
-                    //         },
-                    //     ],
-                    // },
-                    // {
-                    //     title: 'More',
-                    //     items: [
-                    //         {
-                    //             label: 'Blog',
-                    //             to: '/blog',
-                    //         },
-                    //         {
-                    //             label: 'GitHub',
-                    //             href: 'https://github.com/marksmccann/froyo',
-                    //         },
-                    //     ],
-                    // },
-                ],
+                links: [],
                 copyright: `Copyright © ${new Date().getFullYear()} Mark McCann. Built with Docusaurus.`,
             },
             prism: {
