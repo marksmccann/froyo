@@ -3,21 +3,21 @@ import TabItem from '@theme/TabItem';
 
 # Creating a Component
 
-In this brief tutorial you will learn the fundamentals of Froyo by building a simple UI component.
+In this brief tutorial you will learn how to build a simple component.
 
 :::info
 
-This tutorial assumes readers have a working knowledge of JavaScript and fundamental software development concepts. If this doesn't describe you, consider taking a moment to review a [JavaScript tutorial](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Overview) before continuing.
+This tutorial assumes readers have a working knowledge of JavaScript and fundamental software development concepts. If this does not describe you, consider taking a moment to review a [JavaScript tutorial](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Overview) before continuing.
 
 :::
 
-## Setup
+## 1. Setup
 
-For this tutorial, we will be working directly in the browser.
+Goal: Create a boilerplate page and open it in a browser.
 
 ### Create page from template
 
-Let's begin with a basic HTML template; copy it to an HTML file and open it in a browser.
+Let's begin with a basic HTML template; copy it to a HTML file and open it in a browser.
 
 ```html
 <!DOCTYPE html>
@@ -37,14 +37,18 @@ Let's begin with a basic HTML template; copy it to an HTML file and open it in a
 
 ### Import Froyo from CDN
 
-Add the following script tag to the head to import the latest version of Froyo.
+Add the following to the head to import the latest version of Froyo.
 
 ```html
 <head>
     <meta charset="utf-8" />
     <title>Froyo Component Example</title>
     <!-- highlight-next-line -->
-    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.min.js"></script>
+    <link
+        rel="preload"
+        href="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.min.js"
+        as="script"
+    />
 </head>
 ```
 
@@ -68,17 +72,17 @@ Every Froyo component is required to have a root element. The root element is an
 </body>
 ```
 
-## Creating the Component
+## 2. Creating the Component
 
-Learn how to define a new component and get it to render some content.
+Goal: Learn how to define a component and get it to render some content.
 
 ### Define the Component Class
 
-Create a new component by extending the `Component` class from Froyo. Make sure to include the required [`render`](../api/component.md#render) method; `render` is called during the component lifecycle and is where all DOM updates should be handled.
+Create a new component by extending the `Component` class. Make sure to include the required [`render`](../api/component.md#render) method. This method is called during the [component lifecycle](../fundamentals/component-lifecycle.md) and is where all DOM updates should be handled.
 
 :::info
 
-Froyo components are defined with [ES6 class syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) which is supported by modern browsers.
+Components are defined with [ES6 class syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) which is supported by modern browsers.
 
 :::
 
@@ -90,9 +94,9 @@ Froyo components are defined with [ES6 class syntax](https://developer.mozilla.o
 </script>
 ```
 
-### Instantiate the Component
+### Initialize the Component
 
-Now that we have a valid component, we can instantiate it with the root element.
+Now that we've defined a component class, let's initialize it with the root element.
 
 ```html
 <script>
@@ -108,7 +112,7 @@ Now that we have a valid component, we can instantiate it with the root element.
 
 ### Render Something
 
-We have a component, but it doesn't do anything. Update the `render` method to render a string within the root element.
+Next, let's update the `render` method so that it does something &mdash; render a string within the root element.
 
 ```js
 render() {
@@ -124,11 +128,11 @@ After initializing, the root element should look like this:
 
 ### Render Something with State
 
-Now let's make the message dynamic by applying a value from the component's internal state.
+We can make the message dynamic by applying a value from the component's internal state.
 
 :::info
 
-Every instance of component has an internal "state"; a simple object that stores data relevant to the instance. The data from this object is used to control the behavior of the component relative to its values. This concept is known as the [state pattern](https://en.wikipedia.org/wiki/State_pattern) in software development.
+Every instance of component has an internal "state"; a simple object that stores data relevant to the instance. The data from this object is used to control the behavior of the component relative to its values. This concept is known as the [state pattern](https://en.wikipedia.org/wiki/State_pattern) in software development. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) to learn more.
 
 :::
 
@@ -141,7 +145,7 @@ class FrozenYogurt extends froyojs.Component {
 }
 ```
 
-To instantiate the component with state, pass an object as the second argument of the constructor. This sets the initial state of the instance.
+To initialize the component with state, pass an object as the second argument of the constructor. This sets the initial state of the instance.
 
 ```js
 const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
@@ -159,9 +163,9 @@ This time, the rendered output should be:
 <div id="root">Chocolate is the best flavor.</div>
 ```
 
-## Adding Functionality
+## 3. Adding Functionality
 
-Now, let's learn how make the component functional. Our goal for this section is to create component with a button that will toggle the flavor flavor when clicked.
+Goal: Learn how make the component functional.
 
 ### Update the Initial HTML
 
@@ -184,7 +188,7 @@ As a general rule, static content or markup structure that takes up visual space
 
 ### Add the Initialize Method
 
-We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`initialize`](../api/component.md#initialize) method. This method is called once during initialization and is the designation location for performing setup tasks like those previously mentioned.
+We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`initialize`](../api/component.md#initialize) method. This method is called once during initialization and is the designated location for performing setup tasks like those previously mentioned.
 
 ```js
 class FrozenYogurt extends froyojs.Component {
@@ -217,11 +221,11 @@ initialize() {
 
 ### Add Event Listener
 
-Event listeners should also be created in `initialize`. Event listeners should be added to an object using the framework's custom [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility. This utility adds the event and returns a function that will remove it when the component is destroyed. This object should be assigned to [`this.listeners`](../api/component.md#listeners).
+Event listeners should also be created in `initialize`. Create them with the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
 
 :::info
 
-It is a best practice to define event callbacks as class methods with a name beginning with `handle`. This keeps the component organized and avoids unnecessary clutter in `initialize`. Note that the method is [bound to the instance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind) so that `this` refers to the component instance instead of the button element.
+Event handlers should typically be defined on the instance as a class method, with a name that begins with "handle". This keeps the component organized and avoids unnecessary clutter in `initialize`. Note that the method is [bound to the instance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind) so that `this` refers to the component instance instead of the event target.
 
 :::
 
@@ -309,8 +313,8 @@ And when the button is clicked, it should render "Vanilla".
 The best flavor is: <span class="flavor">Vanilla</span>.
 ```
 
-## Conclusion
+## 4. Conclusion
 
-You have now created a functional UI component with Froyo. The fundamental concepts you have learned are the foundation of every component and can scale to support very complex components. While there is more to learn you now know enough to be dangerous.
+Goal: Start building your own components!
 
-Check out the component example on the next page to see a more realistic, real-world example of a Froyo component. Also, review the upcoming guides to learn about other important concepts such as dynamic rendering, the component lifecycle, the observer pattern and more.
+You have now created a functional UI component with Froyo. The fundamental concepts you have learned are universally applicable and can scale to support very complex components. You can start building your own. However, there is more to learn. We encourage working your way through the following guides to learn more.

@@ -59,13 +59,13 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'advanced/component-validation',
-                    label: 'Component Validation',
+                    id: 'advanced/typechecking-state',
+                    label: 'Typechecking State',
                 },
                 {
                     type: 'doc',
-                    id: 'advanced/typechecking-state',
-                    label: 'Typechecking State',
+                    id: 'advanced/component-validation',
+                    label: 'Component Validation',
                 },
                 {
                     type: 'doc',

@@ -3,7 +3,7 @@ import TabItem from '@theme/TabItem';
 
 # Listener Utilities
 
-This page contains a detailed API reference for various convenience utilities related to listeners (e.g. [event listeners](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), [mutation observers](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), [media query lists](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), etc.).
+This page contains a detailed API reference for various convenience utilities related to listeners.
 
 ## Import
 

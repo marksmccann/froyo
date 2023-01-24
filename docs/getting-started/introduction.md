@@ -17,7 +17,11 @@ Froyo is an extremely lightweight and capable framework for building user interf
 
 ## Who is Froyo for?
 
-`Froyo` was created for teams and environments that are unable to support a [single page app](https://developer.mozilla.org/en-US/docs/Glossary/SPA) setup because it is either undesired, too difficult, or impossible. Popular SPA frameworks like [React](https://reactjs.org/), [Vue](https://vuejs.org/), and [Angular](https://angularjs.org/) are fantastic. However, they require a lot of setup and are difficult to integrate into existing systems, like a content management system (CMS). By contrast, `Froyo` is built exclusively with vanilla JavaScript and requires zero setup; it is compatible with practically any system.
+`Froyo` was created for teams and environments that are unable to support a [single page app](https://developer.mozilla.org/en-US/docs/Glossary/SPA) setup.
+
+Popular SPA frameworks like [React](https://reactjs.org/), [Vue](https://vuejs.org/), and [Angular](https://angularjs.org/) require a lot of setup and are difficult to integrate into existing systems, like a content management system (CMS).
+
+By contrast, `Froyo` is built exclusively with vanilla JavaScript and requires zero setup; it is compatible with practically any system.
 
 ## Feedback
 

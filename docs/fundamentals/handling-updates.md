@@ -4,13 +4,13 @@ This guide explains how to use component state to conditionally handle updates.
 
 :::info
 
-While the examples below are using `render`, these principles are also applicable to [`validate`](../api/component.md#validate), [`update`](../api/component.md#update), and any custom observer callbacks created with [`subscribe`](../api/component.md#subscribe).
+While the examples below are using `render`, these principles are also applicable to [`validate`](../api/component.md#validate), [`update`](../api/component.md#update), as well as any [observers](../advanced/observer-pattern.md) created with `subscribe`.
 
 :::
 
 ## Using Basic Operators
 
-Use basic JavaScript operators like [if](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else) and the [ternary operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) to control what actions to perform relative to the state. In the following example, a different message is rendered relative to the value of `flavor` in the state.
+Use basic JavaScript operators like [if](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else) and the [ternary operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) to control what actions to perform relative to the state. In the following example, a different message is rendered relative to the value of `flavor`.
 
 ```js
 render() {
@@ -66,7 +66,7 @@ render(stateChanges) {
 }
 ```
 
-It can be used to skip the initial call.
+The `initialized` property can also be used to skip the first render.
 
 ```js
 render(stateChanges) {

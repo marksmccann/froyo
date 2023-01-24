@@ -1,10 +1,10 @@
 # Creating Listeners
 
-This guide explains how to create and add various listeners.
+This guide explains how to create and add various listeners to a component.
 
 ## Adding Event Listeners
 
-To add an event listener use the [addEventListener](../api/listener-utilities.md#addeventlistener) utility. Apply it directly to [`this.listeners`](../api/component.md#listeners) so that it is removed automatically when the component is destroyed.
+To add an event listener, use the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, addEventListener } from 'froyojs';
@@ -24,7 +24,7 @@ class FrozenYogurt extends Component {
 
 ## Creating Mutation Observers
 
-To create a [mutation observer](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), use the [createMutationObserver](../api/listener-utilities.md#createmutationobserver) utility. Apply it directly to [`this.listeners`](../api/component.md#listeners) so that it is removed automatically when the component is destroyed.
+To create a [mutation observer](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), use the [`createMutationObserver`](../api/listener-utilities.md#createmutationobserver) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, createMutationObserver } from 'froyojs';
@@ -46,7 +46,7 @@ class FrozenYogurt extends Component {
 
 ## Creating Media Query Listeners
 
-To create a listener for media queries (via [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)) use the [createMediaQueryListener](../api/listener-utilities.md#createmediaquerylistener) utility. Apply it directly to [`this.listeners`](../api/component.md#listeners) so that it is removed automatically when the component is destroyed.
+To create a listener for media queries (via [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)), use the [`createMediaQueryListener`](../api/listener-utilities.md#createmediaquerylistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, createMediaQueryListener } from 'froyojs';

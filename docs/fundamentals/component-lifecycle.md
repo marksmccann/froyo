@@ -8,14 +8,14 @@ When a component is initialized, or when the state changes, a series of "lifecyc
 
 The methods are: [`initialize`](../api/component.md#initialize), [`validate`](../api/component.md#validate), [`render`](../api/component.md#render), [`update`](../api/component.md#update), [`destroy`](../api/component.md#destroy).
 
-When initialized, the methods are called once in this order:
+When initialized, these methods are called once in this order:
 
 1. `initialize`
 1. `validate`
 1. `render`
 1. `update`
 
-Every time the component state is updated (via [`setState`](../api/component.md#setstate)), they are called in this order:
+Every time the component state is updated (via [`setState`](../api/component.md#setstate)), these methods are called in this order:
 
 1. `validate`
 1. `render`
@@ -29,7 +29,7 @@ When the component needs to be removed, `destroy` must be called manually.
 
 ## Adding Lifecycle Methods to a Class
 
-When defining a component, the `render` method is required. However, the other lifecycle methods are optional and should only be included when needed. See the [API reference](../api/component.md#instance-methods) to learn more.
+When defining a component, the lifecycle methods are optional, except for `render`. Add the others to the class on an as-needed basis. See the [API reference](../api/component.md#instance-methods) to learn more.
 
 ```js
 class FrozenYogurt extends Component {
@@ -37,20 +37,22 @@ class FrozenYogurt extends Component {
         /* perform setup tasks */
     }
 
-    destroy() {
-        /* perform cleanup tasks */
-    }
-
     validate() {
         /* perform validation before render */
+    }
+
+    render() {
+        /* perform DOM updates */
     }
 
     update() {
         /* perform updates after render */
     }
 
-    render() {
-        /* perform DOM updates */
+    destroy() {
+        /* perform cleanup tasks */
+
+        super.destroy(); // cleanup the parent
     }
 }
 ```
@@ -96,7 +98,7 @@ The only place where it is appropriate to set `this.state` directly is in `initi
 
 ## Determining the Initial State
 
-When a component begins initialization, before the `initialize` method is called, data is collected from the following three sources, merged, and assigned to `this.state`. In reverse order of priority, those sources are:
+When a component begins initialization, before the `initialize` method is called, data is collected, merged, and assigned to `this.state`. In reverse order of priority, the data is collected from the following three sources:
 
 1\. The [`defaultState`](../api/component.md#defaultstate) from the class definition.
 

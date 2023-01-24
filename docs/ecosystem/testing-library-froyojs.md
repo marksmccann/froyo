@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 # testing-library-froyojs
 
-`testing-library-froyojs` is a package that extends `@testing-library/dom` to work with `Froyo`.
+`testing-library-froyojs` is a package that extends `@testing-library/dom` to work with [Froyo](https://marksmccann.github.io/froyo/).
 
 ## Installation
 
@@ -143,7 +143,7 @@ rerender({ message: 'Goodbye, World!' });
 
 #### `destroy`
 
-This will destroy the component instance and remove the associated root element from the DOM. If a `container` was specified, it will also be removed from the DOM if if no longer has any content.
+This will destroy the component instance and remove the associated root element from the DOM. If a `container` was specified, it will also be removed from the DOM if it no longer has any content.
 
 ```js
 import { render } from '@testing-library/react';

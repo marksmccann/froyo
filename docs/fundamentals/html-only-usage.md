@@ -50,11 +50,11 @@ After initialization the `data-initialize` attribute will be removed.
 
 ## Setting the Initial State
 
-The initial state can be set from the HTML by applying the `data-initial-state` attribute onto the root element. The value should include the desired state as valid JSON.
+To set the initial state from the HTML, apply the `data-initial-state` attribute onto the root element. The value should include the desired state as valid JSON.
 
 :::info
 
-Because this attribute is defined on the HTML it only supports primitive types. If you want to configure a state that is not a primitive type (e.g. `function`), the property must instead be set at instantiation via the [constructor](../api/component.md#constructor) or post instantiation via [`setState`](../api/component.md#setstate). See [Determining the Initial State](./component-lifecycle.md#determining-the-initial-state) to learn more.
+Because this attribute is defined in the HTML, it only supports primitive types. If you want to configure a state that is not a primitive type (e.g. `function`), the property must instead be set at instantiation via the [constructor](../api/component.md#constructor) or post instantiation via [`setState`](../api/component.md#setstate). See [Determining the Initial State](./component-lifecycle.md#determining-the-initial-state) to learn more.
 
 :::
 
@@ -74,7 +74,7 @@ After initialization the `data-initial-state` attribute will be removed.
 
 ## Initializing an Entire Library
 
-Create an initializer for an entire library of Froyo components by importing them all at once.
+Create an initializer for an entire library by importing all of the components at once.
 
 <Tabs>
 <TabItem value="es6" label="ES6" default>

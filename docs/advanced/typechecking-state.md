@@ -1,16 +1,14 @@
 # Typechecking State
 
-This guide explains how to setup typechecking for a component's state in Froyo.
+This guide explains how to type-checking component state.
 
-## What is Typechecking?
+## Introduction
 
-[Type checking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) is the process of verifying and enforcing constraints of types in values. It can be very helpful for catching bugs during the development process. If you have done [typechecking in React](https://reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper), this is likely a familiar concept. In fact, Froyo leverages the same `prop-types` library as React.
+[Type checking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) is the process of verifying and enforcing constraints of types in values. It can be very helpful for catching bugs during the development process. If you have done [typechecking in React](https://reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper), this is likely a familiar concept. In fact, Froyo leverages the same [prop-types](https://github.com/facebook/prop-types) library as React.
 
-## `stateTypes`
+## Adding Typechecking
 
-When the `stateTypes` property is applied to a class definition, it will automatically type-check the component state in non-production environments.
-
-View the [prop-types](https://github.com/facebook/prop-types) documentation for a full list of available validators.
+To add typechecking to a component, add the [`stateTypes`](../api/component.md#statetypes) property to the class definition. When this property exists, the component will automatically type-check the state in non-production environments. View the [prop-types](https://github.com/facebook/prop-types) documentation for a full list of available validators.
 
 :::info
 

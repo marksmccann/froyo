@@ -21,9 +21,10 @@ The initial markup for this component includes the content for three tabs and pa
 
 ## Component Definition
 
-The following is an example of a basic `Tabs` component using the core features of Froyo.
+This is the `Tabs` class definition using the core features of the framework.
 
 ```js
+import PropTypes from 'prop-types';
 import {
     Component,
     querySelectorAll,
@@ -32,6 +33,12 @@ import {
 } from 'froyojs';
 
 class Tabs extends Component {
+    static get stateTypes() {
+        return {
+            activeTab: PropTypes.number,
+        };
+    }
+
     static get defaultState() {
         return {
             activeTab: 0,
@@ -54,6 +61,24 @@ class Tabs extends Component {
                 this.handleClick.bind(this)
             ),
         };
+    }
+
+    validate(stateChanges) {
+        const { initialized, id } = this.metadata;
+        const { tabs, panels } = this.elements;
+        const { activeTab } = this.state;
+
+        if (!initialized) {
+            if (tabs.length !== panels.length) {
+                log.error('There must be an equal number of tabs and panels');
+            }
+        }
+
+        if ('activeTab' in stateChanges) {
+            if (activeTab < 0 || activeTab >= tabs.length) {
+                log.error(`There is no tab at index "${activeTab}"`);
+            }
+        }
     }
 
     handleClick(event) {
@@ -120,6 +145,12 @@ class Tabs extends Component {
 ## Initialization
 
 This is how the component would be initialized.
+
+:::info
+
+Alternatively, components can also be initialized from the HTML. Review ["HTML-only Usage"](../fundamentals/html-only-usage.md) to learn more.
+
+:::
 
 ```js
 const instance = new Tabs(document.querySelector('.tabs'));
