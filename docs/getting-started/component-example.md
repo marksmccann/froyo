@@ -64,19 +64,21 @@ class Tabs extends Component {
     }
 
     validate(stateChanges) {
-        const { initialized, id } = this.metadata;
+        const { initialized } = this.metadata;
         const { tabs, panels } = this.elements;
         const { activeTab } = this.state;
 
         if (!initialized) {
             if (tabs.length !== panels.length) {
-                log.error('There must be an equal number of tabs and panels');
+                console.error(
+                    'There must be an equal number of tabs and panels'
+                );
             }
         }
 
         if ('activeTab' in stateChanges) {
             if (activeTab < 0 || activeTab >= tabs.length) {
-                log.error(`There is no tab at index "${activeTab}"`);
+                console.error(`There is no tab at index "${activeTab}"`);
             }
         }
     }
@@ -118,7 +120,7 @@ class Tabs extends Component {
         }
 
         if ('activeTab' in stateChanges) {
-            tabs.forEach((tab) => {
+            tabs.forEach((tab, index) => {
                 setAttributes(tab, {
                     'aria-selected': activeTab === index,
                 });
