@@ -10,10 +10,11 @@ import styles from './index.module.css';
 
 export default function Home() {
     const { siteConfig } = useDocusaurusContext();
+
     return (
         <Layout
-            title={`Hello from ${siteConfig.title}`}
-            description="Description will go into a meta tag in <head />"
+            title={siteConfig.title}
+            description="An ultra lightweight framework for building user interfaces."
         >
             <header className={clsx('hero hero--primary', styles.heroBanner)}>
                 <div className="container margin-bottom--lg">
