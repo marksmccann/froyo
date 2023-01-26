@@ -440,9 +440,8 @@
     };
   }
 
-  function setAttributes(target) {
-    let attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    Object.entries(attributes).forEach(_ref => {
+  function setAttributes(target, attributes) {
+    Object.entries(attributes ?? {}).forEach(_ref => {
       let [key, value] = _ref;
       if (value === null) {
         target.removeAttribute(key);
