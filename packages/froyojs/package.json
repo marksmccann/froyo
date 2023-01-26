@@ -38,17 +38,5 @@
         "rimraf": "^4.1.0",
         "rollup": "^3.10.0",
         "rollup-plugin-filesize": "^9.1.2"
-    },
-    "browserslist": {
-        "production": [
-            ">0.5%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
     }
 }
