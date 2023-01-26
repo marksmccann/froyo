@@ -1,11 +1,18 @@
 module.exports = {
     env: {
         es: {
-            presets: [['@babel/preset-env', { modules: false }]],
+            presets: [
+                [
+                    '@babel/preset-env',
+                    { modules: false, ignoreBrowserslistConfig: true },
+                ],
+            ],
             plugins: ['@babel/plugin-transform-runtime'],
         },
         cjs: {
-            presets: [['@babel/preset-env', { modules: 'cjs' }]],
+            presets: [
+                ['@babel/preset-env', { ignoreBrowserslistConfig: true }],
+            ],
             plugins: ['@babel/plugin-transform-runtime'],
         },
         umd: {
