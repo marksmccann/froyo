@@ -41,7 +41,7 @@ export default class Component {
     get displayName() {
         const { name, displayName } = this.constructor;
 
-        return displayName ?? name;
+        return displayName || name;
     }
 
     get listeners() {

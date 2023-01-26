@@ -199,7 +199,7 @@
         name,
         displayName
       } = this.constructor;
-      return displayName ?? name;
+      return displayName || name;
     }
     get listeners() {
       return Object.fromEntries(_classPrivateFieldGet(this, _listeners));
