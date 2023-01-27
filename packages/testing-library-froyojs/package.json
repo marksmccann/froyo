@@ -3,7 +3,6 @@
     "version": "0.2.5",
     "description": "A package that extends DOM Testing Library to work with Froyo",
     "main": "dist/lib/index.js",
-    "module": "dist/es/index.js",
     "scripts": {
         "build": "run-s clean build:*",
         "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist/lib",
@@ -20,8 +19,7 @@
         "url": "https://github.com/marksmccann/froyo"
     },
     "dependencies": {
-        "@testing-library/dom": "^8.20.0",
-        "froyojs": "^0.2.0"
+        "@testing-library/dom": "^8.20.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.20.7",

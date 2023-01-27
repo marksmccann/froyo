@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 
 import { getQueriesForElement } from '@testing-library/dom';
-import { Component, createElement } from 'froyojs';
 
 const renderedRootElements = new Map();
 
@@ -12,8 +11,9 @@ function render(root, initialize, options = {}) {
     let instance;
 
     if (typeof root === 'string') {
-        const element = createElement('div', null, root.trim());
+        const element = document.createElement('div');
 
+        element.innerHTML = root.trim();
         rootElement = element.firstElementChild;
     }
 
@@ -45,7 +45,7 @@ function render(root, initialize, options = {}) {
         instance = initialize(rootElement);
     }
 
-    if (!(instance instanceof Component)) {
+    if (!instance?.destroy) {
         console.error(
             'Warning: initialize must be a function that returns a Froyo component'
         );
