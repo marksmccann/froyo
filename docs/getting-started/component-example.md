@@ -64,11 +64,10 @@ class Tabs extends Component {
     }
 
     validate(stateChanges) {
-        const { initialized } = this.metadata;
         const { tabs, panels } = this.elements;
         const { activeTab } = this.state;
 
-        if (!initialized) {
+        if (!this.initialized) {
             if (tabs.length !== panels.length) {
                 console.error(
                     'There must be an equal number of tabs and panels'
@@ -94,27 +93,26 @@ class Tabs extends Component {
     }
 
     render(stateChanges) {
-        const { initialized, id } = this.metadata;
         const { tablist, tabs, panels } = this.elements;
         const { activeTab } = this.state;
 
-        if (!initialized) {
+        if (!this.initialized) {
             setAttributes(tablist, { role: 'tablist' });
 
             tabs.forEach((tab, index) => {
                 setAttributes(tab, {
                     type: 'button',
                     role: 'tab',
-                    id: `${id}-tab-${index}`,
-                    'aria-controls': `${id}-panel-${index}`,
+                    id: `tab-${index}`,
+                    'aria-controls': `panel-${index}`,
                 });
             });
 
             panels.forEach((panel, index) => {
                 setAttributes(panel, {
                     role: 'tabpanel',
-                    id: `${id}-panel-${index}`,
-                    'aria-labelledby': `${id}-tab-${index}`,
+                    id: `panel-${index}`,
+                    'aria-labelledby': `tab-${index}`,
                 });
             });
         }

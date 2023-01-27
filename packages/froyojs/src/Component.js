@@ -1,14 +1,13 @@
 /* eslint-disable no-console */
 
-import { nanoid } from 'nanoid';
 import checkPropTypes from 'prop-types/checkPropTypes';
 
 export default class Component {
     #components = new Map();
 
-    #listeners = new Map();
+    #initialized = false;
 
-    #metadata = {};
+    #listeners = new Map();
 
     #observers = new Set();
 
@@ -66,8 +65,8 @@ export default class Component {
         });
     }
 
-    get metadata() {
-        return { ...this.#metadata };
+    get initialized() {
+        return this.#initialized;
     }
 
     get rootElement() {
@@ -79,7 +78,7 @@ export default class Component {
     }
 
     set state(newState) {
-        if (this.#metadata.initialized) {
+        if (this.initialized) {
             console.error(
                 'Warning: state can only be updated via "setState" after initialization'
             );
@@ -117,7 +116,6 @@ export default class Component {
         }
 
         this.#rootElement = rootElement;
-        this.#metadata = { initialized: false, id: nanoid(8) };
 
         // merge the initial states and update before initialize
         this.setState({ ...htmlInitialState, ...initialState });
@@ -141,7 +139,7 @@ export default class Component {
         this.render(this.state, {}, this);
         this.update(this.state, {}, this);
 
-        this.#metadata.initialized = true;
+        this.#initialized = true;
     }
 
     destroy() {
@@ -152,7 +150,6 @@ export default class Component {
 
     setState(newState) {
         const { defaultState = {}, stateTypes = {} } = this.constructor;
-        const { initialized } = this.metadata;
         const previousState = this.state;
         const stateChanges = {};
 
@@ -163,7 +160,7 @@ export default class Component {
             }
         });
 
-        if (Object.keys(stateChanges).length > 0 || !initialized) {
+        if (Object.keys(stateChanges).length > 0 || !this.initialized) {
             const nextState = { ...previousState, ...stateChanges };
 
             // default states that are "undefined"
@@ -187,7 +184,7 @@ export default class Component {
             this.#state = nextState;
 
             // notify observers if initialized
-            if (initialized) {
+            if (this.initialized) {
                 this.#observers.forEach((observer) => {
                     observer(stateChanges, previousState, this);
                 });

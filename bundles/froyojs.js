@@ -45,23 +45,6 @@
     privateMap.set(obj, value);
   }
 
-  let nanoid = function () {
-    let size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 21;
-    return crypto.getRandomValues(new Uint8Array(size)).reduce((id, byte) => {
-      byte &= 63;
-      if (byte < 36) {
-        id += byte.toString(36);
-      } else if (byte < 62) {
-        id += (byte - 26).toString(36).toUpperCase();
-      } else if (byte > 62) {
-        id += '-';
-      } else {
-        id += '_';
-      }
-      return id;
-    }, '');
-  };
-
   /**
    * Copyright (c) 2013-present, Facebook, Inc.
    *
@@ -172,8 +155,8 @@
   var checkPropTypes$1 = checkPropTypes_1;
 
   var _components = /*#__PURE__*/new WeakMap();
+  var _initialized = /*#__PURE__*/new WeakMap();
   var _listeners = /*#__PURE__*/new WeakMap();
-  var _metadata = /*#__PURE__*/new WeakMap();
   var _observers = /*#__PURE__*/new WeakMap();
   var _rootElement = /*#__PURE__*/new WeakMap();
   var _state = /*#__PURE__*/new WeakMap();
@@ -217,10 +200,8 @@
         _classPrivateFieldGet(this, _listeners).set(key, value);
       });
     }
-    get metadata() {
-      return {
-        ..._classPrivateFieldGet(this, _metadata)
-      };
+    get initialized() {
+      return _classPrivateFieldGet(this, _initialized);
     }
     get rootElement() {
       return _classPrivateFieldGet(this, _rootElement);
@@ -231,7 +212,7 @@
       };
     }
     set state(newState) {
-      if (_classPrivateFieldGet(this, _metadata).initialized) {
+      if (this.initialized) {
         console.error('Warning: state can only be updated via "setState" after initialization');
         return;
       }
@@ -243,13 +224,13 @@
         writable: true,
         value: new Map()
       });
+      _classPrivateFieldInitSpec(this, _initialized, {
+        writable: true,
+        value: false
+      });
       _classPrivateFieldInitSpec(this, _listeners, {
         writable: true,
         value: new Map()
-      });
-      _classPrivateFieldInitSpec(this, _metadata, {
-        writable: true,
-        value: {}
       });
       _classPrivateFieldInitSpec(this, _observers, {
         writable: true,
@@ -282,10 +263,6 @@
         }
       }
       _classPrivateFieldSet(this, _rootElement, rootElement);
-      _classPrivateFieldSet(this, _metadata, {
-        initialized: false,
-        id: nanoid(8)
-      });
 
       // merge the initial states and update before initialize
       this.setState({
@@ -311,7 +288,7 @@
       this.validate(this.state, {}, this);
       this.render(this.state, {}, this);
       this.update(this.state, {}, this);
-      _classPrivateFieldGet(this, _metadata).initialized = true;
+      _classPrivateFieldSet(this, _initialized, true);
     }
     destroy() {
       _classPrivateFieldGet(this, _observers).clear();
@@ -323,9 +300,6 @@
         defaultState = {},
         stateTypes = {}
       } = this.constructor;
-      const {
-        initialized
-      } = this.metadata;
       const previousState = this.state;
       const stateChanges = {};
 
@@ -336,7 +310,7 @@
           stateChanges[key] = value;
         }
       });
-      if (Object.keys(stateChanges).length > 0 || !initialized) {
+      if (Object.keys(stateChanges).length > 0 || !this.initialized) {
         const nextState = {
           ...previousState,
           ...stateChanges
@@ -358,7 +332,7 @@
         _classPrivateFieldSet(this, _state, nextState);
 
         // notify observers if initialized
-        if (initialized) {
+        if (this.initialized) {
           _classPrivateFieldGet(this, _observers).forEach(observer => {
             observer(stateChanges, previousState, this);
           });

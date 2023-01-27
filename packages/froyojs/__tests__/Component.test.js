@@ -15,7 +15,7 @@ describe('component', () => {
         }
         const instance = new Foo();
 
-        expect(instance.metadata.id).toBeUndefined();
+        expect(instance.rootElement).toBeNull();
         expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
         expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('root element must be an HTML element')
@@ -31,7 +31,7 @@ describe('component', () => {
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
-        expect(instance.metadata.id).toBeUndefined();
+        expect(instance.rootElement).toBeNull();
         expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
         expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('must have a "render" method')
@@ -110,8 +110,7 @@ describe('component', () => {
         const instance = new Foo(rootElement);
 
         expect(instance.rootElement).toStrictEqual(rootElement);
-        expect(instance.metadata.id).toStrictEqual(expect.any(String));
-        expect(instance.metadata.initialized).toBe(true);
+        expect(instance.initialized).toBe(true);
         expect(instance.components).toStrictEqual(expect.any(Object));
         expect(instance.listeners).toStrictEqual(expect.any(Object));
         expect(instance.state).toStrictEqual(expect.any(Object));

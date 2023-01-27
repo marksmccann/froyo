@@ -103,6 +103,17 @@ class FrozenYogurt extends Component {
 }
 ```
 
+### `initialized`
+
+-   type: `boolean`
+
+A read-only value that indicates the initialized status of the instance.
+
+```js
+const instance = new FrozenYogurt(...);
+// instance.initialized === true
+```
+
 ### `listeners`
 
 -   type: `object`
@@ -128,24 +139,6 @@ class FrozenYogurt extends Component {
     }
 }
 ```
-
-### `metadata`
-
--   type: `object`
-
-An object which contains read-only information about the instance.
-
-```js
-const instance = new FrozenYogurt(...);
-// instance.metadata.id will be something like "NSLZypdy"
-```
-
-#### Properties
-
-| Name          | Type      | Description                                                       |
-| :------------ | :-------- | :---------------------------------------------------------------- |
-| `id`          | `string`  | A unique string randomly generated for every instance.            |
-| `initialized` | `boolean` | A boolean which indicates the initialized status of the instance. |
 
 ### `rootElement`
 

@@ -56,11 +56,11 @@ render(stateChanges) {
 
 ## Handling the First Render
 
-Some tasks only need to be performed once, during initialization. To accomplish this, use `initialized` from the class property [`metadata`](../api/component.md#metadata). This property is `false` when the lifecycle methods are run for the first time, but is `true` for all subsequent updates.
+Some tasks only need to be performed once, during initialization. To accomplish this, use the class property [`this.initialized`](../api/component.md#initialized). This property is `false` when the lifecycle methods are run for the first time, but is `true` for all subsequent updates.
 
 ```js
 render(stateChanges) {
-    if (!this.metadata.initialized) {
+    if (!this.initialized) {
         /* first render only */
     }
 }
@@ -70,7 +70,7 @@ The `initialized` property can also be used to skip the first render.
 
 ```js
 render(stateChanges) {
-    if (this.metadata.initialized) {
+    if (this.initialized) {
         /* skip the first render */
     }
 }
