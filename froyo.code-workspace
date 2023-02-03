@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"clsx",
+			"filesize",
+			"Froyo",
+			"froyojs",
+			"matchmedia",
+			"Subcomponent",
+			"Subcomponents"
+		]
+	}
+}

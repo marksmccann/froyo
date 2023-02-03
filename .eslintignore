@@ -1,12 +1,6 @@
-# Dependencies
 node_modules
-
-# Production
-build
+.DS_Store
+coverage
+.eslintrc.js
 dist
 bundles
-
-# Generated files
-.docusaurus
-.cache-loader
-coverage

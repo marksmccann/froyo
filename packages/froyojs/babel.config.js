@@ -1,23 +1,22 @@
 module.exports = {
+    presets: ['@babel/preset-env', '@babel/preset-typescript'],
     env: {
         es: {
             presets: [
-                [
-                    '@babel/preset-env',
-                    { modules: false, ignoreBrowserslistConfig: true },
-                ],
+                ['@babel/preset-env', { modules: false }],
+                '@babel/preset-typescript',
             ],
             plugins: ['@babel/plugin-transform-runtime'],
         },
         cjs: {
-            presets: [
-                ['@babel/preset-env', { ignoreBrowserslistConfig: true }],
-            ],
+            presets: ['@babel/preset-env', '@babel/preset-typescript'],
             plugins: ['@babel/plugin-transform-runtime'],
         },
-        umd: {
-            presets: ['@babel/preset-env'],
-            plugins: [],
-        },
+        // test: {
+        //     presets: [
+        //         '@babel/preset-env',
+        //         // ['@babel/preset-env', { targets: { node: 'current' } }],
+        //     ],
+        // },
     },
 };
