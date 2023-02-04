@@ -54,7 +54,7 @@ Adds an event listener to the specified target element via [EventTarget.addEvent
 
 ```js
 class MyComponent extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             click: addEventListener(element, 'click', () => {}),
         };
@@ -78,7 +78,7 @@ Creates a `MediaQueryList` for a given media query via [Window.matchMedia](https
 
 ```js
 class MyComponent extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             mediaChanged: createMediaQueryListener(
                 '(min-width: 500px)',
@@ -99,7 +99,7 @@ Creates a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/Mu
 
 ```js
 class MyComponent extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             attributeChange: createMutationObserver(element, () => {}, {
                 attributes: true,

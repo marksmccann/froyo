@@ -45,7 +45,7 @@ class Tabs extends Component {
         };
     }
 
-    initialize() {
+    setup() {
         const { rootElement } = this;
 
         this.elements = {
@@ -148,7 +148,7 @@ This is how the component would be initialized.
 
 :::info
 
-Alternatively, components can also be initialized from the HTML. Review ["HTML-only Usage"](../fundamentals/html-only-usage.md) to learn more.
+Alternatively, components can be initialized with a [query selector](../api/component.md#constructor) or [from the HTML](../fundamentals/html-only-usage.md).
 
 :::
 

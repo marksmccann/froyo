@@ -6,11 +6,11 @@ This guide introduces the concept of the component lifecycle.
 
 When a component is initialized, or when the state changes, a series of "lifecycle" methods are called in a particular order. Each method has a designated responsibility relative to its position in the lifecycle.
 
-The methods are: [`initialize`](../api/component.md#initialize), [`validate`](../api/component.md#validate), [`render`](../api/component.md#render), [`update`](../api/component.md#update), [`destroy`](../api/component.md#destroy).
+The methods are: [`setup`](../api/component.md#setup), [`validate`](../api/component.md#validate), [`render`](../api/component.md#render), [`update`](../api/component.md#update), [`destroy`](../api/component.md#destroy).
 
 When initialized, these methods are called once in this order:
 
-1. `initialize`
+1. `setup`
 1. `validate`
 1. `render`
 1. `update`
@@ -33,7 +33,7 @@ When defining a component, the lifecycle methods are optional, except for `rende
 
 ```js
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         /* perform setup tasks */
     }
 
@@ -63,7 +63,7 @@ class FrozenYogurt extends Component {
 
 ## Setting State Correctly
 
-The state cannot be updated directly. In fact, if you attempt to do so (outside of `initialize`), it will not work and an error message will log to the console.
+The state cannot be updated directly. In fact, if you attempt to do so before the component has initialized, it will not work and an error message will log to the console.
 
 ```js
 // Incorrect
@@ -90,7 +90,7 @@ Instead, use [`setState`](../api/component.md#setstate) which will update the st
 this.setState({ flavor: 'Vanilla' });
 ```
 
-The only place where it is appropriate to set `this.state` directly is in `initialize`.
+The only place where it is appropriate to set `this.state` directly is in `setup`.
 
 <br />
 
@@ -98,7 +98,7 @@ The only place where it is appropriate to set `this.state` directly is in `initi
 
 ## Determining the Initial State
 
-When a component begins initialization, before the `initialize` method is called, data is collected, merged, and assigned to `this.state`. In reverse order of priority, the data is collected from the following three sources:
+When a component begins initialization, before the `setup` method is called, data is collected, merged, and assigned to `this.state`. In reverse order of priority, the data is collected from the following three sources:
 
 1\. The [`defaultState`](../api/component.md#defaultstate) from the class definition.
 
@@ -132,7 +132,7 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 
 <br />
 
-By the time `initialize` is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
+By the time `setup` is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
 
 :::info
 
@@ -142,7 +142,7 @@ Sometimes, initial state properties must be set dynamically (e.g. referencing th
 
 ```js
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.state = {
             flavor: 'Vanilla',
         };

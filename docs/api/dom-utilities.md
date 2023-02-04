@@ -46,7 +46,7 @@ Creates a new DOM element, optionally with attributes and children.
 
 ```js
 class MyComponent extends Component {
-    initialize() {
+    setup() {
         this.elements = {
             someElement: createElement('div', { class: 'foo' }, 'bar'),
             // <div class="foo">bar</div>
@@ -85,7 +85,7 @@ Retrieves an array of DOM elements matching a given query string.
 
 ```js
 class MyComponent extends Component {
-    initialize() {
+    setup() {
         this.elements = {
             someElements: querySelectorAll(this.rootElement, '.foo-bar'),
         };

@@ -110,6 +110,12 @@ Now that we've defined a component class, let's initialize it with the root elem
 </script>
 ```
 
+The first argument of the constructor alternatively supports a query selector. Let's shorten the statement to this:
+
+```js
+const instance = new FrozenYogurt('#root');
+```
+
 ### Render Something
 
 Next, let's update the `render` method so that it does something &mdash; render a string within the root element.
@@ -148,7 +154,7 @@ class FrozenYogurt extends froyojs.Component {
 To initialize the component with state, pass an object as the second argument of the constructor. This sets the initial state of the instance.
 
 ```js
-const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
+const instance = new FrozenYogurt('#root', { flavor: 'Chocolate' });
 ```
 
 :::info
@@ -186,14 +192,14 @@ As a general rule, static content or markup structure that takes up visual space
 </div>
 ```
 
-### Add the Initialize Method
+### Add the `Setup` Method
 
-We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`initialize`](../api/component.md#initialize) method. This method is called once during initialization and is the designated location for performing setup tasks like those previously mentioned.
+We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`setup`](../api/component.md#setup) method. This method is called once during initialization and is the designated location for performing setup tasks like those previously mentioned.
 
 ```js
 class FrozenYogurt extends froyojs.Component {
     // highlight-start
-    initialize() {
+    setup() {
         /* setup tasks go here */
     }
     // highlight-end
@@ -209,7 +215,7 @@ class FrozenYogurt extends froyojs.Component {
 As a matter of convention, references to DOM elements should be retrieved and stored in an object assigned to [`this.elements`](../api/component.md#elements). This keeps the component organized and makes the elements easily accessible.
 
 ```js
-initialize() {
+setup() {
     // highlight-start
     this.elements = {
         button: this.rootElement.querySelector('button');
@@ -221,16 +227,16 @@ initialize() {
 
 ### Add Event Listener
 
-Event listeners should also be created in `initialize`. Create them with the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
+Event listeners should also be created in `setup`. Create them with the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
 
 :::info
 
-Event handlers should typically be defined on the instance as a class method, with a name that begins with "handle". This keeps the component organized and avoids unnecessary clutter in `initialize`. Note that the method is [bound to the instance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind) so that `this` refers to the component instance instead of the event target.
+Event handlers should typically be defined on the instance as a class method, with a name that begins with "handle". This keeps the component organized and avoids unnecessary clutter in `setup`. Note that the method is [bound to the instance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind) so that `this` refers to the component instance instead of the event target.
 
 :::
 
 ```js
-initialize() {
+setup() {
     this.elements = {
         button: this.rootElement.querySelector('button');
         flavor: this.rootElement.querySelector('.flavor');
@@ -272,7 +278,7 @@ At this point, the component should be fully functional and should look like thi
 
 ```js
 class FrozenYogurt extends froyojs.Component {
-    initialize() {
+    setup() {
        this.elements = {
             button: this.rootElement.querySelector('button');
             flavor: this.rootElement.querySelector('.flavor');
@@ -300,7 +306,7 @@ class FrozenYogurt extends froyojs.Component {
 When initialized the component should render "Chocolate".
 
 ```js
-const instance = new FrozenYogurt(rootElement, { flavor: 'Chocolate' });
+const instance = new FrozenYogurt('#root', { flavor: 'Chocolate' });
 ```
 
 ```html

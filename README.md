@@ -1,6 +1,6 @@
 # Froyo
 
-Froyo is an extremely lightweight and capable framework for building user interfaces with plain-old vanilla JavaScript.
+Froyo is an extremely lightweight and capable framework for building UI components with plain-old vanilla JavaScript.
 
 This project contains the source code for the [`froyojs`](./packages/froyojs/) framework as well as other related packages.
 

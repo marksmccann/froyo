@@ -13,8 +13,8 @@ export default function Home() {
 
     return (
         <Layout
-            title={siteConfig.title}
-            description="An ultra lightweight framework for building user interfaces."
+            title="Hello"
+            description="An ultra lightweight framework for building UI components."
         >
             <header className={clsx('hero hero--primary', styles.heroBanner)}>
                 <div className="container margin-bottom--lg">
@@ -40,6 +40,16 @@ export default function Home() {
                     <div className="row">
                         <div className="col col--4">
                             <div>
+                                <h3>No sugar added</h3>
+                                <p>
+                                    Build Froyo components with 100%, all
+                                    natural, vanilla JavaScript; no setup
+                                    required.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="col col--4">
+                            <div>
                                 <h3>A low-fat alternative</h3>
                                 <p>
                                     Weighing-in at less than 2k (gzipped), Froyo
@@ -50,20 +60,10 @@ export default function Home() {
                         </div>
                         <div className="col col--4">
                             <div>
-                                <h3>No sugar added</h3>
-                                <p>
-                                    Build Froyo components with 100%, all
-                                    natural, vanilla JavaScript; no build
-                                    required.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="col col--4">
-                            <div>
                                 <h3>Treat yourself</h3>
                                 <p>
-                                    Effortlessly construct pages directly from
-                                    the HTML, without writing any JavaScript.
+                                    Implement Froyo components effortlessly
+                                    without JavaScript, directly from the HTML.
                                 </p>
                             </div>
                         </div>

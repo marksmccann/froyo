@@ -10,7 +10,7 @@ To add an event listener, use the [`addEventListener`](../api/listener-utilities
 import { Component, addEventListener } from 'froyojs';
 
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             click: addEventListener(this.rootElement, 'click', () => {}),
         };
@@ -30,7 +30,7 @@ To create a [mutation observer](https://developer.mozilla.org/en-US/docs/Web/API
 import { Component, createMutationObserver } from 'froyojs';
 
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             attributeChange: createMutationObserver(someElement, () => {}, {
                 attributes: true,
@@ -52,7 +52,7 @@ To create a listener for media queries (via [window.matchMedia](https://develope
 import { Component, createMediaQueryListener } from 'froyojs';
 
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             mediaChanged: createMediaQueryListener(
                 '(min-width: 500px)',
@@ -73,7 +73,7 @@ When needed, callback handlers can be added to the instance as class methods. As
 
 ```js
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             click: addEventListener(
                 this.rootElement,
@@ -119,7 +119,7 @@ While not recommended, it is possible to add listeners manually. For example, th
 import { Component } from 'froyojs';
 
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.handleClick = () => {};
 
         // add the event listener

@@ -36,7 +36,8 @@ window.froyojs.Component;
 ### `Component`
 
 ```ts
-new Component(rootElement: HTMLElement, initialState: object)
+new Component(root: HTMLElement, initialState: object)
+new Component(root: querySelector, initialState: object)
 ```
 
 `Component` is the base class for Froyo components.
@@ -51,7 +52,7 @@ class FrozenYogurt extends Component {
 }
 ```
 
-When instantiated, the first argument of the constructor is required and must be an HTML element. The second argument is optional and is responsible for setting the initial state of the component.
+When instantiated, the first argument of the constructor is required. It must be an HTML element or a query selector for a valid element rendered in the DOM. The second argument is optional and is responsible for setting the initial state of the component.
 
 ```js
 const rootElement = document.createElement('div');
@@ -73,7 +74,7 @@ class Topping extends Component {
 }
 
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.components = {
             topping: new Topping(...),
         };
@@ -95,7 +96,7 @@ Review our [DOM utilities](dom-utilities) to see how they can help you apply ele
 
 ```js
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.elements = {
             toppings: this.rootElement.querySelectorAll('.topping'),
         };
@@ -128,7 +129,7 @@ Review our [listener utilities](listener-utilities) to see how they can help you
 
 ```js
 class FrozenYogurt extends Component {
-    initialize() {
+    setup() {
         this.listeners = {
             click: {
                 destroy() {
@@ -183,22 +184,6 @@ class FrozenYogurt extends Component {
 }
 ```
 
-### `initialize`
-
-```ts
-initialize();
-```
-
-A [lifecycle method](../fundamentals/component-lifecycle.md) that is called once during initialization, before all other lifecycle methods (e.g. `render`). It should be used to perform setup tasks including like [creating event listeners](../fundamentals/creating-listeners.md) and [setting the initial state](../fundamentals/component-lifecycle.md#determining-the-initial-state). It should never be called directly.
-
-```js
-class FrozenYogurt extends Component {
-    initialize() {
-        // perform setup tasks ...
-    }
-}
-```
-
 ### `setState`
 
 ```ts
@@ -213,6 +198,22 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 
 instance.setState({ flavor: 'Chocolate' });
 // <div>"Chocolate" is the best flavor</div>
+```
+
+### `setup`
+
+```ts
+setup();
+```
+
+A [lifecycle method](../fundamentals/component-lifecycle.md) that is called once during initialization, before all other lifecycle methods. It should be used to perform setup tasks including like [creating event listeners](../fundamentals/creating-listeners.md) and [setting the initial state](../fundamentals/component-lifecycle.md#determining-the-initial-state). It should never be called directly.
+
+```js
+class FrozenYogurt extends Component {
+    setup() {
+        // perform setup tasks ...
+    }
+}
 ```
 
 ### `subscribe`
@@ -270,7 +271,7 @@ class FrozenYogurt extends Component {
 update(stateChanges: object, previousState: object, instance: object)
 ```
 
-A [lifecycle method](../fundamentals/component-lifecycle.md) that is called after every render. It should be used exclusively to perform miscellaneous tasks after a component updates. It should never be called directly.
+A [lifecycle method](../fundamentals/component-lifecycle.md) that is called after every render. It should be used exclusively to perform miscellaneous tasks after a component updates. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly.
 
 ```js
 class FrozenYogurt extends Component {
@@ -286,7 +287,7 @@ class FrozenYogurt extends Component {
 validate(stateChanges: object, previousState: object, instance: object)
 ```
 
-A [lifecycle method](../fundamentals/component-lifecycle.md) that is called before every render. It should be used exclusively to perform validation tasks relative to the component and its state. It should never be called directly. See ["Component Validation"](../advanced/component-validation.md) to learn more.
+A [lifecycle method](../fundamentals/component-lifecycle.md) that is called before every render. It should be used exclusively to perform validation tasks relative to the component and its state. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly. See ["Component Validation"](../advanced/component-validation.md) to learn more.
 
 ```js
 class FrozenYogurt extends Component {
@@ -366,4 +367,14 @@ class FrozenYogurt extends Component {
         };
     }
 }
+```
+
+### `instances`
+
+-   type: `array`
+
+A read-only list of every active instance of the component and its subclasses. This feature is useful to gain access to instances created in different scope.
+
+```js
+console.log(Component.instances); // [Component, Component, ...]
 ```

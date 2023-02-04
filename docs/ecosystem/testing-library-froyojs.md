@@ -36,19 +36,10 @@ Froyo Testing Library re-exports everything from DOM Testing Library as well as 
 ### `render`
 
 ```ts
-render(
-    rootElement: HTMLString,
-    initialize: function(rootElement): FroyoInstance,
-    options?: object
-)
-render(
-    rootElement: HTMLElement,
-    initialize: function(rootElement): FroyoInstance,
-    options?: object
-)
+render(html: HTMLString, initialize: function(): void, options?: object)
 ```
 
-Renders an individual component by appending the `rootElement` and calling `initialize` to instantiate it.
+Renders an HTML string into a container that is appended to the document and then calls `initialize` to instantiate Froyo components.
 
 ```js
 import '@testing-library/jest-dom';
@@ -61,8 +52,11 @@ class HelloWorld extends Component {
     }
 }
 
-test('renders a message', () => {
-    const { getByText } = render('<div></div>', (root) => new HelloWorld(root));
+test('renders a greeting', () => {
+    const { getByText } = render(
+        '<div id="root"></div>',
+        () => new HelloWorld('#root')
+    );
 
     expect(getByText('Hello, world!')).toBeInTheDocument();
 });
@@ -72,19 +66,39 @@ test('renders a message', () => {
 
 #### `container`
 
-By default, Froyo Testing Library will append the root element to `document.body`. If you provide your own HTMLElement container via this option, the root element will be appended to it instead. However, the container will not be appended to the `document.body` automatically.
+By default, Froyo Testing Library will create a div and append it to the base element. This element is the container where the provided `html` is rendered. If you provide your own container via this option, it will not be appended to `document.body` automatically.
 
 ```js
-const myContainer = document.createElement('div');
+const container = document.createElement('div');
 
-const result = render('<div></div>', (root) => new HelloWorld(root), {
-    container: document.body.appendChild(myContainer),
+const result = render('<div id="root"></div>', () => new HelloWorld('#root'), {
+    container: document.body.appendChild(container),
 });
+```
+
+If you forget or choose not to append the container to the document, passing a selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
+
+```js
+new HelloWorld(container.querySelector('#root'));
 ```
 
 #### `baseElement`
 
-If the container is specified, then this defaults to that, otherwise this defaults to `document.body`. This is used as the base element for the queries.
+If the container is specified, then this defaults to that, otherwise this defaults to `document.body`. This is used as the base element for the queries. If you provide your own base element via this option or `container`, it will not be appended to `document.body` automatically.
+
+```js
+const baseElement = document.createElement('div');
+
+const result = render('<div id="root"></div>', () => new HelloWorld('#root'), {
+    baseElement: document.body.appendChild(baseElement),
+});
+```
+
+If you forget or choose not to append the base element or container to the document, passing a selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
+
+```js
+new HelloWorld(container.querySelector('#root'));
+```
 
 #### `queries`
 
@@ -95,8 +109,8 @@ import * as myQueries from 'my-query-library';
 import { queries } from 'testing-library-froyojs';
 
 const { getByMyQuery } = render(
-    '<div></div>',
-    (root) => new HelloWorld(root),
+    '<div id="root"></div>',
+    () => new HelloWorld('#root'),
     queries: { ...queries, ...myQueries },
 );
 ```
@@ -115,30 +129,33 @@ See [Queries](https://testing-library.com/docs/queries/about) for a complete lis
 
 ```js
 const { getByText, queryByLabelText } = render(
-    '<div></div>',
-    (root) => new HelloWorld(root)
+    '<div id="root"></div>',
+    () => new HelloWorld('#root')
 );
 ```
 
-#### `rootElement`
+#### `container`
 
-The resolved DOM node provided to the first argument of `render`.
+The containing DOM node for the rendered `html`.
 
 #### `baseElement`
 
-The containing DOM node where the root element was appended; defaults to `document.body`.
+The containing DOM node where the container was appended; defaults to `document.body`.
 
 #### `rerender`
 
-This function will update the component instance with a new state and re-render.
+This function will rerender a single component by updating its state. The first argument must be an HTML element (or query string) to the root element of the desired component. When a corresponding instance is identified, its state is then updated with the data passed to the second argument, causing the component to update and rerender.
 
 ```js
 import { render } from 'testing-library-froyo';
 
-const { rerender } = render('<div></div>', (root) => new HelloWorld(root));
+const { rerender } = render(
+    '<div id="root"></div>',
+    () => new HelloWorld('#root')
+);
 
 // re-render the same component with different state
-rerender({ message: 'Goodbye, World!' });
+rerender('#root', { message: 'Goodbye, World!' });
 ```
 
 #### `destroy`
@@ -148,18 +165,21 @@ This will destroy the component instance and remove the associated root element 
 ```js
 import { render } from '@testing-library/react';
 
-const { destroy } = render('<div></div>', (root) => new HelloWorld(root));
+const { destroy } = render(
+    '<div id="root"></div>',
+    () => new HelloWorld('#root')
+);
 
 destroy(); // the component is destroyed and now: document.body.innerHTML === ''
 ```
 
 ### `cleanup`
 
-Destroys all instances that were created with `render`. Failing to call cleanup when you've called render could result in a memory leak and a test environment that is not pure (which can lead to errors that are difficult to debug).
+Destroys all instances and removes all elements that were created with `render`. Failing to call cleanup when you've called render could result in a memory leak and a test environment that is not pure (which can lead to errors that are difficult to debug).
 
 :::info
 
-Please note that this is done automatically if the testing framework you're using supports the `afterEach` global and it is injected into your testing environment (like mocha, Jest, and Jasmine). If not, you will need to manually perform cleanups after each test by calling this function.
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` or `teardown` global and it is injected into your testing environment (like mocha, Jest, and Jasmine). If not, you will need to manually perform cleanups after each test by calling this function.
 
 :::
 
