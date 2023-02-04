@@ -2,7 +2,14 @@
 
 import checkPropTypes from 'prop-types/checkPropTypes';
 
+// stores references to component instances
+const instances = new Set();
+
 export default class Component {
+    static get instances() {
+        return Array.from(instances);
+    }
+
     #components = new Map();
 
     #initialized = false;
@@ -89,8 +96,13 @@ export default class Component {
         this.setState(newState);
     }
 
-    constructor(rootElement, initialState = {}) {
+    constructor(root, initialState = {}) {
         let htmlInitialState = {};
+        let rootElement = root;
+
+        if (typeof rootElement === 'string') {
+            rootElement = document.body.querySelector(root);
+        }
 
         if (!(rootElement instanceof Element)) {
             console.error('Warning: the root element must be an HTML element');
@@ -117,14 +129,8 @@ export default class Component {
 
         this.#rootElement = rootElement;
 
-        // merge the initial states and update before initialize
-        this.setState({ ...htmlInitialState, ...initialState });
-
-        // initialize component
-        this.initialize();
-
         // bind the lifecycle methods to instance
-        this.initialize = this.initialize.bind(this);
+        this.setup = this.setup.bind(this);
         this.validate = this.validate.bind(this);
         this.render = this.render.bind(this);
         this.update = this.update.bind(this);
@@ -134,18 +140,25 @@ export default class Component {
         this.subscribe(this.render);
         this.subscribe(this.update);
 
+        // merge and set initial states before setup
+        this.setState({ ...htmlInitialState, ...initialState });
+
         // manually call lifecycle methods for first time
+        this.setup();
         this.validate(this.state, {}, this);
         this.render(this.state, {}, this);
         this.update(this.state, {}, this);
 
         this.#initialized = true;
+
+        instances.add(this);
     }
 
     destroy() {
         this.#observers.clear();
         this.#listeners.forEach((listener) => listener.destroy());
         this.#components.forEach((component) => component.destroy());
+        instances.delete(this);
     }
 
     setState(newState) {
@@ -213,7 +226,7 @@ export default class Component {
 
     /* eslint-disable class-methods-use-this */
 
-    initialize() {}
+    setup() {}
 
     validate() {}
 

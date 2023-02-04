@@ -102,6 +102,21 @@ describe('component', () => {
         instance.destroy();
     });
 
+    it('should initialize with a query selector', () => {
+        class Foo extends Component {
+            render() {}
+        }
+        const rootElement = document.body.appendChild(
+            createElement('div', { id: 'foo' })
+        );
+        const instance = new Foo('#foo');
+
+        expect(instance.rootElement).toStrictEqual(rootElement);
+
+        instance.destroy();
+        rootElement.remove();
+    });
+
     it('should set instance properties', () => {
         class Foo extends Component {
             render() {}
@@ -123,7 +138,7 @@ describe('component', () => {
             render() {}
         }
         class Bar extends Component {
-            initialize() {
+            setup() {
                 this.components = {
                     foo: new Foo(this.rootElement),
                 };
@@ -161,7 +176,7 @@ describe('component', () => {
         global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
-            initialize() {
+            setup() {
                 this.components = { foo: null };
                 this.listeners = { foo: null };
             }
@@ -211,7 +226,7 @@ describe('component', () => {
             render() {}
         }
         class Bar extends Component {
-            initialize() {
+            setup() {
                 this.components = {
                     foo: new Foo(this.rootElement),
                 };
@@ -393,5 +408,23 @@ describe('component', () => {
         expect(global.consoleErrorSpy).not.toHaveBeenCalled();
 
         instance.destroy();
+    });
+
+    it('should store component instances in static variable', () => {
+        class Foo1 extends Component {
+            render() {}
+        }
+        class Foo2 extends Component {
+            render() {}
+        }
+        const instance1 = new Foo1(createElement('div'));
+        const instance2 = new Foo2(createElement('div'));
+
+        expect(Component.instances).toHaveLength(2);
+        expect(Component.instances[0]).toStrictEqual(instance1);
+        expect(Component.instances[1]).toStrictEqual(instance2);
+
+        instance1.destroy();
+        instance2.destroy();
     });
 });

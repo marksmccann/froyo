@@ -1,7 +1,7 @@
 {
     "name": "froyojs",
     "version": "0.2.1",
-    "description": "An ultra lightweight framework for building user interfaces",
+    "description": "An ultra lightweight framework for building UI components",
     "main": "dist/lib/index.js",
     "module": "dist/es/index.js",
     "scripts": {

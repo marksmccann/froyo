@@ -154,6 +154,8 @@
   var checkPropTypes_1 = checkPropTypes;
   var checkPropTypes$1 = checkPropTypes_1;
 
+  // stores references to component instances
+  const instances = new Set();
   var _components = /*#__PURE__*/new WeakMap();
   var _initialized = /*#__PURE__*/new WeakMap();
   var _listeners = /*#__PURE__*/new WeakMap();
@@ -161,6 +163,9 @@
   var _rootElement = /*#__PURE__*/new WeakMap();
   var _state = /*#__PURE__*/new WeakMap();
   class Component {
+    static get instances() {
+      return Array.from(instances);
+    }
     get components() {
       return Object.fromEntries(_classPrivateFieldGet(this, _components));
     }
@@ -218,7 +223,7 @@
       }
       this.setState(newState);
     }
-    constructor(rootElement) {
+    constructor(root) {
       let initialState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       _classPrivateFieldInitSpec(this, _components, {
         writable: true,
@@ -245,6 +250,10 @@
         value: {}
       });
       let htmlInitialState = {};
+      let rootElement = root;
+      if (typeof rootElement === 'string') {
+        rootElement = document.body.querySelector(root);
+      }
       if (!(rootElement instanceof Element)) {
         console.error('Warning: the root element must be an HTML element');
         return;
@@ -264,17 +273,8 @@
       }
       _classPrivateFieldSet(this, _rootElement, rootElement);
 
-      // merge the initial states and update before initialize
-      this.setState({
-        ...htmlInitialState,
-        ...initialState
-      });
-
-      // initialize component
-      this.initialize();
-
       // bind the lifecycle methods to instance
-      this.initialize = this.initialize.bind(this);
+      this.setup = this.setup.bind(this);
       this.validate = this.validate.bind(this);
       this.render = this.render.bind(this);
       this.update = this.update.bind(this);
@@ -284,16 +284,25 @@
       this.subscribe(this.render);
       this.subscribe(this.update);
 
+      // merge and set initial states before setup
+      this.setState({
+        ...htmlInitialState,
+        ...initialState
+      });
+
       // manually call lifecycle methods for first time
+      this.setup();
       this.validate(this.state, {}, this);
       this.render(this.state, {}, this);
       this.update(this.state, {}, this);
       _classPrivateFieldSet(this, _initialized, true);
+      instances.add(this);
     }
     destroy() {
       _classPrivateFieldGet(this, _observers).clear();
       _classPrivateFieldGet(this, _listeners).forEach(listener => listener.destroy());
       _classPrivateFieldGet(this, _components).forEach(component => component.destroy());
+      instances.delete(this);
     }
     setState(newState) {
       const {
@@ -356,7 +365,7 @@
 
     /* eslint-disable class-methods-use-this */
 
-    initialize() {}
+    setup() {}
     validate() {}
     update() {}
   }

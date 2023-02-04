@@ -1,6 +1,6 @@
 # Froyo
 
-An ultra lightweight framework for building user interfaces.
+An ultra lightweight framework for building UI components.
 
 <p>
     <a href="https://www.npmjs.com/package/froyojs"><img src="https://img.shields.io/npm/v/froyojs.svg?style=flat" alt="npm version"></a>
