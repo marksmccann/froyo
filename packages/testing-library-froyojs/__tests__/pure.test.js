@@ -14,153 +14,131 @@ describe('render and cleanup', () => {
         cleanup();
     });
 
-    it('should return expected results', () => {
-        const result = render('<div></div>', (root) => new Foo(root));
+    it('should return expected result', () => {
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'));
 
         expect(result.baseElement).toStrictEqual(document.body);
-        expect(result.rootElement).toBeInstanceOf(window.HTMLElement);
+        expect(result.container).toBeInstanceOf(window.HTMLElement);
         expect(typeof result.getByText).toBe('function');
         expect(typeof result.rerender).toBe('function');
         expect(typeof result.destroy).toBe('function');
     });
 
-    it('should render root element as string', () => {
-        const result = render('<div></div>', (root) => new Foo(root));
+    it('should remove container from body when destroyed', () => {
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'));
 
-        expect(result.baseElement).toStrictEqual(document.body);
-        expect(document.body).toContainElement(result.rootElement);
-        expect(result.rootElement).toHaveTextContent('foo');
-    });
-
-    it('should render root element as DOM element', () => {
-        const div = createElement('div', null, 'foo');
-        const result = render(div, (root) => new Foo(root));
-
-        expect(result.baseElement).toStrictEqual(document.body);
-        expect(document.body).toContainElement(result.rootElement);
-        expect(result.rootElement).toHaveTextContent('foo');
-    });
-
-    it('should fail if the root element is undefined', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
-
-        const results = render();
-
-        expect(Object.keys(results)).toHaveLength(0);
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('root element must be a valid')
-        );
-    });
-
-    it('should remove root element from body when destroyed', () => {
-        const rootElement = createElement('div');
-        const result = render(rootElement, (root) => new Foo(root));
-
-        expect(document.body).toContainElement(rootElement);
+        expect(result.container).toBeInTheDocument();
 
         result.destroy();
 
-        expect(document.body).not.toContainElement(rootElement);
+        expect(result.container).not.toBeInTheDocument();
+    });
+
+    it('should not require initialize function', () => {
+        const result = render('<div>foo</div>');
+
+        expect(result.baseElement).toStrictEqual(document.body);
+        expect(result.container).toBeInstanceOf(window.HTMLElement);
     });
 
     it('should support a custom container', () => {
         const container = createElement('div');
-        const result = render('<div></div>', (root) => new Foo(root), {
-            container,
-        });
-
-        expect(result.rootElement).toHaveTextContent('foo');
-        expect(result.baseElement).toStrictEqual(container);
-        expect(container).toContainElement(result.rootElement);
-        expect(document.body).not.toContainElement(container);
-    });
-
-    it('should remove container from body when destroyed', () => {
-        const container = createElement('div');
-        const result = render('<div></div>', (root) => new Foo(root), {
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'), {
             container: document.body.appendChild(container),
         });
 
-        expect(document.body).toContainElement(container);
+        expect(container).toContainElement(result.getByText('foo'));
+        expect(result.baseElement).toStrictEqual(container);
+        expect(container).toBeInTheDocument();
+    });
+
+    it('should remove custom container from body when destroyed', () => {
+        const container = createElement('div');
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'), {
+            container: document.body.appendChild(container),
+        });
+
+        expect(container).toBeInTheDocument();
 
         result.destroy();
 
-        expect(document.body).not.toContainElement(container);
+        expect(container).not.toBeInTheDocument();
     });
 
     it('should support a custom base element', () => {
         const baseElement = createElement('div');
-        const result = render('<div></div>', (root) => new Foo(root), {
-            baseElement,
-        });
+        const result = render(
+            '<div class="foo"></div>',
+            () => new Foo('.foo'),
+            { baseElement: document.body.appendChild(baseElement) }
+        );
 
         expect(result.baseElement).toStrictEqual(baseElement);
-        expect(result.baseElement).toContainElement(result.rootElement);
-        expect(document.body).not.toContainElement(result.baseElement);
+        expect(result.baseElement).toContainElement(result.container);
+        expect(result.baseElement).toBeInTheDocument();
     });
 
-    it('should call initialize callback with root element', () => {
+    it('should call initialize callback with no arguments', () => {
         const callback = jest.fn();
-        const result = render('<div></div>', (root) => {
-            callback(root);
-            return new Foo(root);
+        render('<div id="foo"></div>', (...args) => {
+            callback(...args);
+            return new Foo('#foo');
         });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith(result.rootElement);
+        expect(callback).toHaveBeenCalledWith();
     });
 
-    it('should fail if initialize is undefined', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+    it('should retrieve data from previously rendered container', () => {
+        const container = createElement('div');
+        const result1 = render('<div id="foo"></div>', () => new Foo('#foo'), {
+            container: document.body.appendChild(container),
+        });
+        const result2 = render('', null, { container });
 
-        const results = render('<div></div>');
-
-        expect(Object.keys(results)).toHaveLength(0);
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('function that returns a Froyo component')
-        );
-    });
-
-    it('should fail if initialize does not return instance', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
-
-        const results = render('<div></div>', () => {});
-
-        expect(Object.keys(results)).toHaveLength(0);
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('function that returns a Froyo component')
-        );
-    });
-
-    it('should retrieve data from previously rendered root element', () => {
-        const rootElement = createElement('div');
-        const results1 = render(rootElement, (root) => new Foo(root));
-        const results2 = render(rootElement, (root) => new Foo(root));
-
-        expect(results1.destroy).toStrictEqual(results2.destroy);
+        expect(result1.destroy).toStrictEqual(result2.destroy);
     });
 
     it('should rerender a component', () => {
-        const result = render('<div></div>', (root) => new Foo(root));
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'));
 
-        expect(result.rootElement).toHaveTextContent('foo');
+        expect(result.queryByText('foo')).toBeInTheDocument();
+        expect(result.queryByText('bar')).not.toBeInTheDocument();
 
-        result.rerender({ text: 'bar' });
+        result.rerender(result.getByText('foo'), { text: 'bar' });
 
-        expect(result.rootElement).toHaveTextContent('bar');
+        expect(result.queryByText('foo')).not.toBeInTheDocument();
+        expect(result.queryByText('bar')).toBeInTheDocument();
+
+        result.rerender('#foo', { text: 'foo' });
+
+        expect(result.queryByText('foo')).toBeInTheDocument();
+        expect(result.queryByText('bar')).not.toBeInTheDocument();
+    });
+
+    it('should fail if instance is not found when rerendering', () => {
+        global.consoleErrorSpy.mockImplementation(() => {});
+
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'));
+
+        expect(result.queryByText('foo')).toBeInTheDocument();
+
+        result.rerender('bar', { text: 'bar' });
+
+        expect(result.queryByText('foo')).toBeInTheDocument();
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+            expect.stringContaining('no component found for the root element')
+        );
     });
 
     it('should not fail if rerender or destroy are called after destroy', () => {
-        const result = render('<div></div>', (root) => new Foo(root));
+        const result = render('<div id="foo"></div>', () => new Foo('#foo'));
 
         result.destroy();
 
         expect(() => {
-            result.rerender({});
-            result.rerender();
+            result.rerender('#foo');
             result.destroy();
         }).not.toThrow();
     });

@@ -1,87 +1,82 @@
 /* eslint-disable no-console */
 
+import { Component } from 'froyojs';
 import { getQueriesForElement } from '@testing-library/dom';
 
-const renderedRootElements = new Map();
+const renderedContainers = new Map();
 
-function render(root, initialize, options = {}) {
-    const { queries, container } = options;
-    let { baseElement } = options;
-    let rootElement = root;
-    let instance;
-
-    if (typeof root === 'string') {
-        const element = document.createElement('div');
-
-        element.innerHTML = root.trim();
-        rootElement = element.firstElementChild;
-    }
-
-    if (!(rootElement instanceof HTMLElement)) {
-        console.error(
-            'Warning: the root element must be a valid HTML element or string'
-        );
-
-        return {};
-    }
+function render(html, initialize, options = {}) {
+    const { queries } = options;
+    let { container, baseElement } = options;
+    let instances = [];
 
     if (!baseElement) {
         baseElement = container ?? document.body;
     }
 
-    if (container) {
-        container.appendChild(rootElement);
-    } else {
-        baseElement.appendChild(rootElement);
+    if (!container) {
+        container = document.createElement('div');
+        baseElement.appendChild(container);
     }
 
-    // if the root element was rendered previously
+    // if the container was rendered previously,
     // return the saved data from before
-    if (renderedRootElements.has(rootElement)) {
-        return renderedRootElements.get(rootElement);
+    if (renderedContainers.has(container)) {
+        return renderedContainers.get(container);
     }
+
+    container.innerHTML = html.trim();
 
     if (initialize) {
-        instance = initialize(rootElement);
-    }
+        // the number of instances that already exist
+        const instancesBefore = Component.instances.length;
 
-    if (!instance?.destroy) {
-        console.error(
-            'Warning: initialize must be a function that returns a Froyo component'
-        );
+        initialize();
 
-        return {};
+        // retrieve the instances that were just created
+        instances = Component.instances.reverse().slice(instancesBefore * -1);
     }
 
     const data = {
         baseElement,
-        rootElement,
+        container,
         ...getQueriesForElement(baseElement, queries),
-        rerender(newState = {}) {
-            instance.setState(newState);
+        rerender(root, newState = {}) {
+            let rootElement = root;
+
+            if (typeof root === 'string') {
+                rootElement = container.querySelector(root);
+            }
+
+            const component = instances.find(
+                (instance) => rootElement === instance.rootElement
+            );
+
+            if (!component) {
+                console.error(
+                    `Warning: no component found for the root element: ${root}`
+                );
+
+                return;
+            }
+
+            component.setState(newState);
         },
         destroy() {
-            instance.destroy();
-            rootElement.remove();
-
-            // only remove the container if it has no content
-            if (/^[\n\r\s]*$/.test(container?.innerHTML)) {
-                container.remove();
-            }
-
-            if (renderedRootElements.has(rootElement)) {
-                renderedRootElements.delete(rootElement);
-            }
+            container.remove();
+            if (baseElement !== document.body) baseElement.remove();
+            instances.forEach((instance) => instance.destroy());
+            renderedContainers.delete(container);
         },
     };
 
-    renderedRootElements.set(rootElement, data);
+    renderedContainers.set(container, data);
 
     return data;
 }
 
 function cleanup() {
-    renderedRootElements.forEach(({ destroy }) => destroy());
+    renderedContainers.forEach(({ destroy }) => destroy());
 }
 
 export { render, cleanup };
