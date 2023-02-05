@@ -36,7 +36,7 @@ window.froyojs.createInitializer;
 ### `createInitializer`
 
 ```ts
-createInitializer(componentList: object)
+function createInitializer(componentList: object): function initialize(): Component[]
 ```
 
 Creates an "initializer" function that will initialize components from the HTML when called. The function takes a named list of `Component` subclasses as its only argument.

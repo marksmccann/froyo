@@ -218,8 +218,8 @@ As a matter of convention, references to DOM elements should be retrieved and st
 setup() {
     // highlight-start
     this.elements = {
-        button: this.rootElement.querySelector('button');
-        flavor: this.rootElement.querySelector('.flavor');
+        button: froyojs.querySelector(this.rootElement, 'button');
+        flavor: froyojs.querySelector(this.rootElement, '.flavor');
     };
     // highlight-end
 }
@@ -238,8 +238,8 @@ Event handlers should typically be defined on the instance as a class method, wi
 ```js
 setup() {
     this.elements = {
-        button: this.rootElement.querySelector('button');
-        flavor: this.rootElement.querySelector('.flavor');
+        button: froyojs.querySelector(this.rootElement, 'button');
+        flavor: froyojs.querySelector(this.rootElement, '.flavor');
     };
 
     // highlight-start
@@ -280,8 +280,8 @@ At this point, the component should be fully functional and should look like thi
 class FrozenYogurt extends froyojs.Component {
     setup() {
        this.elements = {
-            button: this.rootElement.querySelector('button');
-            flavor: this.rootElement.querySelector('.flavor');
+            button: froyojs.querySelector(this.rootElement, 'button');
+            flavor: froyojs.querySelector(this.rootElement, '.flavor');
         };
 
         this.listeners = {

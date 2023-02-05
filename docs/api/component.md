@@ -36,8 +36,8 @@ window.froyojs.Component;
 ### `Component`
 
 ```ts
-new Component(root: HTMLElement, initialState: object)
-new Component(root: querySelector, initialState: object)
+new Component(root: HTMLElement, initialState?: object)
+new Component(root: querySelector, initialState?: object)
 ```
 
 `Component` is the base class for Froyo components.
@@ -169,7 +169,7 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 ### `destroy`
 
 ```ts
-destroy();
+function destroy(): void;
 ```
 
 A [lifecycle method](../fundamentals/component-lifecycle.md) responsible for performing cleanup tasks. If included, make sure to call `super.destroy` so that the parent class is properly destroyed.
@@ -187,7 +187,7 @@ class FrozenYogurt extends Component {
 ### `setState`
 
 ```ts
-setState(newState: object)
+function setState(newState: object): void;
 ```
 
 Update the component's state and call all registered observers including the lifecycle methods (e.g. `render`, `update`, `validate`). Only the properties that are changing need to be included in `newState`. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) and ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
@@ -203,7 +203,7 @@ instance.setState({ flavor: 'Chocolate' });
 ### `setup`
 
 ```ts
-setup();
+function setup(): void;
 ```
 
 A [lifecycle method](../fundamentals/component-lifecycle.md) that is called once during initialization, before all other lifecycle methods. It should be used to perform setup tasks including like [creating event listeners](../fundamentals/creating-listeners.md) and [setting the initial state](../fundamentals/component-lifecycle.md#determining-the-initial-state). It should never be called directly.
@@ -219,7 +219,7 @@ class FrozenYogurt extends Component {
 ### `subscribe`
 
 ```ts
-subscribe(observer: function(stateChanges: object, previousState: object, instance: object))
+function subscribe(observer: function (stateChanges: object, previousState: object, instance: object): void): void
 ```
 
 Register a callback function which is called when the state changes, after the lifecycle methods. See ["Observer Pattern"](../advanced/observer-pattern.md) to learn more.
@@ -235,7 +235,7 @@ instance.subscribe((stateChanges) => {
 ### `unsubscribe`
 
 ```ts
-unsubscribe(observer: function)
+function unsubscribe(observer: function(stateChanges: object, previousState: object, instance: object): void): void
 ```
 
 Deregister a callback function that was previously subscribed to the instance. The observer callback must be a direct reference to the same function passed to `subscribe`. Use of this method is uncommon because all registered observers are automatically cleared when the component is destroyed.
@@ -252,7 +252,11 @@ instance.unsubscribe(observer);
 ### `render`
 
 ```ts
-render(stateChanges: object, previousState: object, instance: object)
+function render(
+    stateChanges: object,
+    previousState: object,
+    instance: object
+): void;
 ```
 
 A [lifecycle method](../fundamentals/component-lifecycle.md) that is called when the state updates. It should be used exclusively to update the DOM. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly.
@@ -268,7 +272,11 @@ class FrozenYogurt extends Component {
 ### `update`
 
 ```ts
-update(stateChanges: object, previousState: object, instance: object)
+function update(
+    stateChanges: object,
+    previousState: object,
+    instance: object
+): void;
 ```
 
 A [lifecycle method](../fundamentals/component-lifecycle.md) that is called after every render. It should be used exclusively to perform miscellaneous tasks after a component updates. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly.
@@ -284,7 +292,11 @@ class FrozenYogurt extends Component {
 ### `validate`
 
 ```ts
-validate(stateChanges: object, previousState: object, instance: object)
+function validate(
+    stateChanges: object,
+    previousState: object,
+    instance: object
+): void;
 ```
 
 A [lifecycle method](../fundamentals/component-lifecycle.md) that is called before every render. It should be used exclusively to perform validation tasks relative to the component and its state. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly. See ["Component Validation"](../advanced/component-validation.md) to learn more.

@@ -46,8 +46,22 @@ window.froyojs.createMutationObserver;
 ### `addEventListener`
 
 ```ts
-addEventListener(target: HTMLElement, type: string, callback: fn, useCapture: boolean)
-addEventListener(target: HTMLElement, type: string, callback: fn, options: object)
+function addEventListener(
+    target: HTMLElement,
+    type: string,
+    callback: fn,
+    useCapture?: boolean,
+): {
+    destroy: function(): void,
+}
+function addEventListener(
+    target: HTMLElement,
+    type: string,
+    callback: fn,
+    options?: object
+): {
+    destroy: function(): void,
+}
 ```
 
 Adds an event listener to the specified target element via [EventTarget.addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). It returns an object with a `destroy` function that removes the listener when called.
@@ -65,7 +79,13 @@ class MyComponent extends Component {
 ### `createMediaQueryListener`
 
 ```ts
-createMediaQueryListener(query: mediaQueryString, callback: fn)
+function createMediaQueryListener(
+    query: mediaQueryString,
+    callback: fn,
+): {
+    media: MediaQueryList,
+    destroy: function(): void,
+}
 ```
 
 Creates a `MediaQueryList` for a given media query via [Window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) and adds a change event listener. It returns an object with a reference to the `media` query list instance and a `destroy` function that removes the listener when called.
@@ -92,7 +112,14 @@ class MyComponent extends Component {
 ### `createMutationObserver`
 
 ```ts
-createMutationObserver(target: HTMLElement, callback: fn, options: object)
+function createMutationObserver(
+    target: HTMLElement,
+    callback: fn,
+    options?: object,
+): {
+    observer: MutationObserver,
+    destroy: function(): void
+}
 ```
 
 Creates a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for the specified target element and begins observing it. `options` is passed to the [observe](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe) method. It returns an object with a reference to the `observer` instance and a `destroy` function that disconnects the observer when called.

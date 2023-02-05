@@ -21,4 +21,14 @@ describe('setAttributes', () => {
 
         expect(element).not.toHaveAttribute('id');
     });
+
+    it('should ignore attributes if undefined', () => {
+        const element = createElement('div', { id: 'foo' });
+
+        expect(element).toHaveAttribute('id', 'foo');
+
+        setAttributes(element, { id: undefined });
+
+        expect(element).toHaveAttribute('id', 'foo');
+    });
 });

@@ -27,9 +27,10 @@ This is the `Tabs` class definition using the core features of the framework.
 import PropTypes from 'prop-types';
 import {
     Component,
-    querySelectorAll,
-    setAttributes,
     addEventListener,
+    setAttributes,
+    querySelector,
+    querySelectorAll,
 } from 'froyojs';
 
 class Tabs extends Component {
@@ -49,7 +50,7 @@ class Tabs extends Component {
         const { rootElement } = this;
 
         this.elements = {
-            tablist: rootElement.querySelector('.tabs__tablist'),
+            tablist: querySelector(rootElement, '.tabs__tablist'),
             tabs: querySelectorAll(rootElement, '.tabs__tab'),
             panels: querySelectorAll(rootElement, '.tabs__panel'),
         };
