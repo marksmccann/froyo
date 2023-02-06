@@ -95,7 +95,7 @@ class FrozenYogurt extends Component {
 
 ## Adding Custom Listeners
 
-While likely unnecessary, it is possible to create a custom listener that uses [`this.listeners`](../api/listener-utilities.md). This property expects each key to be a simple object with a "destroy" function. As long as that criteria is met, it can be used with any listener.
+Custom listener can also be assigned to [`this.listeners`](../api/listener-utilities.md). This property expects each key to be a simple object with a "destroy" function. As long as that simple criteria is met, it can be used with any listener.
 
 ```js
 this.listeners = {
@@ -104,6 +104,22 @@ this.listeners = {
             // remove the custom listener ...
         },
     },
+};
+```
+
+For example, the lightweight package [delegate](https://www.npmjs.com/package/delegate) coincidentally supports the same API and can be used to create delegated event listeners that can be assigned directly to the class.
+
+```js
+import delegate from 'delegate';
+
+this.listeners = {
+    myCustomListener: delegate(
+        this.rootElement,
+        '<some selector>',
+        'click',
+        this.handleClick.bind(this),
+        false
+    ),
 };
 ```
 

@@ -1,10 +1,14 @@
 # Typechecking State
 
-This guide explains how to type-checking component state.
+This guide explains how to add type-checking to component state.
 
 ## Introduction
 
 [Type checking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) is the process of verifying and enforcing constraints of types in values. It can be very helpful for catching bugs during the development process. If you have done [typechecking in React](https://reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper), this is likely a familiar concept. In fact, Froyo leverages the same [prop-types](https://github.com/facebook/prop-types) library as React.
+
+<br />
+
+---
 
 ## Adding Typechecking
 

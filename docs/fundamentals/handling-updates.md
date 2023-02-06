@@ -28,7 +28,7 @@ render() {
 
 ## Working with Multiple States
 
-When a component has multiple state properties, use the list of state changes (which is passed as the first argument) to filter updates. As a general rule, only the logic relevant to the state changes should run, the rest should be ignored. Failing to do this properly will lead to a less efficient component that is more difficult to debug.
+When a component has multiple state properties, use the list of state changes (which is passed as the first argument) to filter updates. As a general rule, only the logic relevant to the state changes should run.
 
 ```js
 render(stateChanges) {
@@ -56,7 +56,7 @@ render(stateChanges) {
 
 ## Handling the First Render
 
-Some tasks only need to be performed once, during initialization. To accomplish this, use the class property [`this.initialized`](../api/component.md#initialized). This property is `false` when the lifecycle methods are run for the first time, but is `true` for all subsequent updates.
+Some tasks only need to be performed once, during initialization. To accomplish this, use the class property [`this.initialized`](../api/component.md#initialized). This property is `false` when the [lifecycle methods](./component-lifecycle.md) like `render` are run for the first time, but is `true` for all subsequent updates.
 
 ```js
 render(stateChanges) {

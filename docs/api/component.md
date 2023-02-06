@@ -36,8 +36,7 @@ window.froyojs.Component;
 ### `Component`
 
 ```ts
-new Component(root: HTMLElement, initialState?: object)
-new Component(root: querySelector, initialState?: object)
+new Component(root: HTMLElement | querySelector, initialState?: object)
 ```
 
 `Component` is the base class for Froyo components.

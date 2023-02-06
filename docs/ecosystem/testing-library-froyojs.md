@@ -36,7 +36,7 @@ Froyo Testing Library re-exports everything from DOM Testing Library as well as 
 ### `render`
 
 ```ts
-render(html: HTMLString, initialize: function(): void, options?: object)
+function render(html: HTMLString, initialize: function(): void, options?: RenderOptions): RenderResult
 ```
 
 Renders an HTML string into a container that is appended to the document and then calls `initialize` to instantiate Froyo components.
@@ -62,7 +62,7 @@ test('renders a greeting', () => {
 });
 ```
 
-### `Render` Options
+### `render` Options
 
 #### `container`
 
@@ -117,7 +117,7 @@ const { getByMyQuery } = render(
 
 Learn more about creating [custom queries](https://testing-library.com/docs/dom-testing-library/api-custom-queries/) on the Testing Library website.
 
-### `Render` Result
+### `render` Result
 
 The render method returns an object with the following properties:
 

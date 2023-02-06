@@ -9,12 +9,14 @@ This guide explains how components can be implemented from the HTML.
 
 With just a couple of attributes, Froyo components can be declared and configured directly from the HTML. Once an [initializer](#creating-an-initializer) has been created and called, consumers can build entire pages with functional and dynamic UI components without writing a single line of JavaScript.
 
+<!-- prettier-ignore -->
 ```html
-<div
-    data-initialize="ComponentName"
-    data-initial-state='{"someState": true}'
-></div>
+<div data-initialize="ComponentName" data-initial-state='{"someState": true}'></div>
 ```
+
+<br />
+
+---
 
 ## Creating an Initializer
 
@@ -43,7 +45,7 @@ const instances = initialize();
 
 The initializer uses the `data-initialize` attribute to identify which elements to initialize. Apply this attribute to the desired root element with the name of the desired component as its value.
 
-When the initializer is called, it searches the DOM for every element that has this attribute and pairs its value with the list of components it was given. It then uses that element and the specified component constructor to initialize the component.
+When the initializer is called, it searches the DOM for every element that has this attribute and pairs its value with the list of components it was given. It then uses that element and the specified component constructor to initialize it.
 
 ```html
 <div data-initialize="FrozenYogurt"></div>
@@ -53,7 +55,7 @@ After initialization the `data-initialize` attribute will be removed.
 
 :::info
 
-Removing the `data-initialize` attribute means the initializer to be can be called more than once. This can be useful if other components, not originally present (e.g. injected asynchronously), need to be initialized.
+The removal of the `data-initialize` attribute means the initializer to be can be called more than once. This can be useful if other components, not originally present (e.g. injected asynchronously), need to be initialized.
 
 :::
 

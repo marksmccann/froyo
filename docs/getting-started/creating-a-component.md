@@ -43,12 +43,13 @@ Add the following to the head to import the latest version of Froyo.
 <head>
     <meta charset="utf-8" />
     <title>Froyo Component Example</title>
-    <!-- highlight-next-line -->
+    <!-- highlight-start -->
     <link
         rel="preload"
         href="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.min.js"
         as="script"
     />
+    <!-- highlight-end -->
 </head>
 ```
 
@@ -218,8 +219,8 @@ As a matter of convention, references to DOM elements should be retrieved and st
 setup() {
     // highlight-start
     this.elements = {
-        button: froyojs.querySelector(this.rootElement, 'button');
-        flavor: froyojs.querySelector(this.rootElement, '.flavor');
+        button: this.rootElement.querySelector('button');
+        flavor: this.rootElement.querySelector('.flavor');
     };
     // highlight-end
 }
@@ -238,8 +239,8 @@ Event handlers should typically be defined on the instance as a class method, wi
 ```js
 setup() {
     this.elements = {
-        button: froyojs.querySelector(this.rootElement, 'button');
-        flavor: froyojs.querySelector(this.rootElement, '.flavor');
+        button: this.rootElement.querySelector('button');
+        flavor: this.rootElement.querySelector('.flavor');
     };
 
     // highlight-start
@@ -280,8 +281,8 @@ At this point, the component should be fully functional and should look like thi
 class FrozenYogurt extends froyojs.Component {
     setup() {
        this.elements = {
-            button: froyojs.querySelector(this.rootElement, 'button');
-            flavor: froyojs.querySelector(this.rootElement, '.flavor');
+            button: this.rootElement.querySelector('button');
+            flavor: this.rootElement.querySelector('.flavor');
         };
 
         this.listeners = {

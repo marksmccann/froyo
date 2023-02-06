@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Component from '../src/Component';
 import createElement from '../src/createElement';
 import addEventListener from '../src/addEventListener';
-import querySelector from '../src/querySelector';
 
 describe('component', () => {
     it('should fail if root element is missing', () => {
@@ -145,7 +144,7 @@ describe('component', () => {
                 };
 
                 this.elements = {
-                    foo: querySelector(this.rootElement, 'div'),
+                    foo: this.rootElement.querySelector('div'),
                 };
 
                 this.listeners = {

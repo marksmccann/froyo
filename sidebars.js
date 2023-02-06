@@ -42,6 +42,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    id: 'fundamentals/dom-management',
+                    label: 'DOM Management',
+                },
+                {
+                    type: 'doc',
                     id: 'fundamentals/creating-listeners',
                     label: 'Creating Listeners',
                 },

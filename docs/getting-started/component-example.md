@@ -21,17 +21,11 @@ The initial markup for this component includes the content for three tabs and pa
 
 ## Component Definition
 
-This is the `Tabs` class definition using the core features of the framework.
+This is the `Tabs` class definition using the primary features of the framework.
 
 ```js
 import PropTypes from 'prop-types';
-import {
-    Component,
-    addEventListener,
-    setAttributes,
-    querySelector,
-    querySelectorAll,
-} from 'froyojs';
+import { Component, addEventListener, setAttributes } from 'froyojs';
 
 class Tabs extends Component {
     static get stateTypes() {
@@ -50,9 +44,9 @@ class Tabs extends Component {
         const { rootElement } = this;
 
         this.elements = {
-            tablist: querySelector(rootElement, '.tabs__tablist'),
-            tabs: querySelectorAll(rootElement, '.tabs__tab'),
-            panels: querySelectorAll(rootElement, '.tabs__panel'),
+            tablist: rootElement.querySelector('.tabs__tablist'),
+            tabs: rootElement.querySelectorAll('.tabs__tab'),
+            panels: rootElement.querySelectorAll('.tabs__panel'),
         };
 
         this.listeners = {
@@ -168,8 +162,8 @@ This is what the rendered HTML would look like after initialization.
             class="tabs__tab tabs__tab--active"
             type="button"
             role="tab"
-            id="fU1a7rWg-tab-0"
-            aria-controls="fU1a7rWg-panel-0"
+            id="tab-0"
+            aria-controls="panel-0"
             aria-selected="true"
         >
             Tab 1
@@ -178,8 +172,8 @@ This is what the rendered HTML would look like after initialization.
             class="tabs__tab"
             type="button"
             role="tab"
-            id="fU1a7rWg-tab-1"
-            aria-controls="fU1a7rWg-panel-1"
+            id="tab-1"
+            aria-controls="panel-1"
             aria-selected="false"
         >
             Tab 2
@@ -188,8 +182,8 @@ This is what the rendered HTML would look like after initialization.
             class="tabs__tab"
             type="button"
             role="tab"
-            id="fU1a7rWg-tab-2"
-            aria-controls="fU1a7rWg-panel-2"
+            id="tab-2"
+            aria-controls="panel-2"
             aria-selected="false"
         >
             Tab 3
@@ -198,25 +192,15 @@ This is what the rendered HTML would look like after initialization.
     <div
         class="tabs__panel tabs__panel--active"
         role="panel"
-        id="fU1a7rWg-panel-0"
-        aria-labelledby="fU1a7rWg-tab-0"
+        id="panel-0"
+        aria-labelledby="tab-0"
     >
         Panel 1
     </div>
-    <div
-        class="tabs__panel"
-        role="panel"
-        id="fU1a7rWg-panel-1"
-        aria-labelledby="fU1a7rWg-tab-1"
-    >
+    <div class="tabs__panel" role="panel" id="panel-1" aria-labelledby="tab-1">
         Panel 2
     </div>
-    <div
-        class="tabs__panel"
-        role="panel"
-        id="fU1a7rWg-panel-2"
-        aria-labelledby="fU1a7rWg-tab-2"
-    >
+    <div class="tabs__panel" role="panel" id="panel-2" aria-labelledby="tab-2">
         Panel 3
     </div>
 </div>

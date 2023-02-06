@@ -42,8 +42,8 @@ export default function Home() {
                             <div>
                                 <h3>No sugar added</h3>
                                 <p>
-                                    Build Froyo components with 100%, all
-                                    natural, vanilla JavaScript; no setup
+                                    Build user interface components with 100%,
+                                    all natural, vanilla JavaScript; no setup
                                     required.
                                 </p>
                             </div>
@@ -52,9 +52,8 @@ export default function Home() {
                             <div>
                                 <h3>A low-fat alternative</h3>
                                 <p>
-                                    Weighing-in at less than 2k (gzipped), Froyo
-                                    is a fraction of the size of other UI
-                                    frameworks.
+                                    Weighing-in at 2k (gzipped), Froyo is a
+                                    fraction of the size of other UI frameworks.
                                 </p>
                             </div>
                         </div>
@@ -62,7 +61,7 @@ export default function Home() {
                             <div>
                                 <h3>Treat yourself</h3>
                                 <p>
-                                    Implement Froyo components effortlessly
+                                    Construct user interfaces effortlessly
                                     without JavaScript, directly from the HTML.
                                 </p>
                             </div>

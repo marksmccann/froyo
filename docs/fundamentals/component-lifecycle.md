@@ -63,7 +63,7 @@ class FrozenYogurt extends Component {
 
 ## Setting State Correctly
 
-The state cannot be updated directly. In fact, if you attempt to do so before the component has initialized, it will not work and an error message will log to the console.
+The state cannot be updated directly. In fact, if you attempt to do so after the component has initialized, it will not work and an error message will log to the console.
 
 ```js
 // Incorrect
@@ -90,7 +90,7 @@ Instead, use [`setState`](../api/component.md#setstate) which will update the st
 this.setState({ flavor: 'Vanilla' });
 ```
 
-The only place where it is appropriate to set `this.state` directly is in `setup`.
+The only place where it is appropriate to set `this.state` directly is in [`setup`](../api/component.md#setup), before the component has initialized.
 
 <br />
 
@@ -98,7 +98,7 @@ The only place where it is appropriate to set `this.state` directly is in `setup
 
 ## Determining the Initial State
 
-When a component begins initialization, before the `setup` method is called, data is collected, merged, and assigned to `this.state`. In reverse order of priority, the data is collected from the following three sources:
+When a component begins initialization, data regarding its state is collected, merged, and saved. In reverse order of priority, the data is collected from the following three sources:
 
 1\. The [`defaultState`](../api/component.md#defaultstate) from the class definition.
 
@@ -112,7 +112,7 @@ class FrozenYogurt extends Component {
 }
 ```
 
-2\. The `data-initial-state` HTML attribute from the root element.
+2\. The `data-initial-state` HTML attribute on the root element.
 
 :::info
 
@@ -127,16 +127,16 @@ The value of this attribute must be valid JSON. See ["HTML-only Usage"](./html-o
 3\. The `initialState` passed to the second argument of the constructor.
 
 ```js
-const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
+new FrozenYogurt('#root', { flavor: 'Vanilla' });
 ```
 
 <br />
 
-By the time `setup` is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
+By the time [`setup`](../api/component.md#setup) is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
 
 :::info
 
-Sometimes, initial state properties must be set dynamically (e.g. referencing the viewport width to determine the initial layout of a component). This is the appropriate place to perform that logic. Alternatively, calling `setState` from the `update` method would also be appropriate, if the logic can wait until after the initial render of the component.
+Sometimes, initial state properties must be set dynamically (e.g. referencing the viewport width to determine the initial layout of a component). This is the appropriate place to perform that logic. Alternatively, calling `setState` from [`update`](../api/component.md#update) would also be appropriate (if the logic can wait until after the initial render).
 
 :::
 

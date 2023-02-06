@@ -49,16 +49,8 @@ window.froyojs.createMutationObserver;
 function addEventListener(
     target: HTMLElement,
     type: string,
-    callback: fn,
-    useCapture?: boolean,
-): {
-    destroy: function(): void,
-}
-function addEventListener(
-    target: HTMLElement,
-    type: string,
-    callback: fn,
-    options?: object
+    callback: function(event): void,
+    useCapture?: boolean | object,
 ): {
     destroy: function(): void,
 }

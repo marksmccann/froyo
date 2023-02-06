@@ -5,8 +5,6 @@ import TabItem from '@theme/TabItem';
 
 ## Node
 
-Install Froyo in node with NPM.
-
 <Tabs>
 <TabItem value="npm" label="npm" default>
 
@@ -25,8 +23,6 @@ yarn add froyojs
 </Tabs>
 
 ## Browser (CDN)
-
-Install Froyo in the browser with a CDN.
 
 <Tabs>
 <TabItem value="production" label="Prod" default>

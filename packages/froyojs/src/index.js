@@ -4,6 +4,4 @@ export { default as addEventListener } from './addEventListener';
 export { default as createMutationObserver } from './createMutationObserver';
 export { default as createMediaQueryListener } from './createMediaQueryListener';
 export { default as createElement } from './createElement';
-export { default as querySelector } from './querySelector';
-export { default as querySelectorAll } from './querySelectorAll';
 export { default as setAttributes } from './setAttributes';

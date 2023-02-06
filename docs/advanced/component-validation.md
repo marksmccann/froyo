@@ -6,6 +6,10 @@ This guide explains the concept of component validation.
 
 Component validation is the process of making sure the component is working properly throughout its lifecycle. When issues are identified, consumers should be informed via thrown errors or console messaging. While optional, this validation creates a better experience during the development process. There are various aspects of a component that can be validated. However, the most common are the [initial HTML](#validating-the-initial-html) and [state](#validating-state).
 
+<br />
+
+---
+
 ## Adding Validation
 
 To add validation to a component, include the [`validate`](../api/component.md#validate) lifecycle method on the class definition. Use the arguments provided to this callback to filter the validators. See ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
@@ -17,6 +21,10 @@ class FrozenYogurt extends Component {
     }
 }
 ```
+
+<br />
+
+---
 
 ## Validating the Initial HTML
 
@@ -31,6 +39,10 @@ validate() {
     }
 }
 ```
+
+<br />
+
+---
 
 ## Validating State
 

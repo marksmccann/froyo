@@ -4,7 +4,7 @@ This guide explains how to add other components to an instance.
 
 ## Adding a Subcomponent
 
-While not common, there may be times you will want to instantiate a component within another. To do so, instantiate the component within [`setup`](../api/component.md#setup) and assign the instance to [`this.components`](../api/component.md#components).
+There are times a component needs to instantiate another component within itself. These nested components are are known as "subcomponents". To create one, initialize the subcomponent and assign it to [`this.components`](../api/component.md#components) from within [`setup`](../api/component.md#setup).
 
 ```js
 // subcomponent
@@ -24,6 +24,10 @@ class FrozenYogurt extends Component {
 }
 ```
 
+<br />
+
+---
+
 ## Responding to Subcomponent Events
 
 Use the ["External Control"](./external-control.md) technique to respond to events triggered by the subcomponent.
@@ -37,6 +41,10 @@ this.components = {
     }),
 };
 ```
+
+<br />
+
+---
 
 ## Updating the Subcomponent
 
