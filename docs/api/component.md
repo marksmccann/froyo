@@ -189,7 +189,7 @@ class FrozenYogurt extends Component {
 function setState(newState: object): void;
 ```
 
-Update the component's state and call all registered observers including the lifecycle methods (e.g. `render`, `update`, `validate`). Only the properties that are changing need to be included in `newState`. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) and ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
+A method that updates the component's state and calls all [registered observers](../advanced/observer-pattern.md) including the lifecycle methods (e.g. `render`, `update`, `validate`). Only the properties that are changing need to be included in `newState`. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) and ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
 
 ```js
 const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
@@ -205,7 +205,7 @@ instance.setState({ flavor: 'Chocolate' });
 function setup(): void;
 ```
 
-A [lifecycle method](../fundamentals/component-lifecycle.md) that is called once during initialization, before all other lifecycle methods. It should be used to perform setup tasks including like [creating event listeners](../fundamentals/creating-listeners.md) and [setting the initial state](../fundamentals/component-lifecycle.md#determining-the-initial-state). It should never be called directly.
+A [lifecycle method](../fundamentals/component-lifecycle.md) that is called once during initialization, before all other lifecycle methods. It should be used to perform setup tasks like [creating event listeners](../fundamentals/creating-listeners.md) and [setting the initial state](../fundamentals/component-lifecycle.md#determining-the-initial-state). It should never be called directly.
 
 ```js
 class FrozenYogurt extends Component {

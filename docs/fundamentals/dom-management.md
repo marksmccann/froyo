@@ -31,7 +31,7 @@ class FrozenYogurt extends Component {
 
 ## Creating Elements
 
-Use the utility function [`createElement`](../api/dom-utilities.md#createelement) to generate elements. Assign these elements to [`this.elements`](../api/component.md#elements) from within the `setup` method so they can be referenced from elsewhere in the class.
+For convenience, use the utility function [`createElement`](../api/dom-utilities.md#createelement) to generate elements with attributes and content. Assign these elements to [`this.elements`](../api/component.md#elements) from within the `setup` method so they can be referenced from elsewhere in the class.
 
 ```js
 import { Component, createElement } from 'froyojs';
@@ -55,7 +55,7 @@ class FrozenYogurt extends Component {
 
 ## Setting Attributes
 
-From within the [`render`](../api/component.md#render) method, use the utility function [`setAttributes`](../api/dom-utilities.md#setattributes) to add, change, or remove attributes from an element.
+For convenience, use the utility function [`setAttributes`](../api/dom-utilities.md#setattributes) to add, change, or remove attributes from an element at once.
 
 ```js
 import { Component, setAttributes } from 'froyojs';

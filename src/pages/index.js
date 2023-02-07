@@ -42,9 +42,8 @@ export default function Home() {
                             <div>
                                 <h3>No sugar added</h3>
                                 <p>
-                                    Build user interface components with 100%,
-                                    all natural, vanilla JavaScript; no setup
-                                    required.
+                                    Build UI components with 100%, all natural,
+                                    vanilla JavaScript; no setup required.
                                 </p>
                             </div>
                         </div>
