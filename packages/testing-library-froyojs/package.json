@@ -19,6 +19,12 @@
         "type": "git",
         "url": "https://github.com/marksmccann/froyo"
     },
+    "keywords": [
+        "tests",
+        "testing-library",
+        "froyojs",
+        "froyo"
+    ],
     "peerDependencies": {
         "froyojs": "*"
     },

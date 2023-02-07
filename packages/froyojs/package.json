@@ -20,6 +20,13 @@
         "type": "git",
         "url": "https://github.com/marksmccann/froyo"
     },
+    "keywords": [
+        "vanilla",
+        "framework",
+        "ui",
+        "component",
+        "froyo"
+    ],
     "dependencies": {
         "@babel/runtime": "^7.20.7",
         "prop-types": "^15.8.1"
