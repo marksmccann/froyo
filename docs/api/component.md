@@ -384,7 +384,7 @@ class FrozenYogurt extends Component {
 
 -   type: `array`
 
-A read-only list of every active instance of the component and its subclasses. This feature is useful to gain access to instances created in different scope.
+A read-only list of every active instance of the component and its subclasses. This feature is useful to gain access to instances created in a different scope.
 
 ```js
 console.log(Component.instances); // [Component, Component, ...]

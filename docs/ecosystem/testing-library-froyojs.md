@@ -76,11 +76,15 @@ const result = render('<div id="root"></div>', () => new HelloWorld('#root'), {
 });
 ```
 
-If you forget or choose not to append the container to the document, passing a selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
+:::info
+
+If you choose not to append the container to the document, keep in mind that passing a raw selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
 
 ```js
 new HelloWorld(container.querySelector('#root'));
 ```
+
+:::
 
 #### `baseElement`
 
@@ -94,11 +98,15 @@ const result = render('<div id="root"></div>', () => new HelloWorld('#root'), {
 });
 ```
 
-If you forget or choose not to append the base element or container to the document, passing a selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
+:::info
+
+If the base element you provided is not appended to the document, keep in mind that passing a raw selector to the Froyo component constructor will not work because it will not be able to find the element. You will need to pass a direct reference to the HTML element instead.
 
 ```js
-new HelloWorld(container.querySelector('#root'));
+new HelloWorld(baseElement.querySelector('#root'));
 ```
+
+:::
 
 #### `queries`
 
@@ -160,7 +168,7 @@ rerender('#root', { message: 'Goodbye, World!' });
 
 #### `destroy`
 
-This will destroy the component instance and remove the associated root element from the DOM. If a `container` was specified, it will also be removed from the DOM if it no longer has any content.
+This will destroy the component instance(s) and remove the container element from the DOM.
 
 ```js
 import { render } from '@testing-library/react';
