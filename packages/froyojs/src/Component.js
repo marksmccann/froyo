@@ -12,6 +12,8 @@ export default class Component {
 
     #components = new Map();
 
+    #elements = {};
+
     #initialized = false;
 
     #listeners = new Map();
@@ -48,6 +50,28 @@ export default class Component {
         const { name, displayName } = this.constructor;
 
         return displayName || name;
+    }
+
+    get elements() {
+        return { ...this.#elements };
+    }
+
+    set elements(newElements) {
+        Object.entries(newElements).forEach(([key, value]) => {
+            if (value instanceof Node || value === null) {
+                this.#elements[key] = value;
+                return;
+            }
+
+            if (value instanceof NodeList || value instanceof HTMLCollection) {
+                this.#elements[key] = Array.from(value);
+                return;
+            }
+
+            console.error(
+                `Warning: value assigned to "elements.${key}" is not a valid DOM node`
+            );
+        });
     }
 
     get listeners() {

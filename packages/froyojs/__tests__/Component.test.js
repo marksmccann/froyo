@@ -172,11 +172,46 @@ describe('component', () => {
         instance.destroy();
     });
 
+    it('should assign valid DOM nodes to elements property', () => {
+        class Foo extends Component {
+            setup() {
+                this.elements = {
+                    null: null,
+                    createElement: createElement('div'),
+                    querySelector: this.rootElement.querySelector('div'),
+                    textNode: document.createTextNode('foo'),
+                    selectorAll: this.rootElement.querySelectorAll('div'),
+                    byTagName: this.rootElement.getElementsByTagName('div'),
+                };
+            }
+
+            render() {}
+        }
+        const rootElement = createElement(
+            'div',
+            null,
+            `<div></div><div></div>`
+        );
+        const instance = new Foo(rootElement);
+
+        expect(instance.elements.null).toBeNull();
+        expect(instance.elements.createElement).toBeInstanceOf(Node);
+        expect(instance.elements.querySelector).toBeInstanceOf(Node);
+        expect(instance.elements.textNode).toBeInstanceOf(Node);
+        expect(Array.isArray(instance.elements.selectorAll)).toBe(true);
+        expect(instance.elements.selectorAll).toHaveLength(2);
+        expect(Array.isArray(instance.elements.byTagName)).toBe(true);
+        expect(instance.elements.byTagName).toHaveLength(2);
+
+        instance.destroy();
+    });
+
     it('should fail if property assignments are invalid', () => {
         global.consoleErrorSpy.mockImplementation(() => {});
 
         class Foo extends Component {
             setup() {
+                this.elements = { foo: '' };
                 this.components = { foo: null };
                 this.listeners = { foo: null };
             }
@@ -188,12 +223,16 @@ describe('component', () => {
 
         expect(instance.components.foo).toBeUndefined();
         expect(instance.listeners.foo).toBeUndefined();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(2);
+        expect(instance.elements.foo).toBeUndefined();
+        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(3);
         expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not an instance of "Component"')
         );
         expect(global.consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is missing a "destroy" function')
+        );
+        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+            expect.stringContaining('is not a valid DOM node')
         );
 
         instance.destroy();

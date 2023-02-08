@@ -157,6 +157,7 @@
   // stores references to component instances
   const instances = new Set();
   var _components = /*#__PURE__*/new WeakMap();
+  var _elements = /*#__PURE__*/new WeakMap();
   var _initialized = /*#__PURE__*/new WeakMap();
   var _listeners = /*#__PURE__*/new WeakMap();
   var _observers = /*#__PURE__*/new WeakMap();
@@ -189,12 +190,31 @@
       } = this.constructor;
       return displayName || name;
     }
+    get elements() {
+      return {
+        ..._classPrivateFieldGet(this, _elements)
+      };
+    }
+    set elements(newElements) {
+      Object.entries(newElements).forEach(_ref2 => {
+        let [key, value] = _ref2;
+        if (value instanceof Node || value === null) {
+          _classPrivateFieldGet(this, _elements)[key] = value;
+          return;
+        }
+        if (value instanceof NodeList || value instanceof HTMLCollection) {
+          _classPrivateFieldGet(this, _elements)[key] = Array.from(value);
+          return;
+        }
+        console.error(`Warning: value assigned to "elements.${key}" is not a valid DOM node`);
+      });
+    }
     get listeners() {
       return Object.fromEntries(_classPrivateFieldGet(this, _listeners));
     }
     set listeners(newListeners) {
-      Object.entries(newListeners).forEach(_ref2 => {
-        let [key, value] = _ref2;
+      Object.entries(newListeners).forEach(_ref3 => {
+        let [key, value] = _ref3;
         if (typeof value?.destroy !== 'function') {
           console.error(`Warning: listener "${key}" is missing a "destroy" function`);
           return;
@@ -228,6 +248,10 @@
       _classPrivateFieldInitSpec(this, _components, {
         writable: true,
         value: new Map()
+      });
+      _classPrivateFieldInitSpec(this, _elements, {
+        writable: true,
+        value: {}
       });
       _classPrivateFieldInitSpec(this, _initialized, {
         writable: true,
@@ -313,8 +337,8 @@
       const stateChanges = {};
 
       // identify state properties that have changed
-      Object.entries(newState).forEach(_ref3 => {
-        let [key, value] = _ref3;
+      Object.entries(newState).forEach(_ref4 => {
+        let [key, value] = _ref4;
         if (value !== previousState[key]) {
           stateChanges[key] = value;
         }

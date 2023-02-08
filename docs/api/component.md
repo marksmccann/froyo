@@ -85,7 +85,7 @@ class FrozenYogurt extends Component {
 
 -   type: `object`
 
-A user-defined object for storing references to DOM elements.
+A user-defined object for storing references to DOM elements. Only valid instances of DOM nodes and lists (e.g. `Element`, `NodeList`, `TextNode`, `HTMLCollection`, etc.) can be applied to this property. Node lists are automatically converted to an traditionally `Array`. View ["Selecting Elements"](../fundamentals/dom-management.md#selecting-elements) to learn more.
 
 :::tip
 
