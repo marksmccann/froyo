@@ -12,6 +12,7 @@
     },
     "author": "Mark McCann <marksmccann@gmail.com>",
     "license": "MIT",
+    "sideEffects": false,
     "files": [
         "dist"
     ],
