@@ -470,6 +470,12 @@
     return element;
   }
 
+  function setClasses(target, classes) {
+    Object.entries(classes).forEach(entry => {
+      target.classList[entry[1] ? 'add' : 'remove'](entry[0]);
+    });
+  }
+
   exports.Component = Component;
   exports.addEventListener = addEventListener;
   exports.createElement = createElement;
@@ -477,5 +483,6 @@
   exports.createMediaQueryListener = createMediaQueryListener;
   exports.createMutationObserver = createMutationObserver;
   exports.setAttributes = setAttributes;
+  exports.setClasses = setClasses;
 
 }));

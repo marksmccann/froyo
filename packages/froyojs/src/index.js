@@ -5,3 +5,4 @@ export { default as createMutationObserver } from './createMutationObserver';
 export { default as createMediaQueryListener } from './createMediaQueryListener';
 export { default as createElement } from './createElement';
 export { default as setAttributes } from './setAttributes';
+export { default as setClasses } from './setClasses';

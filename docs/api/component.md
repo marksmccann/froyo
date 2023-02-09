@@ -218,7 +218,13 @@ class FrozenYogurt extends Component {
 ### `subscribe`
 
 ```ts
-function subscribe(observer: function (stateChanges: object, previousState: object, instance: object): void): void
+function subscribe(
+    observer: function (
+        stateChanges: object,
+        previousState: object,
+        instance: object
+    ): void
+): void
 ```
 
 Register a callback function which is called when the state changes, after the lifecycle methods. See ["Observer Pattern"](../advanced/observer-pattern.md) to learn more.
@@ -234,7 +240,13 @@ instance.subscribe((stateChanges) => {
 ### `unsubscribe`
 
 ```ts
-function unsubscribe(observer: function(stateChanges: object, previousState: object, instance: object): void): void
+function unsubscribe(
+    observer: function(
+        stateChanges: object,
+        previousState: object,
+        instance: object
+    ): void
+): void
 ```
 
 Deregister a callback function that was previously subscribed to the instance. The observer callback must be a direct reference to the same function passed to `subscribe`. Use of this method is uncommon because all registered observers are automatically cleared when the component is destroyed.

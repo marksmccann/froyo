@@ -25,7 +25,12 @@ This is the `Tabs` class definition using the primary features of the framework.
 
 ```js
 import PropTypes from 'prop-types';
-import { Component, addEventListener, setAttributes } from 'froyojs';
+import {
+    Component,
+    addEventListener,
+    setAttributes,
+    setClasses,
+} from 'froyojs';
 
 class Tabs extends Component {
     static get stateTypes() {
@@ -114,23 +119,14 @@ class Tabs extends Component {
 
         if ('activeTab' in stateChanges) {
             tabs.forEach((tab, index) => {
-                setAttributes(tab, {
-                    'aria-selected': activeTab === index,
-                });
-
-                if (activeTab === index) {
-                    tab.classList.add('tabs__tab--active');
-                } else {
-                    tab.classList.remove('tabs__tab--active');
-                }
+                setAttributes(tab, { 'aria-selected': activeTab === index });
+                setClasses(tab, { 'tabs__tab--active': activeTab === index });
             });
 
             panels.forEach((panel, index) => {
-                if (activeTab === index) {
-                    panel.classList.add('tabs__panel--active');
-                } else {
-                    panel.classList.remove('tabs__panel--active');
-                }
+                setClasses(panel, {
+                    'tabs__panel--active': activeTab === index,
+                });
             });
         }
     }

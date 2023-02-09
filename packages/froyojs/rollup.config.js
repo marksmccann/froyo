@@ -1,7 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
-import filesize from 'rollup-plugin-filesize';
 import replace from '@rollup/plugin-replace';
 import { babel } from '@rollup/plugin-babel';
 
@@ -39,7 +38,6 @@ export default [
                 },
             }),
             terser(),
-            filesize(),
         ],
     },
 ];

@@ -11,14 +11,14 @@ This page contains a detailed API reference for various DOM-related convenience 
 <TabItem value="es6" label="ES6" default>
 
 ```js
-import { createElement, setAttributes } from 'froyojs';
+import { createElement, setAttributes, setClasses } from 'froyojs';
 ```
 
 </TabItem>
 <TabItem value="commonjs" label="CommonJS">
 
 ```js
-const { createElement, setAttributes } = require('froyojs');
+const { createElement, setAttributes, setClasses } = require('froyojs');
 ```
 
 </TabItem>
@@ -27,6 +27,7 @@ const { createElement, setAttributes } = require('froyojs');
 ```js
 window.froyojs.createElement;
 window.froyojs.setAttributes;
+window.froyojs.setClasses;
 ```
 
 </TabItem>
@@ -60,7 +61,7 @@ class MyComponent extends Component {
 ### `setAttributes`
 
 ```ts
-function setAttributes(attributesList: object): void;
+function setAttributes(target: HTMLElement, attributes?: object): void;
 ```
 
 Sets multiple attributes on an element simultaneously. If a value is `null`, the corresponding attribute will be removed. If it is `undefined` it will be ignored and the attribute will not be updated.
@@ -73,6 +74,25 @@ class MyComponent extends Component {
             id: 'bar',
             'aria-hidden': null, // removes attribute
             'data-foo': undefined, // ignored
+        });
+    }
+}
+```
+
+### `setClasses`
+
+```ts
+function setClasses(target: HTMLElement, classes: object): void;
+```
+
+Adds and/or removes CSS classes to/from an element's class list. Each key in the `classes` object is the class that should be added or removed. If the corresponding value is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) it will be added, otherwise it will be removed.
+
+```js
+class MyComponent extends Component {
+    render() {
+        setClasses(this.rootElement, {
+            foo: true, // adds "foo" class
+            bar: false, // removes "bar" class
         });
     }
 }

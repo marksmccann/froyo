@@ -51,7 +51,7 @@ export default function Home() {
                             <div>
                                 <h3>A low-fat alternative</h3>
                                 <p>
-                                    Weighing-in at 2k (gzipped), Froyo is a
+                                    Weighing-in at 3k (gzipped), Froyo is a
                                     fraction of the size of other UI frameworks.
                                 </p>
                             </div>
