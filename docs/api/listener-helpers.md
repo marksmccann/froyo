@@ -1,9 +1,9 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Listener Utilities
+# Listener Helpers
 
-This page contains a detailed API reference for various convenience utilities related to listeners.
+This page contains a detailed API reference for various convenience helpers related to listeners.
 
 ## Import
 

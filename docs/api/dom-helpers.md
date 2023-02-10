@@ -1,9 +1,9 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# DOM Utilities
+# DOM Helpers
 
-This page contains a detailed API reference for various DOM-related convenience utilities.
+This page contains a detailed API reference for various DOM-related convenience helpers.
 
 ## Import
 

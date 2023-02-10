@@ -89,7 +89,7 @@ A user-defined object for storing references to DOM elements. Only valid instanc
 
 :::tip
 
-Review our [DOM utilities](dom-utilities) to see how they can help you apply elements to this property.
+Review our [DOM helpers](./dom-helpers.md) to see how they can help you apply elements to this property.
 
 :::
 
@@ -122,7 +122,7 @@ A user-defined object for storing data related to listeners (e.g. [event listene
 
 :::tip
 
-Review our [listener utilities](listener-utilities) to see how they can help you apply listeners to this property.
+Review our [listener helpers](./listener-helpers.md) to see how they can help you apply listeners to this property.
 
 :::
 
@@ -179,6 +179,32 @@ class FrozenYogurt extends Component {
         // perform cleanup tasks ...
 
         super.destroy(); // cleanup parent
+    }
+}
+```
+
+### `render`
+
+```ts
+function render(
+    stateChanges: object,
+    previousState: object,
+    instance: object
+): void;
+```
+
+A [lifecycle method](../fundamentals/component-lifecycle.md) that is called when the state updates. It should be used exclusively to update the DOM. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly.
+
+:::tip
+
+Review our [DOM helpers](./dom-helpers.md) to see how they can help you update the DOM.
+
+:::
+
+```js
+class FrozenYogurt extends Component {
+    render() {
+        // update the DOM ...
     }
 }
 ```
@@ -258,26 +284,6 @@ function observer() {}
 
 instance.subscribe(observer);
 instance.unsubscribe(observer);
-```
-
-### `render`
-
-```ts
-function render(
-    stateChanges: object,
-    previousState: object,
-    instance: object
-): void;
-```
-
-A [lifecycle method](../fundamentals/component-lifecycle.md) that is called when the state updates. It should be used exclusively to update the DOM. The arguments provided should be used to perform [conditional updates](../fundamentals/handling-updates.md). It should never be called directly.
-
-```js
-class FrozenYogurt extends Component {
-    render() {
-        // update the DOM ...
-    }
-}
 ```
 
 ### `update`

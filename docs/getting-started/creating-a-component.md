@@ -228,7 +228,7 @@ setup() {
 
 ### Add Event Listener
 
-Event listeners should also be created in `setup`. Create them with the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
+Event listeners should also be created in `setup`. Create them with the [`addEventListener`](../api/listener-helpers.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
 
 :::info
 

@@ -105,13 +105,13 @@ module.exports = {
                 },
                 {
                     type: 'doc',
-                    id: 'api/dom-utilities',
-                    label: 'DOM Utilities',
+                    id: 'api/dom-helpers',
+                    label: 'DOM Helpers',
                 },
                 {
                     type: 'doc',
-                    id: 'api/listener-utilities',
-                    label: 'Listener Utilities',
+                    id: 'api/listener-helpers',
+                    label: 'Listener Helpers',
                 },
             ],
         },

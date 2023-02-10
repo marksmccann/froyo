@@ -4,7 +4,7 @@ This guide explains how to create and add various listeners to a component.
 
 ## Adding Event Listeners
 
-To add an event listener, use the [`addEventListener`](../api/listener-utilities.md#addeventlistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
+To add an event listener, use the [`addEventListener`](../api/listener-helpers.md#addeventlistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, addEventListener } from 'froyojs';
@@ -24,7 +24,7 @@ class FrozenYogurt extends Component {
 
 ## Creating Mutation Observers
 
-To create a [mutation observer](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), use the [`createMutationObserver`](../api/listener-utilities.md#createmutationobserver) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
+To create a [mutation observer](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), use the [`createMutationObserver`](../api/listener-helpers.md#createmutationobserver) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, createMutationObserver } from 'froyojs';
@@ -46,7 +46,7 @@ class FrozenYogurt extends Component {
 
 ## Creating Media Query Listeners
 
-To create a listener for media queries (via [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)), use the [`createMediaQueryListener`](../api/listener-utilities.md#createmediaquerylistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
+To create a listener for media queries (via [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)), use the [`createMediaQueryListener`](../api/listener-helpers.md#createmediaquerylistener) utility and store the result directly to an object that is assigned to [`this.listeners`](../api/component.md#listeners).
 
 ```js
 import { Component, createMediaQueryListener } from 'froyojs';
@@ -95,7 +95,7 @@ class FrozenYogurt extends Component {
 
 ## Adding Custom Listeners
 
-Custom listener can also be assigned to [`this.listeners`](../api/listener-utilities.md). This property expects each key to be a simple object with a "destroy" function. As long as that simple criteria is met, it can be used with any listener.
+Custom listener can also be assigned to [`this.listeners`](../api/listener-helpers.md). This property expects each key to be a simple object with a "destroy" function. As long as that simple criteria is met, it can be used with any listener.
 
 ```js
 this.listeners = {
