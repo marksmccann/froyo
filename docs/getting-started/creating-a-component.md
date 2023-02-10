@@ -17,7 +17,7 @@ Goal: Create a boilerplate page and open it in a browser.
 
 ### Create page from template
 
-Let's begin with a basic HTML template; copy it to a HTML file and open it in a browser.
+Let's begin with a basic HTML 5 template; copy it to a HTML file and open it in a browser.
 
 ```html
 <!DOCTYPE html>
@@ -28,29 +28,8 @@ Let's begin with a basic HTML template; copy it to a HTML file and open it in a 
     </head>
     <body>
         <!-- content goes here -->
-        <script>
-            /* scripts go here */
-        </script>
     </body>
 </html>
-```
-
-### Import Froyo from CDN
-
-Add the following to the head to import the latest version of Froyo.
-
-```html
-<head>
-    <meta charset="utf-8" />
-    <title>Froyo Component Example</title>
-    <!-- highlight-start -->
-    <link
-        rel="preload"
-        href="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.min.js"
-        as="script"
-    />
-    <!-- highlight-end -->
-</head>
 ```
 
 ### Add the Root Element
@@ -65,10 +44,32 @@ Every Froyo component is required to have a root element. The root element is an
 
 ```html
 <body>
-    <!-- highlight-next-line -->
     <div id="root"></div>
+</body>
+```
+
+### Import Froyo from CDN
+
+Add the following script to the bottom of the document to import the latest development version of Froyo.
+
+```html
+<body>
+    ...
+    <!-- highlight-start -->
+    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.js"></script>
+    <!-- highlight-end -->
+</body>
+```
+
+### Add Script Tag
+
+Add an empty script tag to the bottom of the document. This is where we will be working.
+
+```html
+<body>
+    ...
     <script>
-        /* scripts go here */
+        /* scripts will go here */
     </script>
 </body>
 ```

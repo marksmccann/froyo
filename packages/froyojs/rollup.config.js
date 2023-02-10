@@ -17,6 +17,12 @@ export default [
             nodeResolve({ browser: true }),
             commonjs(),
             babel({ babelHelpers: 'bundled' }),
+            replace({
+                preventAssignment: true,
+                values: {
+                    'process.env.NODE_ENV': JSON.stringify('development'),
+                },
+            }),
         ],
     },
     {

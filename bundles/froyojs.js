@@ -77,7 +77,7 @@
    * LICENSE file in the root directory of this source tree.
    */
   var printWarning = function () {};
-  if (process.env.NODE_ENV !== 'production') {
+  {
     var ReactPropTypesSecret = requireReactPropTypesSecret();
     var loggedTypeFailures = {};
     var has = requireHas();
@@ -107,7 +107,7 @@
    * @private
    */
   function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
-    if (process.env.NODE_ENV !== 'production') {
+    {
       for (var typeSpecName in typeSpecs) {
         if (has(typeSpecs, typeSpecName)) {
           var error;
@@ -147,7 +147,7 @@
    * @private
    */
   checkPropTypes.resetWarningCache = function () {
-    if (process.env.NODE_ENV !== 'production') {
+    {
       loggedTypeFailures = {};
     }
   };
@@ -357,7 +357,7 @@
         });
 
         // validate data types of state in non-production
-        if (process.env.NODE_ENV !== 'production') {
+        {
           checkPropTypes$1(stateTypes, nextState, 'state', this.displayName);
         }
 
