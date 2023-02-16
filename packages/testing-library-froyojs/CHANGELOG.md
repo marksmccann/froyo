@@ -1,3 +1,15 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [0.3.7](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.6...testing-library-froyojs@0.3.7) (2023-02-16)
+
+### Bug Fixes
+
+-   add changelog to package ([38ac4dc](https://github.com/marksmccann/froyo/commit/38ac4dc17776f090a77c99df5488bdf0c974a3de))
+-   add keywords to package.json ([1e89b94](https://github.com/marksmccann/froyo/commit/1e89b9468747874bc9a0c4b2df068d1d670348fe))
+
 ## [0.3.6](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.6...testing-library-froyojs@0.3.6) (2023-02-16)
 
 ### Bug Fixes

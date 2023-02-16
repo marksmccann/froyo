@@ -1,3 +1,17 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [0.5.3](https://github.com/marksmccann/froyo/compare/froyojs@0.5.2...froyojs@0.5.3) (2023-02-16)
+
+### Bug Fixes
+
+-   add changelog to package ([38ac4dc](https://github.com/marksmccann/froyo/commit/38ac4dc17776f090a77c99df5488bdf0c974a3de))
+-   add keywords to package.json ([1e89b94](https://github.com/marksmccann/froyo/commit/1e89b9468747874bc9a0c4b2df068d1d670348fe))
+-   correct dev build for the UMD bundle ([316d217](https://github.com/marksmccann/froyo/commit/316d2175b3891464e8405332a6aac1cc432d9577))
+-   use rollup to create es and cjs bundles ([b46f2f6](https://github.com/marksmccann/froyo/commit/b46f2f68b2155a90bd16f36510a1f8224a278121))
+
 ## [0.5.2](https://github.com/marksmccann/froyo/compare/froyojs@0.5.2...froyojs@0.5.2) (2023-02-16)
 
 ### Bug Fixes
