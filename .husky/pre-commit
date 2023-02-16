@@ -2,4 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx pretty-quick --staged
-npx lerna run build:umd --since HEAD && git add bundles
+npx lerna run build --since HEAD --scope=froyojs && git add packages/froyojs/bundles

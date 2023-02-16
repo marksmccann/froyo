@@ -4,47 +4,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.froyojs = {}));
 })(this, (function (exports) { 'use strict';
 
-  function _classPrivateFieldGet(receiver, privateMap) {
-    var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get");
-    return _classApplyDescriptorGet(receiver, descriptor);
-  }
-  function _classPrivateFieldSet(receiver, privateMap, value) {
-    var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set");
-    _classApplyDescriptorSet(receiver, descriptor, value);
-    return value;
-  }
-  function _classExtractFieldDescriptor(receiver, privateMap, action) {
-    if (!privateMap.has(receiver)) {
-      throw new TypeError("attempted to " + action + " private field on non-instance");
-    }
-    return privateMap.get(receiver);
-  }
-  function _classApplyDescriptorGet(receiver, descriptor) {
-    if (descriptor.get) {
-      return descriptor.get.call(receiver);
-    }
-    return descriptor.value;
-  }
-  function _classApplyDescriptorSet(receiver, descriptor, value) {
-    if (descriptor.set) {
-      descriptor.set.call(receiver, value);
-    } else {
-      if (!descriptor.writable) {
-        throw new TypeError("attempted to set read only private field");
-      }
-      descriptor.value = value;
-    }
-  }
-  function _checkPrivateRedeclaration(obj, privateCollection) {
-    if (privateCollection.has(obj)) {
-      throw new TypeError("Cannot initialize the same private elements twice on an object");
-    }
-  }
-  function _classPrivateFieldInitSpec(obj, privateMap, value) {
-    _checkPrivateRedeclaration(obj, privateMap);
-    privateMap.set(obj, value);
-  }
-
   /**
    * Copyright (c) 2013-present, Facebook, Inc.
    *
@@ -154,33 +113,34 @@
   var checkPropTypes_1 = checkPropTypes;
   var checkPropTypes$1 = checkPropTypes_1;
 
+  /* eslint-disable no-console */
+
   // stores references to component instances
   const instances = new Set();
-  var _components = /*#__PURE__*/new WeakMap();
-  var _elements = /*#__PURE__*/new WeakMap();
-  var _initialized = /*#__PURE__*/new WeakMap();
-  var _listeners = /*#__PURE__*/new WeakMap();
-  var _observers = /*#__PURE__*/new WeakMap();
-  var _rootElement = /*#__PURE__*/new WeakMap();
-  var _state = /*#__PURE__*/new WeakMap();
   class Component {
     static get instances() {
       return Array.from(instances);
     }
+    #components = new Map();
+    #elements = {};
+    #initialized = false;
+    #listeners = new Map();
+    #observers = new Set();
+    #rootElement = null;
+    #state = {};
     get components() {
-      return Object.fromEntries(_classPrivateFieldGet(this, _components));
+      return Object.fromEntries(this.#components);
     }
     set components(newComponents) {
-      Object.entries(newComponents).forEach(_ref => {
-        let [key, value] = _ref;
+      Object.entries(newComponents).forEach(([key, value]) => {
         if (!(value instanceof Component)) {
           console.error(`Warning: component "${key}" is not an instance of "Component"`);
           return;
         }
-        if (_classPrivateFieldGet(this, _components).has(key)) {
-          _classPrivateFieldGet(this, _components).get(key).destroy();
+        if (this.#components.has(key)) {
+          this.#components.get(key).destroy();
         }
-        _classPrivateFieldGet(this, _components).set(key, value);
+        this.#components.set(key, value);
       });
     }
     get displayName() {
@@ -192,48 +152,46 @@
     }
     get elements() {
       return {
-        ..._classPrivateFieldGet(this, _elements)
+        ...this.#elements
       };
     }
     set elements(newElements) {
-      Object.entries(newElements).forEach(_ref2 => {
-        let [key, value] = _ref2;
+      Object.entries(newElements).forEach(([key, value]) => {
         if (value instanceof Node || value === null) {
-          _classPrivateFieldGet(this, _elements)[key] = value;
+          this.#elements[key] = value;
           return;
         }
         if (value instanceof NodeList || value instanceof HTMLCollection) {
-          _classPrivateFieldGet(this, _elements)[key] = Array.from(value);
+          this.#elements[key] = Array.from(value);
           return;
         }
         console.error(`Warning: value assigned to "elements.${key}" is not a valid DOM node`);
       });
     }
     get listeners() {
-      return Object.fromEntries(_classPrivateFieldGet(this, _listeners));
+      return Object.fromEntries(this.#listeners);
     }
     set listeners(newListeners) {
-      Object.entries(newListeners).forEach(_ref3 => {
-        let [key, value] = _ref3;
+      Object.entries(newListeners).forEach(([key, value]) => {
         if (typeof value?.destroy !== 'function') {
           console.error(`Warning: listener "${key}" is missing a "destroy" function`);
           return;
         }
-        if (_classPrivateFieldGet(this, _listeners).has(key)) {
-          _classPrivateFieldGet(this, _listeners).get(key).destroy();
+        if (this.#listeners.has(key)) {
+          this.#listeners.get(key).destroy();
         }
-        _classPrivateFieldGet(this, _listeners).set(key, value);
+        this.#listeners.set(key, value);
       });
     }
     get initialized() {
-      return _classPrivateFieldGet(this, _initialized);
+      return this.#initialized;
     }
     get rootElement() {
-      return _classPrivateFieldGet(this, _rootElement);
+      return this.#rootElement;
     }
     get state() {
       return {
-        ..._classPrivateFieldGet(this, _state)
+        ...this.#state
       };
     }
     set state(newState) {
@@ -243,36 +201,7 @@
       }
       this.setState(newState);
     }
-    constructor(root) {
-      let initialState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      _classPrivateFieldInitSpec(this, _components, {
-        writable: true,
-        value: new Map()
-      });
-      _classPrivateFieldInitSpec(this, _elements, {
-        writable: true,
-        value: {}
-      });
-      _classPrivateFieldInitSpec(this, _initialized, {
-        writable: true,
-        value: false
-      });
-      _classPrivateFieldInitSpec(this, _listeners, {
-        writable: true,
-        value: new Map()
-      });
-      _classPrivateFieldInitSpec(this, _observers, {
-        writable: true,
-        value: new Set()
-      });
-      _classPrivateFieldInitSpec(this, _rootElement, {
-        writable: true,
-        value: null
-      });
-      _classPrivateFieldInitSpec(this, _state, {
-        writable: true,
-        value: {}
-      });
+    constructor(root, initialState = {}) {
       let htmlInitialState = {};
       let rootElement = root;
       if (typeof rootElement === 'string') {
@@ -295,7 +224,7 @@
           console.error('Warning: "data-initial-state" must contain valid JSON');
         }
       }
-      _classPrivateFieldSet(this, _rootElement, rootElement);
+      this.#rootElement = rootElement;
 
       // bind the lifecycle methods to instance
       this.setup = this.setup.bind(this);
@@ -319,13 +248,13 @@
       this.validate(this.state, {}, this);
       this.render(this.state, {}, this);
       this.update(this.state, {}, this);
-      _classPrivateFieldSet(this, _initialized, true);
+      this.#initialized = true;
       instances.add(this);
     }
     destroy() {
-      _classPrivateFieldGet(this, _observers).clear();
-      _classPrivateFieldGet(this, _listeners).forEach(listener => listener.destroy());
-      _classPrivateFieldGet(this, _components).forEach(component => component.destroy());
+      this.#observers.clear();
+      this.#listeners.forEach(listener => listener.destroy());
+      this.#components.forEach(component => component.destroy());
       instances.delete(this);
     }
     setState(newState) {
@@ -337,8 +266,7 @@
       const stateChanges = {};
 
       // identify state properties that have changed
-      Object.entries(newState).forEach(_ref4 => {
-        let [key, value] = _ref4;
+      Object.entries(newState).forEach(([key, value]) => {
         if (value !== previousState[key]) {
           stateChanges[key] = value;
         }
@@ -362,11 +290,11 @@
         }
 
         // update the state
-        _classPrivateFieldSet(this, _state, nextState);
+        this.#state = nextState;
 
         // notify observers if initialized
         if (this.initialized) {
-          _classPrivateFieldGet(this, _observers).forEach(observer => {
+          this.#observers.forEach(observer => {
             observer(stateChanges, previousState, this);
           });
         }
@@ -377,13 +305,13 @@
         console.error('Warning: a function must be provided to "subscribe"');
         return;
       }
-      if (!_classPrivateFieldGet(this, _observers).has(observer)) {
-        _classPrivateFieldGet(this, _observers).add(observer);
+      if (!this.#observers.has(observer)) {
+        this.#observers.add(observer);
       }
     }
     unsubscribe(observer) {
-      if (_classPrivateFieldGet(this, _observers).has(observer)) {
-        _classPrivateFieldGet(this, _observers).delete(observer);
+      if (this.#observers.has(observer)) {
+        this.#observers.delete(observer);
       }
     }
 
@@ -413,10 +341,7 @@
     };
   }
 
-  function addEventListener(target) {
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
+  function addEventListener(target, ...args) {
     target.addEventListener(...args);
     return {
       destroy() {
@@ -448,8 +373,7 @@
   }
 
   function setAttributes(target, attributes) {
-    Object.entries(attributes ?? {}).forEach(_ref => {
-      let [key, value] = _ref;
+    Object.entries(attributes ?? {}).forEach(([key, value]) => {
       if (value === null) {
         target.removeAttribute(key);
       } else if (value !== undefined) {
@@ -458,8 +382,7 @@
     });
   }
 
-  function createElement(tag, attributes) {
-    let children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+  function createElement(tag, attributes, children = '') {
     const element = document.createElement(tag);
     setAttributes(element, attributes);
     if (typeof children === 'string') {

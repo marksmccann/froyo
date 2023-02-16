@@ -28,14 +28,14 @@ yarn add froyojs
 <TabItem value="production" label="Prod" default>
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.min.js"></script>
 ```
 
 </TabItem>
 <TabItem value="development" label="Dev">
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.js"></script>
 ```
 
 </TabItem>

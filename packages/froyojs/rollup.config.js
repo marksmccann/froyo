@@ -8,10 +8,43 @@ export default [
     {
         input: 'src/index.js',
         output: {
-            file: '../../bundles/froyojs.js',
+            file: 'dist/froyojs.js',
+            format: 'cjs',
+        },
+        external: [/@babel\/runtime/, /prop-types/],
+        plugins: [
+            nodeResolve({ browser: true }),
+            commonjs(),
+            babel({
+                babelHelpers: 'runtime',
+                presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-transform-runtime'],
+            }),
+        ],
+    },
+    {
+        input: 'src/index.js',
+        output: {
+            file: 'dist/froyojs.mjs',
+            format: 'es',
+        },
+        external: [/@babel\/runtime/, /prop-types/],
+        plugins: [
+            nodeResolve({ browser: true }),
+            commonjs(),
+            babel({
+                babelHelpers: 'runtime',
+                presets: [['@babel/preset-env', { modules: false }]],
+                plugins: ['@babel/plugin-transform-runtime'],
+            }),
+        ],
+    },
+    {
+        input: 'src/index.js',
+        output: {
+            file: 'bundles/froyojs.js',
             format: 'umd',
             name: 'froyojs',
-            globals: { crypto: 'crypto' },
         },
         plugins: [
             nodeResolve({ browser: true }),
@@ -28,10 +61,9 @@ export default [
     {
         input: 'src/index.js',
         output: {
-            file: '../../bundles/froyojs.min.js',
+            file: 'bundles/froyojs.min.js',
             format: 'umd',
             name: 'froyojs',
-            globals: { crypto: 'crypto' },
         },
         plugins: [
             nodeResolve({ browser: true }),
