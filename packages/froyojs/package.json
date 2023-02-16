@@ -26,7 +26,9 @@
         "framework",
         "ui",
         "component",
-        "froyo"
+        "froyo",
+        "ice cream",
+        "frozen yogurt"
     ],
     "dependencies": {
         "@babel/runtime": "^7.20.7",

@@ -24,7 +24,9 @@
         "tests",
         "testing-library",
         "froyojs",
-        "froyo"
+        "froyo",
+        "ice cream",
+        "frozen yogurt"
     ],
     "peerDependencies": {
         "froyojs": "*"
