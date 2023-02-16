@@ -9,7 +9,7 @@ Froyo is an extremely lightweight framework for building UI components with plai
 ## Features
 
 -   📖 Easy to learn
--   🐭 Extremely small (3k gzipped)
+-   🐭 Extremely small (2k gzipped)
 -   🏋 Robust and capable
 -   🚀 Browser ready (no setup required)
 -   🌎 Universal compatibility
