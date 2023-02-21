@@ -1,5 +1,8 @@
-function setAttributes(target, attributes) {
-    Object.entries(attributes ?? {}).forEach(([key, value]) => {
+function setAttributes(
+    target: Element,
+    attributes: { [key: string]: string | null | undefined } = {}
+) {
+    Object.entries(attributes).forEach(([key, value]) => {
         if (value === null) {
             target.removeAttribute(key);
         } else if (value !== undefined) {

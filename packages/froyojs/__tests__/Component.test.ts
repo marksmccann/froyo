@@ -5,45 +5,23 @@ import PropTypes from 'prop-types';
 import Component from '../src/Component';
 import createElement from '../src/createElement';
 import addEventListener from '../src/addEventListener';
+import createMutationObserver from '../src/createMutationObserver';
+import createMediaQueryListener from '../src/createMediaQueryListener';
+
+interface FroyoState {
+    [key: string]: any;
+}
 
 describe('component', () => {
     it('should fail if root element is missing', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
-
-        class Foo extends Component {
-            render() {}
-        }
-        const instance = new Foo();
-
-        expect(instance.rootElement).toBeNull();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('root element must be an HTML element')
-        );
-
-        instance.destroy();
-    });
-
-    it('should fail if render method is missing', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
-
         class Foo extends Component {}
-        const rootElement = createElement('div');
-        const instance = new Foo(rootElement);
 
-        expect(instance.rootElement).toBeNull();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('must have a "render" method')
-        );
-
-        instance.destroy();
+        // @ts-ignore
+        expect(() => new Foo()).toThrow(/root element must be an HTML element/);
     });
 
     it('should set initial state via HTML', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const initialState = JSON.stringify({ foo: 'bar' });
         const rootElement = createElement('div', {
             'data-initial-state': initialState,
@@ -56,9 +34,7 @@ describe('component', () => {
     });
 
     it('should set initial state via constructor', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement, { foo: 'bar' });
 
@@ -68,9 +44,7 @@ describe('component', () => {
     });
 
     it('should favor initial state from constructor over HTML', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const initialState = JSON.stringify({ foo: 'bar' });
         const rootElement = createElement('div', {
             'data-initial-state': initialState,
@@ -83,19 +57,19 @@ describe('component', () => {
     });
 
     it('should fail if HTML initial state is invalid JSON', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div', {
-            'data-initial-state': 'foo',
+            'data-initial-state': '',
         });
         const instance = new Foo(rootElement);
 
         expect(instance.state).toStrictEqual(expect.objectContaining({}));
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('must contain valid JSON')
         );
 
@@ -103,9 +77,7 @@ describe('component', () => {
     });
 
     it('should initialize with a query selector', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = document.body.appendChild(
             createElement('div', { id: 'foo' })
         );
@@ -118,16 +90,11 @@ describe('component', () => {
     });
 
     it('should set instance properties', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
         expect(instance.rootElement).toStrictEqual(rootElement);
-        expect(instance.initialized).toBe(true);
-        expect(instance.components).toStrictEqual(expect.any(Object));
-        expect(instance.listeners).toStrictEqual(expect.any(Object));
         expect(instance.state).toStrictEqual(expect.any(Object));
 
         instance.destroy();
@@ -149,6 +116,13 @@ describe('component', () => {
 
                 this.listeners = {
                     foo: addEventListener(this.rootElement, 'click', () => {}),
+                    bar: createMediaQueryListener(
+                        '(min-width: 500px)',
+                        () => {}
+                    ),
+                    baz: createMutationObserver(document, () => {}, {
+                        attributes: true,
+                    }),
                 };
 
                 this.state = {
@@ -156,17 +130,20 @@ describe('component', () => {
                 };
             }
 
-            render() {}
+            validate() {
+                expect(this.components.foo).toBeInstanceOf(Foo);
+                expect(this.elements.foo).toStrictEqual(
+                    this.rootElement.firstChild
+                );
+                expect(this.listeners.foo).toStrictEqual(
+                    expect.objectContaining({ destroy: expect.any(Function) })
+                );
+            }
         }
         const rootElement = createElement('div', null, '<div></div>');
         const instance = new Bar(document.body.appendChild(rootElement));
 
         expect(instance.state.foo).toBe('bar');
-        expect(instance.components.foo).toBeInstanceOf(Foo);
-        expect(instance.elements.foo).toStrictEqual(rootElement.firstChild);
-        expect(instance.listeners.foo).toStrictEqual(
-            expect.objectContaining({ destroy: expect.any(Function) })
-        );
 
         rootElement.remove();
         instance.destroy();
@@ -185,53 +162,56 @@ describe('component', () => {
                 };
             }
 
-            render() {}
+            validate() {
+                expect(this.elements.null).toBeNull();
+                expect(this.elements.createElement).toBeInstanceOf(Node);
+                expect(this.elements.querySelector).toBeInstanceOf(Node);
+                expect(this.elements.textNode).toBeInstanceOf(Node);
+                expect(Array.isArray(this.elements.selectorAll)).toBe(true);
+                expect(this.elements.selectorAll).toHaveLength(2);
+                expect(Array.isArray(this.elements.byTagName)).toBe(true);
+                expect(this.elements.byTagName).toHaveLength(2);
+            }
         }
-        const rootElement = createElement(
-            'div',
-            null,
-            `<div></div><div></div>`
+        const instance = new Foo(
+            createElement('div', null, `<div></div><div></div>`)
         );
-        const instance = new Foo(rootElement);
-
-        expect(instance.elements.null).toBeNull();
-        expect(instance.elements.createElement).toBeInstanceOf(Node);
-        expect(instance.elements.querySelector).toBeInstanceOf(Node);
-        expect(instance.elements.textNode).toBeInstanceOf(Node);
-        expect(Array.isArray(instance.elements.selectorAll)).toBe(true);
-        expect(instance.elements.selectorAll).toHaveLength(2);
-        expect(Array.isArray(instance.elements.byTagName)).toBe(true);
-        expect(instance.elements.byTagName).toHaveLength(2);
 
         instance.destroy();
     });
 
     it('should fail if property assignments are invalid', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
         class Foo extends Component {
             setup() {
+                // @ts-ignore
                 this.elements = { foo: '' };
+                // @ts-ignore
                 this.components = { foo: null };
+                // @ts-ignore
                 this.listeners = { foo: null };
             }
 
-            render() {}
+            validate() {
+                expect(this.components.foo).toBeUndefined();
+                expect(this.listeners.foo).toBeUndefined();
+                expect(this.elements.foo).toBeUndefined();
+            }
         }
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
-        expect(instance.components.foo).toBeUndefined();
-        expect(instance.listeners.foo).toBeUndefined();
-        expect(instance.elements.foo).toBeUndefined();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(3);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(3);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not an instance of "Component"')
         );
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is missing a "destroy" function')
         );
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not a valid DOM node')
         );
 
@@ -239,21 +219,22 @@ describe('component', () => {
     });
 
     it('should fail if state is updated directly', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
         expect(instance.state.foo).toBeUndefined();
 
+        // @ts-ignore
         instance.state = { foo: 'bar' };
 
         expect(instance.state.foo).toBeUndefined();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('only be updated via "setState"')
         );
 
@@ -261,33 +242,34 @@ describe('component', () => {
     });
 
     it('should replace previously defined properties', () => {
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
+        const rootElement = createElement('div');
+        const component1 = new Foo(rootElement);
+        const component2 = new Foo(rootElement);
+        const listener1 = addEventListener(rootElement, 'click', () => {});
+        const listener2 = addEventListener(rootElement, 'click', () => {});
         class Bar extends Component {
             setup() {
-                this.components = {
-                    foo: new Foo(this.rootElement),
-                };
+                this.components = { foo: component1 };
+                this.listeners = { foo: listener1 };
 
-                this.listeners = {
-                    foo: addEventListener(this.rootElement, 'click', () => {}),
-                };
+                expect(this.components.foo).toStrictEqual(component1);
+                expect(this.listeners.foo).toStrictEqual(listener1);
             }
 
-            render() {}
+            update() {
+                this.components = { foo: component2 };
+                this.listeners = { foo: listener2 };
+
+                expect(this.components.foo).toStrictEqual(component2);
+                expect(this.listeners.foo).toStrictEqual(listener2);
+            }
         }
-        const rootElement = createElement('div');
+
         const instance = new Bar(rootElement);
-        const { components, listeners } = instance;
 
-        instance.components = { foo: new Foo(rootElement) };
-        instance.listeners = {
-            foo: addEventListener(rootElement, 'click', () => {}),
-        };
-
-        expect(components.foo).not.toStrictEqual(instance.components.foo);
-        expect(listeners.foo).not.toStrictEqual(instance.listeners.foo);
+        // update the state to force it to rerender
+        instance.setState({ foo: 'bar' });
 
         instance.destroy();
     });
@@ -297,8 +279,6 @@ describe('component', () => {
             static get defaultState() {
                 return { foo: 'bar' };
             }
-
-            render() {}
         }
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
@@ -325,16 +305,28 @@ describe('component', () => {
         const renderSpy = jest.fn();
         const updateSpy = jest.fn();
         class Foo extends Component {
-            validate(...args) {
-                validateSpy(...args);
+            validate(
+                stateChanges: FroyoState,
+                previousState: FroyoState,
+                instance: Foo
+            ) {
+                validateSpy(stateChanges, previousState, instance);
             }
 
-            render(...args) {
-                renderSpy(...args);
+            render(
+                stateChanges: FroyoState,
+                previousState: FroyoState,
+                instance: Foo
+            ) {
+                renderSpy(stateChanges, previousState, instance);
             }
 
-            update(...args) {
-                updateSpy(...args);
+            update(
+                stateChanges: FroyoState,
+                previousState: FroyoState,
+                instance: Foo
+            ) {
+                updateSpy(stateChanges, previousState, instance);
             }
         }
         const rootElement = createElement('div');
@@ -367,9 +359,7 @@ describe('component', () => {
 
     it('should call observers subscribed to instance', () => {
         const callback = jest.fn();
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
@@ -390,18 +380,19 @@ describe('component', () => {
     });
 
     it('should fail if observer is invalid', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
-        class Foo extends Component {
-            render() {}
-        }
+        class Foo extends Component {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
+        // @ts-ignore
         instance.subscribe();
 
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('a function must be provided')
         );
 
@@ -409,21 +400,21 @@ describe('component', () => {
     });
 
     it('should type-check state properties', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
         class Foo extends Component {
             static get stateTypes() {
                 return { foo: PropTypes.string };
             }
-
-            render() {}
         }
         const rootElement = createElement('div');
         const instance = new Foo(rootElement, { foo: true });
 
         expect(instance.state.foo).toBe(true);
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('Failed state type')
         );
 
@@ -431,31 +422,26 @@ describe('component', () => {
     });
 
     it('should not type-check state in production', () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error');
         process.env.NODE_ENV = 'production';
 
         class Foo extends Component {
             static get stateTypes() {
                 return { foo: PropTypes.string };
             }
-
-            render() {}
         }
         const rootElement = createElement('div');
         const instance = new Foo(rootElement, { foo: true });
 
         expect(instance.state.foo).toBe(true);
-        expect(global.consoleErrorSpy).not.toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
 
         instance.destroy();
     });
 
     it('should store component instances in static variable', () => {
-        class Foo1 extends Component {
-            render() {}
-        }
-        class Foo2 extends Component {
-            render() {}
-        }
+        class Foo1 extends Component {}
+        class Foo2 extends Component {}
         const instance1 = new Foo1(createElement('div'));
         const instance2 = new Foo2(createElement('div'));
 

@@ -1,11 +1,15 @@
-function createMutationObserver(target, callback, options) {
+function createMutationObserver(
+    target: Node,
+    callback: MutationCallback,
+    options: MutationObserverInit
+) {
     const observer = new MutationObserver(callback);
 
     observer.observe(target, options);
 
     return {
         observer,
-        destroy() {
+        destroy(): void {
             observer.disconnect();
         },
     };

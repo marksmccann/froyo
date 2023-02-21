@@ -117,7 +117,9 @@ describe('render and cleanup', () => {
     });
 
     it('should fail if instance is not found when rerendering', () => {
-        global.consoleErrorSpy.mockImplementation(() => {});
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
 
         const result = render('<div id="foo"></div>', () => new Foo('#foo'));
 
@@ -126,8 +128,8 @@ describe('render and cleanup', () => {
         result.rerender('bar', { text: 'bar' });
 
         expect(result.queryByText('foo')).toBeInTheDocument();
-        expect(global.consoleErrorSpy).toHaveBeenCalledTimes(1);
-        expect(global.consoleErrorSpy).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('no component found for the root element')
         );
     });

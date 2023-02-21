@@ -21,11 +21,6 @@ beforeAll(() => {
     });
 });
 
-beforeEach(() => {
-    global.consoleErrorSpy = jest.spyOn(console, 'error');
-});
-
 afterEach(() => {
-    global.consoleErrorSpy.mockRestore();
     process.env.NODE_ENV = originalNodeEnv;
 });

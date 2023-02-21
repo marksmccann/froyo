@@ -31,4 +31,10 @@ describe('setAttributes', () => {
 
         expect(element).toHaveAttribute('id', 'foo');
     });
+
+    it('should not require attributes object', () => {
+        const element = createElement('div');
+
+        expect(() => setAttributes(element)).not.toThrow();
+    });
 });
