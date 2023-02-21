@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/marksmccann/froyo/compare/froyojs@0.6.0...froyojs@0.6.1) (2023-02-21)
+
+### Bug Fixes
+
+-   remove babel dependency ([c3b0d74](https://github.com/marksmccann/froyo/commit/c3b0d747ea523d358f1605b7d7cfb0d28a8282f1))
+
 # [0.6.0](https://github.com/marksmccann/froyo/compare/froyojs@0.5.3...froyojs@0.6.0) (2023-02-21)
 
 ### Features
