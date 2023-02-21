@@ -36,7 +36,7 @@ window.froyojs.Component;
 ### `Component`
 
 ```ts
-new (root: Element | string, initialState?: { [key: string]: any }): Component
+new Component(root: Element | string, initialState?: { [key: string]: any })
 ```
 
 `Component` is an abstract class used to derive Froyo components.

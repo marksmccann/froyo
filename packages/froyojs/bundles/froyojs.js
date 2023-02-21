@@ -18,16 +18,18 @@
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
+
     function __classPrivateFieldGet(receiver, state, kind, f) {
-      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-      return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+        if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+        return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
     }
+
     function __classPrivateFieldSet(receiver, state, value, kind, f) {
-      if (kind === "m") throw new TypeError("Private method is not writable");
-      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-      return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+        if (kind === "m") throw new TypeError("Private method is not writable");
+        if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+        return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
     }
 
     /**
@@ -36,23 +38,28 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
+
     var ReactPropTypesSecret_1;
     var hasRequiredReactPropTypesSecret;
-    function requireReactPropTypesSecret() {
-      if (hasRequiredReactPropTypesSecret) return ReactPropTypesSecret_1;
-      hasRequiredReactPropTypesSecret = 1;
-      var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-      ReactPropTypesSecret_1 = ReactPropTypesSecret;
-      return ReactPropTypesSecret_1;
+
+    function requireReactPropTypesSecret () {
+    	if (hasRequiredReactPropTypesSecret) return ReactPropTypesSecret_1;
+    	hasRequiredReactPropTypesSecret = 1;
+
+    	var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+    	ReactPropTypesSecret_1 = ReactPropTypesSecret;
+    	return ReactPropTypesSecret_1;
     }
 
     var has$1;
     var hasRequiredHas;
-    function requireHas() {
-      if (hasRequiredHas) return has$1;
-      hasRequiredHas = 1;
-      has$1 = Function.call.bind(Object.prototype.hasOwnProperty);
-      return has$1;
+
+    function requireHas () {
+    	if (hasRequiredHas) return has$1;
+    	hasRequiredHas = 1;
+    	has$1 = Function.call.bind(Object.prototype.hasOwnProperty);
+    	return has$1;
     }
 
     /**
@@ -61,12 +68,15 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    var printWarning = function () {};
+
+    var printWarning = function() {};
+
     {
       var ReactPropTypesSecret = requireReactPropTypesSecret();
       var loggedTypeFailures = {};
       var has = requireHas();
-      printWarning = function (text) {
+
+      printWarning = function(text) {
         var message = 'Warning: ' + text;
         if (typeof console !== 'undefined') {
           console.error(message);
@@ -76,7 +86,7 @@
           // This error was thrown as a convenience so that you can use this stack
           // to find the callsite that caused this warning to fire.
           throw new Error(message);
-        } catch (x) {/**/}
+        } catch (x) { /**/ }
       };
     }
 
@@ -103,7 +113,11 @@
               // This is intentionally an invariant that gets caught. It's the same
               // behavior as without this statement except with a better message.
               if (typeof typeSpecs[typeSpecName] !== 'function') {
-                var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+                var err = Error(
+                  (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+                  'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' +
+                  'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.'
+                );
                 err.name = 'Invariant Violation';
                 throw err;
               }
@@ -112,14 +126,25 @@
               error = ex;
             }
             if (error && !(error instanceof Error)) {
-              printWarning((componentName || 'React class') + ': type specification of ' + location + ' `' + typeSpecName + '` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a ' + typeof error + '. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).');
+              printWarning(
+                (componentName || 'React class') + ': type specification of ' +
+                location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+                'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+                'You may have forgotten to pass an argument to the type checker ' +
+                'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+                'shape all require an argument).'
+              );
             }
             if (error instanceof Error && !(error.message in loggedTypeFailures)) {
               // Only monitor this failure once because there tends to be a lot of the
               // same error.
               loggedTypeFailures[error.message] = true;
+
               var stack = getStack ? getStack() : '';
-              printWarning('Failed ' + location + ' type: ' + error.message + (stack != null ? stack : ''));
+
+              printWarning(
+                'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+              );
             }
           }
         }
@@ -131,12 +156,14 @@
      *
      * @private
      */
-    checkPropTypes.resetWarningCache = function () {
+    checkPropTypes.resetWarningCache = function() {
       {
         loggedTypeFailures = {};
       }
     };
+
     var checkPropTypes_1 = checkPropTypes;
+
     var checkPropTypes$1 = checkPropTypes_1;
 
     /* eslint-disable no-console */
