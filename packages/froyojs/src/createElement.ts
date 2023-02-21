@@ -1,9 +1,15 @@
 import setAttributes from './setAttributes';
 
-function createElement(tag, attributes, children = '') {
+function createElement(
+    tag: keyof HTMLElementTagNameMap,
+    attributes?: { [key: string]: string } | null,
+    children: string | Node = ''
+) {
     const element = document.createElement(tag);
 
-    setAttributes(element, attributes);
+    if (attributes) {
+        setAttributes(element, attributes);
+    }
 
     if (typeof children === 'string') {
         element.innerHTML = children;

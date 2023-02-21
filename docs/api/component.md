@@ -36,22 +36,16 @@ window.froyojs.Component;
 ### `Component`
 
 ```ts
-new Component(root: HTMLElement | querySelector, initialState?: object)
+new (root: Element | string, initialState?: { [key: string]: any }): Component
 ```
 
-`Component` is the base class for Froyo components.
-
-When defining a subclass, the [`render`](#render) method is the only required method:
+`Component` is an abstract class used to derive Froyo components.
 
 ```js
-class FrozenYogurt extends Component {
-    render() {
-        this.rootElement.innerHTML = `"${this.state.flavor}" is the best flavor.`;
-    }
-}
+class FrozenYogurt extends Component {}
 ```
 
-When instantiated, the first argument of the constructor is required. It must be an HTML element or a query selector for a valid element rendered in the DOM. The second argument is optional and is responsible for setting the initial state of the component.
+When instantiated, the first argument of the constructor is required. It must be an HTML element or a query selector for a valid element within in the DOM. The second argument is optional and is responsible for setting the initial state of the component.
 
 ```js
 const rootElement = document.createElement('div');

@@ -1,11 +1,14 @@
-function createMediaQueryListener(query, callback) {
+function createMediaQueryListener(
+    query: string,
+    callback: EventListenerOrEventListenerObject
+) {
     const media = window.matchMedia(query);
 
     media.addEventListener('change', callback);
 
     return {
         media,
-        destroy() {
+        destroy(): void {
             media.removeEventListener('change', callback);
         },
     };

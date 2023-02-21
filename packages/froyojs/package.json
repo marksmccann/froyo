@@ -4,9 +4,16 @@
     "description": "An ultra lightweight framework for building UI components",
     "main": "dist/froyojs.js",
     "module": "dist/froyojs.mjs",
+    "types": "dist/froyojs.d.ts",
+    "exports": {
+        "import": "./dist/froyojs.mjs",
+        "require": "./dist/froyojs.js",
+        "types": "./dist/froyojs.d.ts"
+    },
     "scripts": {
         "prebuild": "npm run clean",
         "build": "rollup -c --bundleConfigAsCjs",
+        "postbuild": "rm -rf dist/dts",
         "clean": "rm -rf dist"
     },
     "author": "Mark McCann <marksmccann@gmail.com>",
@@ -40,6 +47,10 @@
         "@rollup/plugin-commonjs": "^24.0.0",
         "@rollup/plugin-node-resolve": "^15.0.1",
         "@rollup/plugin-terser": "^0.3.0",
-        "rollup": "^3.10.0"
+        "@rollup/plugin-typescript": "^11.0.0",
+        "@types/prop-types": "^15.7.5",
+        "rollup": "^3.10.0",
+        "rollup-plugin-dts": "^5.2.0",
+        "typescript": "^4.9.5"
     }
 }

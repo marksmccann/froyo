@@ -80,7 +80,7 @@ Goal: Learn how to define a component and get it to render some content.
 
 ### Define the Component Class
 
-Create a new component by extending the `Component` class. Make sure to include the required [`render`](../api/component.md#render) method. This method is called during the [component lifecycle](../fundamentals/component-lifecycle.md) and is where all DOM updates should be handled.
+Create a new component by extending the `Component` class.
 
 :::info
 
@@ -90,9 +90,7 @@ Components are defined with [ES6 class syntax](https://developer.mozilla.org/en-
 
 ```html
 <script>
-    class FrozenYogurt extends froyojs.Component {
-        render() {}
-    }
+    class FrozenYogurt extends froyojs.Component {}
 </script>
 ```
 
@@ -102,9 +100,7 @@ Now that we've defined a component class, let's initialize it with the root elem
 
 ```html
 <script>
-    class FrozenYogurt extends froyojs.Component {
-        render() {}
-    }
+    class FrozenYogurt extends froyojs.Component {}
 
     /* highlight-start */
     const instance = new FrozenYogurt(document.getElementById('root'));
@@ -120,11 +116,21 @@ const instance = new FrozenYogurt('#root');
 
 ### Render Something
 
-Next, let's update the `render` method so that it does something &mdash; render a string within the root element.
+Next, add a `render` method so that it does something &mdash; let's render a string within the root element.
+
+:::info
+
+The [`render`](../api/component.md#render) method is called during the [component lifecycle](../fundamentals/component-lifecycle.md) and is where all DOM updates should be handled.
+
+:::
 
 ```js
-render() {
-    this.rootElement.innerHTML = 'Vanilla is the best flavor.';
+class FrozenYogurt extends froyojs.Component {
+    /* highlight-start */
+    render() {
+        this.rootElement.innerHTML = 'Vanilla is the best flavor.';
+    }
+    /* highlight-end */
 }
 ```
 

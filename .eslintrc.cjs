@@ -8,15 +8,16 @@ module.exports = {
     extends: [
         'plugin:react/recommended',
         'airbnb',
+        'airbnb-typescript',
         'prettier',
         'plugin:jest-dom/recommended',
         'plugin:jest/all',
     ],
     parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
     },
     plugins: ['react', 'jest', 'jest-dom'],
+    root: true,
     rules: {
         'jest/no-hooks': 'off',
         'jest/prefer-expect-assertions': 'off',
