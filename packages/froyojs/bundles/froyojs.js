@@ -319,7 +319,6 @@
         }
     }
     _Component_components = new WeakMap(), _Component_elements = new WeakMap(), _Component_initialized = new WeakMap(), _Component_listeners = new WeakMap(), _Component_observers = new WeakMap(), _Component_rootElement = new WeakMap(), _Component_state = new WeakMap();
-    var Component$1 = Component;
 
     /* eslint-disable no-console */
     function createInitializer(componentList) {
@@ -329,7 +328,7 @@
             Array.from(rootElements).forEach((rootElement) => {
                 const name = rootElement.getAttribute('data-initialize') || '';
                 if (name in componentList &&
-                    componentList[name].prototype instanceof Component$1) {
+                    componentList[name].prototype instanceof Component) {
                     rootElement.removeAttribute('data-initialize');
                     instances.push(new componentList[name](rootElement));
                 }
@@ -403,7 +402,7 @@
         });
     }
 
-    exports.Component = Component$1;
+    exports.Component = Component;
     exports.addEventListener = addEventListener;
     exports.createElement = createElement;
     exports.createInitializer = createInitializer;
