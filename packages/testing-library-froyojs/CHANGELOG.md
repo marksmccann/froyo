@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.7...testing-library-froyojs@0.3.8) (2023-02-21)
+
+**Note:** Version bump only for package testing-library-froyojs
+
 ## [0.3.7](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.6...testing-library-froyojs@0.3.7) (2023-02-16)
 
 ### Bug Fixes
