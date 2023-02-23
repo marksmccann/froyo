@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/marksmccann/froyo/compare/froyojs@0.6.1...froyojs@0.6.2) (2023-02-23)
+
+### Bug Fixes
+
+-   fix repository field in package.json ([c738d23](https://github.com/marksmccann/froyo/commit/c738d239dff09c8089a5ce4539b308036b1dc363))
+
 ## [0.6.1](https://github.com/marksmccann/froyo/compare/froyojs@0.6.0...froyojs@0.6.1) (2023-02-21)
 
 ### Bug Fixes

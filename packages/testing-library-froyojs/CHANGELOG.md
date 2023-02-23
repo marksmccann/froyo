@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.9...testing-library-froyojs@0.4.0) (2023-02-23)
+
+### Bug Fixes
+
+-   fix repository field in package.json ([c738d23](https://github.com/marksmccann/froyo/commit/c738d239dff09c8089a5ce4539b308036b1dc363))
+
+### Features
+
+-   add typescript support ([3c392cc](https://github.com/marksmccann/froyo/commit/3c392cc0751ca768383de7a7a5e8dda7640ea17c))
+
 ## [0.3.9](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.8...testing-library-froyojs@0.3.9) (2023-02-21)
 
 **Note:** Version bump only for package testing-library-froyojs
