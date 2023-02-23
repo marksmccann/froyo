@@ -56,7 +56,7 @@ Add the following script to the bottom of the document to import the latest deve
 <body>
     ...
     <!-- highlight-start -->
-    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/bundles/froyojs.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.min.js"></script>
     <!-- highlight-end -->
 </body>
 ```
