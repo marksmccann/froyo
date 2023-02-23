@@ -1,6 +1,8 @@
-/* eslint-disable jest/require-top-level-describe */
+/* eslint-disable jest/require-top-level-describe, no-var */
 
 import { cleanup } from './pure';
+
+declare var teardown: any;
 
 // if running in a test environment, automatically
 // cleanup after each test via "afterEach" or "teardown".
