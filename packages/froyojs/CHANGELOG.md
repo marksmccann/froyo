@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/marksmccann/froyo/compare/froyojs@0.6.2...froyojs@0.7.0) (2023-03-02)
+
+### Features
+
+-   add improved typescript support ([8452cce](https://github.com/marksmccann/froyo/commit/8452ccedc9807a3b57cd713e8cdb240a963b547a))
+
 ## [0.6.2](https://github.com/marksmccann/froyo/compare/froyojs@0.6.1...froyojs@0.6.2) (2023-02-23)
 
 ### Bug Fixes

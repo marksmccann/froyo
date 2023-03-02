@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.4.0...testing-library-froyojs@0.5.0) (2023-03-02)
+
+### Features
+
+-   add improved typescript support ([8452cce](https://github.com/marksmccann/froyo/commit/8452ccedc9807a3b57cd713e8cdb240a963b547a))
+
 # [0.4.0](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.3.9...testing-library-froyojs@0.4.0) (2023-02-23)
 
 ### Bug Fixes

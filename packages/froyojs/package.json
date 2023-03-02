@@ -1,6 +1,6 @@
 {
     "name": "froyojs",
-    "version": "0.6.2",
+    "version": "0.7.0",
     "description": "An ultra lightweight framework for building UI components",
     "main": "dist/froyojs.js",
     "module": "dist/froyojs.mjs",
