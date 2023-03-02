@@ -1,123 +1,98 @@
 /* eslint-disable no-console */
 
 import checkPropTypes from 'prop-types/checkPropTypes';
+import type {
+    ComponentListeners,
+    ComponentElements,
+    ComponentRoot,
+    ComponentState,
+    ComponentComponents,
+} from './types';
 
-interface FroyoState {
-    [key: string]: any;
-}
+abstract class Component<
+    State extends ComponentState = {},
+    Elements extends ComponentElements = {},
+    Listeners extends ComponentListeners = {},
+    Components extends ComponentComponents = {}
+> {
+    protected static readonly defaultState?: Record<string, any>;
 
-interface FroyoListener {
-    destroy(): void;
-}
+    protected static readonly displayName?: string;
 
-type FroyoObserver = (
-    stateChanges?: FroyoState,
-    previousState?: FroyoState,
-    instance?: Component
-) => void;
+    protected static readonly stateTypes?: Record<string, any>;
 
-type FroyoElement = null | Node | Array<Node | null>;
+    // @ts-expect-error
+    #components: Components = {};
 
-// stores references to component instances
-const instances: Set<Component> = new Set();
+    // @ts-expect-error
+    #elements: Elements = {};
 
-abstract class Component {
-    static defaultState?: FroyoState;
+    #initialized = false;
 
-    static displayName?: string;
+    // @ts-expect-error
+    #listeners: Listeners = {};
 
-    static stateTypes?: { [key: string]: any };
-
-    static get instances() {
-        return Array.from(instances);
-    }
-
-    #components: Map<string, Component> = new Map();
-
-    #elements: { [key: string]: FroyoElement } = {};
-
-    #initialized: boolean = false;
-
-    #listeners: Map<string, FroyoListener> = new Map();
-
-    #observers: Set<FroyoObserver> = new Set();
+    #observers: Set<
+        (stateChanges: Partial<State>, previousState: State) => void
+    > = new Set();
 
     #rootElement: Element;
 
-    #state: FroyoState = {};
+    #state!: State;
 
-    protected get components() {
-        return Object.fromEntries(this.#components);
+    protected get components(): Components {
+        return { ...this.#components };
     }
 
-    protected set components(newComponents: { [key: string]: Component }) {
-        Object.entries(newComponents).forEach(([key, value]) => {
+    protected set components(components: Components) {
+        const valid = Object.entries(components).every(([key, value]) => {
             if (!(value instanceof Component)) {
                 console.error(
                     `Warning: component "${key}" is not an instance of "Component"`
                 );
 
-                return;
+                return false;
             }
 
-            if (this.#components.has(key)) {
-                this.#components.get(key)?.destroy();
-            }
-
-            this.#components.set(key, value);
+            return true;
         });
+
+        if (valid) this.#components = { ...components };
     }
 
     public get displayName() {
-        const { name, displayName } = this.constructor as typeof Component;
+        const Subclass = this.constructor as typeof Component;
+        const { name, displayName } = Subclass;
 
         return displayName || name;
     }
 
-    protected get elements() {
+    protected get elements(): Elements {
         return { ...this.#elements };
     }
 
-    protected set elements(newElements: {
-        [key: string]: FroyoElement | NodeList | HTMLCollection;
-    }) {
-        Object.entries(newElements).forEach(([key, value]) => {
-            if (value instanceof Node || value === null) {
-                this.#elements[key] = value;
-                return;
-            }
-
-            if (value instanceof NodeList || value instanceof HTMLCollection) {
-                this.#elements[key] = Array.from(value);
-                return;
-            }
-
-            console.error(
-                `Warning: value assigned to "elements.${key}" is not a valid DOM node`
-            );
-        });
+    protected set elements(elements: Elements) {
+        this.#elements = { ...elements };
     }
 
-    protected get listeners() {
-        return Object.fromEntries(this.#listeners);
+    protected get listeners(): Listeners {
+        return { ...this.#listeners };
     }
 
-    protected set listeners(newListeners: { [key: string]: FroyoListener }) {
-        Object.entries(newListeners).forEach(([key, value]) => {
+    protected set listeners(listeners: Listeners) {
+        const valid = Object.entries(listeners).every(([key, value]) => {
             if (typeof value?.destroy !== 'function') {
                 console.error(
                     `Warning: listener "${key}" is missing a "destroy" function`
                 );
 
-                return;
+                return false;
             }
 
-            if (this.#listeners.has(key)) {
-                this.#listeners.get(key)?.destroy();
-            }
-
-            this.#listeners.set(key, value);
+            return true;
         });
+
+        if (valid) this.#listeners = { ...listeners };
     }
 
     protected get initialized() {
@@ -128,11 +103,11 @@ abstract class Component {
         return this.#rootElement;
     }
 
-    public get state() {
+    public get state(): State {
         return { ...this.#state };
     }
 
-    protected set state(newState) {
+    protected set state(state: State) {
         if (this.initialized) {
             console.error(
                 'Warning: state can only be updated via "setState" after initialization'
@@ -141,11 +116,11 @@ abstract class Component {
             return;
         }
 
-        this.setState(newState);
+        this.setState(state);
     }
 
-    constructor(root: string | Element, initialState: FroyoState = {}) {
-        let htmlInitialState: FroyoState = {};
+    constructor(root: ComponentRoot, initialState: ComponentState = {}) {
+        let htmlInitialState: ComponentState = {};
         let rootElement: Element | null = null;
 
         if (typeof root === 'string') {
@@ -176,7 +151,7 @@ abstract class Component {
         }
 
         // merge and set initial states before setup
-        this.state = { ...htmlInitialState, ...initialState };
+        this.setState({ ...htmlInitialState, ...initialState } as State);
 
         if (this.setup) {
             this.setup();
@@ -184,36 +159,37 @@ abstract class Component {
 
         if (this.validate) {
             this.subscribe(this.validate.bind(this));
-            this.validate(this.state, {}, this);
+            this.validate.call(this, this.state, this.state);
         }
 
         if (this.render) {
             this.subscribe(this.render.bind(this));
-            this.render(this.state, {}, this);
+            this.render.call(this, this.state, this.state);
         }
 
         if (this.update !== undefined) {
             this.subscribe(this.update.bind(this));
-            this.update(this.state, {}, this);
+            this.update.call(this, this.state, this.state);
         }
 
         this.#initialized = true;
-
-        instances.add(this);
     }
 
     public destroy() {
         this.#observers.clear();
-        this.#listeners.forEach((listener) => listener.destroy());
-        this.#components.forEach((component) => component.destroy());
-        instances.delete(this);
+        Object.values(this.#listeners).forEach((listener) => {
+            listener.destroy();
+        });
+        Object.values(this.#components).forEach((component) => {
+            component.destroy();
+        });
     }
 
-    public setState(newState: FroyoState) {
-        const { defaultState = {}, stateTypes = {} } = this
-            .constructor as typeof Component;
+    public setState(newState: Partial<State>) {
+        const Subclass = this.constructor as typeof Component;
+        const { defaultState = {}, stateTypes = {} } = Subclass;
         const previousState = this.state;
-        const stateChanges: FroyoState = {};
+        const stateChanges: ComponentState = {};
 
         // identify state properties that have changed
         Object.entries(newState).forEach(([key, value]) => {
@@ -223,7 +199,10 @@ abstract class Component {
         });
 
         if (Object.keys(stateChanges).length > 0 || !this.initialized) {
-            const nextState = { ...previousState, ...stateChanges };
+            const nextState: ComponentState = {
+                ...previousState,
+                ...stateChanges,
+            };
 
             // default states that are "undefined"
             Object.keys(defaultState).forEach((key) => {
@@ -243,18 +222,24 @@ abstract class Component {
             }
 
             // update the state
-            this.#state = nextState;
+            this.#state = nextState as State;
 
             // notify observers if initialized
             if (this.initialized) {
                 this.#observers.forEach((observer) => {
-                    observer(stateChanges, previousState, this);
+                    observer.call(
+                        this,
+                        stateChanges as Partial<State>,
+                        previousState
+                    );
                 });
             }
         }
     }
 
-    public subscribe(observer: FroyoObserver) {
+    public subscribe(
+        observer: (stateChanges: Partial<State>, previousState: State) => void
+    ) {
         if (typeof observer !== 'function') {
             console.error(
                 'Warning: a function must be provided to "subscribe"'
@@ -268,34 +253,23 @@ abstract class Component {
         }
     }
 
-    public unsubscribe(observer: FroyoObserver) {
+    public unsubscribe(
+        observer: (stateChanges: Partial<State>, previousState: State) => void
+    ) {
         if (this.#observers.has(observer)) {
             this.#observers.delete(observer);
         }
     }
 
-    protected render?(
-        stateChanges?: FroyoState,
-        previousState?: FroyoState,
-        instance?: Component
-    ): void;
+    protected render?(stateChanges: Partial<State>, previousState: State): void;
 
-    protected setup?(
-        stateChanges?: FroyoState,
-        previousState?: FroyoState,
-        instance?: Component
-    ): void;
+    protected setup?(): void;
+
+    protected update?(stateChanges: Partial<State>, previousState: State): void;
 
     protected validate?(
-        stateChanges?: FroyoState,
-        previousState?: FroyoState,
-        instance?: Component
-    ): void;
-
-    protected update?(
-        stateChanges?: FroyoState,
-        previousState?: FroyoState,
-        instance?: Component
+        stateChanges: Partial<State>,
+        previousState: State
     ): void;
 }
 

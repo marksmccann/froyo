@@ -31,12 +31,20 @@ window.froyojs.Component;
 </TabItem>
 </Tabs>
 
-## Constructor
+## Reference
 
 ### `Component`
 
 ```ts
-new Component(root: Element | string, initialState?: { [key: string]: any })
+abstract class Component<
+    State extends Record<string, any> = {},
+    Elements extends Record<
+        string,
+        null | Node | Array<Node> | NodeList | HTMLCollection
+    > = {},
+    Listeners extends Record<string, { destroy(): void }> = {},
+    Components extends Record<string, Component> = {}
+> {}
 ```
 
 `Component` is an abstract class used to derive Froyo components.
@@ -45,7 +53,13 @@ new Component(root: Element | string, initialState?: { [key: string]: any })
 class FrozenYogurt extends Component {}
 ```
 
-When instantiated, the first argument of the constructor is required. It must be an HTML element or a query selector for a valid element within in the DOM. The second argument is optional and is responsible for setting the initial state of the component.
+### `Constructor`
+
+```ts
+new Component(root: string | Element, initialState?: Record<string, any> })
+```
+
+The first argument of the constructor is required. It must be an HTML element or a query selector for a valid element within in the DOM. The second argument is optional and is responsible for setting the initial state of the component.
 
 ```js
 const rootElement = document.createElement('div');
@@ -57,7 +71,7 @@ const instance = new FrozenYogurt(rootElement, { flavor: 'Vanilla' });
 
 ### `components`
 
--   type: `object`
+-   type: `Components`
 
 A user-defined object for storing references to component instances. Instances assigned to this property are automatically destroyed when the parent instance is destroyed. See ["Subcomponents"](../advanced/subcomponents.md) to learn more.
 
@@ -77,9 +91,9 @@ class FrozenYogurt extends Component {
 
 ### `elements`
 
--   type: `object`
+-   type: `Elements`
 
-A user-defined object for storing references to DOM elements. Only valid instances of DOM nodes and lists (e.g. `Element`, `NodeList`, `TextNode`, `HTMLCollection`, etc.) can be applied to this property. Node lists are automatically converted to an traditionally `Array`. View ["Selecting Elements"](../fundamentals/dom-management.md#selecting-elements) to learn more.
+A user-defined object for storing references to DOM elements. View ["Selecting Elements"](../fundamentals/dom-management.md#selecting-elements) to learn more.
 
 :::tip
 
@@ -110,7 +124,7 @@ const instance = new FrozenYogurt(...);
 
 ### `listeners`
 
--   type: `object`
+-   type: `Listeners`
 
 A user-defined object for storing data related to listeners (e.g. [event listeners](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), [mutation observers](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), [media query lists](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), etc.). Each item in the object must be another object with at least, a "destroy" key that is responsible for removing the listener. The `destroy` functions are called automatically when the component is destroyed. See ["Creating Listeners"](../fundamentals/creating-listeners.md) to learn more.
 
@@ -148,7 +162,7 @@ const instance = new FrozenYogurt(div);
 
 ### `state`
 
--   type: `object`
+-   type: `State`
 
 A user-defined object to store data about the instance. This data is used to conditionally control the output and behavior of the component. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) to learn more.
 
@@ -180,10 +194,9 @@ class FrozenYogurt extends Component {
 ### `render`
 
 ```ts
-function render(
-    stateChanges: object,
-    previousState: object,
-    instance: object
+protected function render?(
+    stateChanges: Partial<State>,
+    previousState: State
 ): void;
 ```
 
@@ -206,7 +219,7 @@ class FrozenYogurt extends Component {
 ### `setState`
 
 ```ts
-function setState(newState: object): void;
+function setState(newState: Partial<State>): void;
 ```
 
 A method that updates the component's state and calls all [registered observers](../advanced/observer-pattern.md) including the lifecycle methods (e.g. `render`, `update`, `validate`). Only the properties that are changing need to be included in `newState`. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) and ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
@@ -239,15 +252,11 @@ class FrozenYogurt extends Component {
 
 ```ts
 function subscribe(
-    observer: function (
-        stateChanges: object,
-        previousState: object,
-        instance: object
-    ): void
-): void
+    observer: (stateChanges: Partial<State>, previousState: State) => void
+): void;
 ```
 
-Register a callback function which is called when the state changes, after the lifecycle methods. See ["Observer Pattern"](../advanced/observer-pattern.md) to learn more.
+Registers a callback function which is called when the state changes, after the lifecycle methods. See ["Observer Pattern"](../advanced/observer-pattern.md) to learn more.
 
 ```js
 const instance = new FrozenYogurt(rootElement);
@@ -261,15 +270,11 @@ instance.subscribe((stateChanges) => {
 
 ```ts
 function unsubscribe(
-    observer: function(
-        stateChanges: object,
-        previousState: object,
-        instance: object
-    ): void
-): void
+    observer: (stateChanges: Partial<State>, previousState: State) => void
+): void;
 ```
 
-Deregister a callback function that was previously subscribed to the instance. The observer callback must be a direct reference to the same function passed to `subscribe`. Use of this method is uncommon because all registered observers are automatically cleared when the component is destroyed.
+Deregisters a callback function that was previously subscribed to the instance. The observer callback must be a direct reference to the same function passed to `subscribe`. Use of this method is uncommon because all registered observers are automatically cleared when the component is destroyed.
 
 ```js
 const instance = new FrozenYogurt(rootElement);
@@ -283,10 +288,9 @@ instance.unsubscribe(observer);
 ### `update`
 
 ```ts
-function update(
-    stateChanges: object,
-    previousState: object,
-    instance: object
+protected function update?(
+    stateChanges: Partial<State>,
+    previousState: State
 ): void;
 ```
 
@@ -303,10 +307,9 @@ class FrozenYogurt extends Component {
 ### `validate`
 
 ```ts
-function validate(
-    stateChanges: object,
-    previousState: object,
-    instance: object
+protected function validate?(
+    stateChanges: Partial<State>,
+    previousState: State
 ): void;
 ```
 
@@ -330,7 +333,7 @@ Class properties should be defined with a [getter](https://developer.mozilla.org
 
 ### `defaultState`
 
--   type: `object`
+-   type: `Record<string, any>`
 
 Used to define default values for the state. Values are defaulted when their value is `undefined`, not `null`.
 
@@ -376,7 +379,7 @@ class FrozenYogurt extends Component {
 
 ### `stateTypes`
 
--   type: `object`
+-   type: `Record<string, any>`
 
 Used to perform for [typechecking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) on the state properties. See ["Typechecking State"](../advanced/typechecking-state.md) to learn more.
 
@@ -390,14 +393,4 @@ class FrozenYogurt extends Component {
         };
     }
 }
-```
-
-### `instances`
-
--   type: `array`
-
-A read-only list of every active instance of the component and its subclasses. This feature is useful to gain access to instances created in a different scope.
-
-```js
-console.log(Component.instances); // [Component, Component, ...]
 ```

@@ -39,10 +39,10 @@ window.froyojs.setClasses;
 
 ```ts
 function createElement(
-    tag: string,
-    attributes?: object,
-    children?: string | DOMNode
-): HTMLElement;
+    tag: keyof HTMLElementTagNameMap,
+    attributes?: { [key: string]: string } | null,
+    children?: string | Node
+): Element;
 ```
 
 Creates a new DOM element, optionally with attributes and children.
@@ -61,7 +61,10 @@ class MyComponent extends Component {
 ### `setAttributes`
 
 ```ts
-function setAttributes(target: HTMLElement, attributes?: object): void;
+function setAttributes(
+    target: Element,
+    attributes?: { [key: string]: string | null | undefined }
+): void;
 ```
 
 Sets multiple attributes on an element simultaneously. If a value is `null`, the corresponding attribute will be removed. If it is `undefined` it will be ignored and the attribute will not be updated.
@@ -82,7 +85,7 @@ class MyComponent extends Component {
 ### `setClasses`
 
 ```ts
-function setClasses(target: HTMLElement, classes: object): void;
+function setClasses(target: Element, classes: { [key: string]: boolean }): void;
 ```
 
 Adds and/or removes CSS classes to/from an element's class list. Each key in the `classes` object is the class that should be added or removed. If the corresponding value is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) it will be added, otherwise it will be removed.

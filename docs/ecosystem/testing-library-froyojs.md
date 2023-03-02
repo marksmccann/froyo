@@ -36,10 +36,14 @@ Froyo Testing Library re-exports everything from DOM Testing Library as well as 
 ### `render`
 
 ```ts
-function render(html: HTMLString, initialize: function(): void, options?: RenderOptions): RenderResult
+function render<H, T extends Component>(
+    html: string,
+    initialize?: (() => T | T[]) | null,
+    options?: RenderOptions
+): RenderResult;
 ```
 
-Renders an HTML string into a container that is appended to the document and then calls `initialize` to instantiate Froyo components.
+Renders an HTML string into a container that is appended to the document. It then calls an `initialize` method that is used to instantiate and return Froyo component(s).
 
 ```js
 import '@testing-library/jest-dom';
@@ -66,6 +70,8 @@ test('renders a greeting', () => {
 
 #### `container`
 
+-   type: `Element | DocumentFragment`
+
 By default, Froyo Testing Library will create a div and append it to the base element. This element is the container where the provided `html` is rendered. If you provide your own container via this option, it will not be appended to `document.body` automatically.
 
 ```js
@@ -87,6 +93,8 @@ new HelloWorld(container.querySelector('#root'));
 :::
 
 #### `baseElement`
+
+-   type: `Element | DocumentFragment`
 
 If the container is specified, then this defaults to that, otherwise this defaults to `document.body`. This is used as the base element for the queries. If you provide your own base element via this option or `container`, it will not be appended to `document.body` automatically.
 
@@ -110,6 +118,8 @@ new HelloWorld(baseElement.querySelector('#root'));
 
 #### `queries`
 
+-   type: `Queries`
+
 Queries to bind to the `baseElement`. Overrides the default set of queries from DOM Testing Library unless merged.
 
 ```js
@@ -131,6 +141,8 @@ The render method returns an object with the following properties:
 
 #### `...queries`
 
+-   type: `Queries`
+
 Most importantly, the queries from DOM Testing Library are automatically returned with their first argument bound to the `baseElement`, which defaults to `document.body`.
 
 See [Queries](https://testing-library.com/docs/queries/about) for a complete list.
@@ -144,13 +156,24 @@ const { getByText, queryByLabelText } = render(
 
 #### `container`
 
+-   type: `Element`
+
 The containing DOM node for the rendered `html`.
 
 #### `baseElement`
 
+-   type: `Element`
+
 The containing DOM node where the container was appended; defaults to `document.body`.
 
 #### `rerender`
+
+```ts
+function rerender(
+    root: HTMLElement | string,
+    newState?: { [key: string]: any }
+) => void
+```
 
 This function will rerender a single component by updating its state. The first argument must be an HTML element (or query string) to the root element of the desired component. When a corresponding instance is identified, its state is then updated with the data passed to the second argument, causing the component to update and rerender.
 
@@ -168,6 +191,10 @@ rerender('#root', { message: 'Goodbye, World!' });
 
 #### `destroy`
 
+```ts
+function destroy(): void;
+```
+
 This will destroy the component instance(s) and remove the container element from the DOM.
 
 ```js
@@ -182,6 +209,10 @@ destroy(); // the component is destroyed and now: document.body.innerHTML === ''
 ```
 
 ### `cleanup`
+
+```ts
+function cleanup(): void;
+```
 
 Destroys all instances and removes all elements that were created with `render`. Failing to call cleanup when you've called render could result in a memory leak and a test environment that is not pure (which can lead to errors that are difficult to debug).
 

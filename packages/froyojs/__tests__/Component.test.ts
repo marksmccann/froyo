@@ -7,10 +7,11 @@ import createElement from '../src/createElement';
 import addEventListener from '../src/addEventListener';
 import createMutationObserver from '../src/createMutationObserver';
 import createMediaQueryListener from '../src/createMediaQueryListener';
-
-interface FroyoState {
-    [key: string]: any;
-}
+import type {
+    ComponentEventListener,
+    ComponentMediaQueryListener,
+    ComponentMutationObserver,
+} from '../src/types';
 
 describe('component', () => {
     it('should fail if root element is missing', () => {
@@ -21,7 +22,7 @@ describe('component', () => {
     });
 
     it('should set initial state via HTML', () => {
-        class Foo extends Component {}
+        class Foo extends Component<{ foo: string }> {}
         const initialState = JSON.stringify({ foo: 'bar' });
         const rootElement = createElement('div', {
             'data-initial-state': initialState,
@@ -34,7 +35,7 @@ describe('component', () => {
     });
 
     it('should set initial state via constructor', () => {
-        class Foo extends Component {}
+        class Foo extends Component<{ foo: string }> {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement, { foo: 'bar' });
 
@@ -44,7 +45,7 @@ describe('component', () => {
     });
 
     it('should favor initial state from constructor over HTML', () => {
-        class Foo extends Component {}
+        class Foo extends Component<{ foo: string }> {}
         const initialState = JSON.stringify({ foo: 'bar' });
         const rootElement = createElement('div', {
             'data-initial-state': initialState,
@@ -104,10 +105,25 @@ describe('component', () => {
         class Foo extends Component {
             render() {}
         }
-        class Bar extends Component {
+        class Bar extends Component<
+            {
+                foo: string;
+            },
+            {
+                foo: HTMLElement | null;
+            },
+            {
+                foo: ComponentEventListener;
+                bar: ComponentMediaQueryListener;
+                baz: ComponentMutationObserver;
+            },
+            {
+                foo: Foo;
+            }
+        > {
             setup() {
-                this.components = {
-                    foo: new Foo(this.rootElement),
+                this.state = {
+                    foo: 'bar',
                 };
 
                 this.elements = {
@@ -125,8 +141,8 @@ describe('component', () => {
                     }),
                 };
 
-                this.state = {
-                    foo: 'bar',
+                this.components = {
+                    foo: new Foo(this.rootElement),
                 };
             }
 
@@ -150,7 +166,17 @@ describe('component', () => {
     });
 
     it('should assign valid DOM nodes to elements property', () => {
-        class Foo extends Component {
+        class Foo extends Component<
+            {},
+            {
+                null: null;
+                createElement: HTMLElement;
+                querySelector: Node | null;
+                textNode: Node;
+                selectorAll: NodeList;
+                byTagName: HTMLCollection;
+            }
+        > {
             setup() {
                 this.elements = {
                     null: null,
@@ -167,9 +193,9 @@ describe('component', () => {
                 expect(this.elements.createElement).toBeInstanceOf(Node);
                 expect(this.elements.querySelector).toBeInstanceOf(Node);
                 expect(this.elements.textNode).toBeInstanceOf(Node);
-                expect(Array.isArray(this.elements.selectorAll)).toBe(true);
+                expect(this.elements.selectorAll).toBeInstanceOf(NodeList);
                 expect(this.elements.selectorAll).toHaveLength(2);
-                expect(Array.isArray(this.elements.byTagName)).toBe(true);
+                expect(this.elements.byTagName).toBeInstanceOf(HTMLCollection);
                 expect(this.elements.byTagName).toHaveLength(2);
             }
         }
@@ -186,33 +212,35 @@ describe('component', () => {
             .mockImplementation(() => {});
 
         class Foo extends Component {
+            render() {}
+        }
+        class Bar extends Component<
+            {},
+            {},
+            { foo: ComponentEventListener },
+            { foo: Foo }
+        > {
             setup() {
-                // @ts-ignore
-                this.elements = { foo: '' };
-                // @ts-ignore
-                this.components = { foo: null };
-                // @ts-ignore
-                this.listeners = { foo: null };
+                // @ts-expect-error
+                this.listeners = { foo: undefined };
+                // @ts-expect-error
+                this.components = { foo: undefined };
             }
 
             validate() {
                 expect(this.components.foo).toBeUndefined();
                 expect(this.listeners.foo).toBeUndefined();
-                expect(this.elements.foo).toBeUndefined();
             }
         }
         const rootElement = createElement('div');
-        const instance = new Foo(rootElement);
+        const instance = new Bar(rootElement);
 
-        expect(consoleErrorSpy).toHaveBeenCalledTimes(3);
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
         expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is not an instance of "Component"')
         );
         expect(consoleErrorSpy).toHaveBeenCalledWith(
             expect.stringContaining('is missing a "destroy" function')
-        );
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('is not a valid DOM node')
         );
 
         instance.destroy();
@@ -223,7 +251,7 @@ describe('component', () => {
             .spyOn(console, 'error')
             .mockImplementation(() => {});
 
-        class Foo extends Component {}
+        class Foo extends Component<{ foo: string }> {}
         const rootElement = createElement('div');
         const instance = new Foo(rootElement);
 
@@ -241,41 +269,8 @@ describe('component', () => {
         instance.destroy();
     });
 
-    it('should replace previously defined properties', () => {
-        class Foo extends Component {}
-        const rootElement = createElement('div');
-        const component1 = new Foo(rootElement);
-        const component2 = new Foo(rootElement);
-        const listener1 = addEventListener(rootElement, 'click', () => {});
-        const listener2 = addEventListener(rootElement, 'click', () => {});
-        class Bar extends Component {
-            setup() {
-                this.components = { foo: component1 };
-                this.listeners = { foo: listener1 };
-
-                expect(this.components.foo).toStrictEqual(component1);
-                expect(this.listeners.foo).toStrictEqual(listener1);
-            }
-
-            update() {
-                this.components = { foo: component2 };
-                this.listeners = { foo: listener2 };
-
-                expect(this.components.foo).toStrictEqual(component2);
-                expect(this.listeners.foo).toStrictEqual(listener2);
-            }
-        }
-
-        const instance = new Bar(rootElement);
-
-        // update the state to force it to rerender
-        instance.setState({ foo: 'bar' });
-
-        instance.destroy();
-    });
-
     it('should default state from "defaultState"', () => {
-        class Foo extends Component {
+        class Foo extends Component<{ foo: string | null }> {
             static get defaultState() {
                 return { foo: 'bar' };
             }
@@ -304,29 +299,27 @@ describe('component', () => {
         const validateSpy = jest.fn();
         const renderSpy = jest.fn();
         const updateSpy = jest.fn();
-        class Foo extends Component {
-            validate(
-                stateChanges: FroyoState,
-                previousState: FroyoState,
-                instance: Foo
-            ) {
-                validateSpy(stateChanges, previousState, instance);
+        type State = {};
+        class Foo extends Component<State> {
+            protected validate(
+                stateChanges: Partial<State>,
+                previousState: {}
+            ): void {
+                validateSpy(stateChanges, previousState);
             }
 
-            render(
-                stateChanges: FroyoState,
-                previousState: FroyoState,
-                instance: Foo
-            ) {
-                renderSpy(stateChanges, previousState, instance);
+            protected render(
+                stateChanges: Partial<State>,
+                previousState: {}
+            ): void {
+                renderSpy(stateChanges, previousState);
             }
 
-            update(
-                stateChanges: FroyoState,
-                previousState: FroyoState,
-                instance: Foo
-            ) {
-                updateSpy(stateChanges, previousState, instance);
+            protected update(
+                stateChanges: Partial<State>,
+                previousState: {}
+            ): void {
+                updateSpy(stateChanges, previousState);
             }
         }
         const rootElement = createElement('div');
@@ -335,18 +328,18 @@ describe('component', () => {
         expect(validateSpy).toHaveBeenCalledTimes(1);
         expect(renderSpy).toHaveBeenCalledTimes(1);
         expect(updateSpy).toHaveBeenCalledTimes(1);
-        expect(validateSpy).toHaveBeenCalledWith({}, {}, instance);
-        expect(renderSpy).toHaveBeenCalledWith({}, {}, instance);
-        expect(updateSpy).toHaveBeenCalledWith({}, {}, instance);
+        expect(validateSpy).toHaveBeenCalledWith({}, {});
+        expect(renderSpy).toHaveBeenCalledWith({}, {});
+        expect(updateSpy).toHaveBeenCalledWith({}, {});
 
         instance.setState({ foo: 'bar' });
 
         expect(validateSpy).toHaveBeenCalledTimes(2);
         expect(renderSpy).toHaveBeenCalledTimes(2);
         expect(updateSpy).toHaveBeenCalledTimes(2);
-        expect(validateSpy).toHaveBeenCalledWith({ foo: 'bar' }, {}, instance);
-        expect(renderSpy).toHaveBeenCalledWith({ foo: 'bar' }, {}, instance);
-        expect(updateSpy).toHaveBeenCalledWith({ foo: 'bar' }, {}, instance);
+        expect(validateSpy).toHaveBeenCalledWith({ foo: 'bar' }, {});
+        expect(renderSpy).toHaveBeenCalledWith({ foo: 'bar' }, {});
+        expect(updateSpy).toHaveBeenCalledWith({ foo: 'bar' }, {});
 
         instance.setState({ foo: 'bar' });
 
@@ -368,7 +361,7 @@ describe('component', () => {
         instance.setState({ foo: 'bar' });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith({ foo: 'bar' }, {}, instance);
+        expect(callback).toHaveBeenCalledWith({ foo: 'bar' }, {});
 
         instance.unsubscribe(callback);
         instance.unsubscribe(callback);
@@ -399,12 +392,12 @@ describe('component', () => {
         instance.destroy();
     });
 
-    it('should type-check state properties', () => {
+    it('should perform runtime type-checking for state', () => {
         const consoleErrorSpy = jest
             .spyOn(console, 'error')
             .mockImplementation(() => {});
 
-        class Foo extends Component {
+        class Foo extends Component<{ foo: string }> {
             static get stateTypes() {
                 return { foo: PropTypes.string };
             }
@@ -425,7 +418,7 @@ describe('component', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error');
         process.env.NODE_ENV = 'production';
 
-        class Foo extends Component {
+        class Foo extends Component<{ foo: string }> {
             static get stateTypes() {
                 return { foo: PropTypes.string };
             }
@@ -437,19 +430,5 @@ describe('component', () => {
         expect(consoleErrorSpy).not.toHaveBeenCalled();
 
         instance.destroy();
-    });
-
-    it('should store component instances in static variable', () => {
-        class Foo1 extends Component {}
-        class Foo2 extends Component {}
-        const instance1 = new Foo1(createElement('div'));
-        const instance2 = new Foo2(createElement('div'));
-
-        expect(Component.instances).toHaveLength(2);
-        expect(Component.instances[0]).toStrictEqual(instance1);
-        expect(Component.instances[1]).toStrictEqual(instance2);
-
-        instance1.destroy();
-        instance2.destroy();
     });
 });

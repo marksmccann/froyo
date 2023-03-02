@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Component Lifecycle
 
 This guide introduces the concept of the component lifecycle.
@@ -31,6 +34,9 @@ When the component needs to be removed, `destroy` must be called manually.
 
 When defining a component, the lifecycle methods are optional, except for `render`. Add the others to the class on an as-needed basis. See the [API reference](../api/component.md#instance-methods) to learn more.
 
+<Tabs>
+<TabItem value="js" label="JavaScript" default>
+
 ```js
 class FrozenYogurt extends Component {
     setup() {
@@ -57,13 +63,50 @@ class FrozenYogurt extends Component {
 }
 ```
 
+</TabItem>
+<TabItem value="ts" label="TypeScript" default>
+
+```ts
+type State = {};
+
+class FrozenYogurt extends Component<State> {
+    protected setup(): void {
+        /* perform setup tasks */
+    }
+
+    protected validate(
+        stateChanges: Partial<State>,
+        previousState: State
+    ): void {
+        /* perform validation before render */
+    }
+
+    protected render(stateChanges: Partial<State>, previousState: State): void {
+        /* perform DOM updates */
+    }
+
+    protected update(stateChanges: Partial<State>, previousState: State): void {
+        /* perform updates after render */
+    }
+
+    public destroy(): void {
+        /* perform cleanup tasks */
+
+        super.destroy(); // cleanup the parent
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
 <br />
 
 ---
 
 ## Setting State Correctly
 
-The state cannot be updated directly. In fact, if you attempt to do so after the component has initialized, it will not work and an error message will log to the console.
+Outside of the [`setup`](../api/component.md#setup) method, `this.state` cannot be set directly. In fact, if you attempt to do so, it will not work and an error message will log to the console.
 
 ```js
 // Incorrect
@@ -90,15 +133,13 @@ Instead, use [`setState`](../api/component.md#setstate) which will update the st
 this.setState({ flavor: 'Vanilla' });
 ```
 
-The only place where it is appropriate to set `this.state` directly is in [`setup`](../api/component.md#setup), before the component has initialized.
-
 <br />
 
 ---
 
 ## Determining the Initial State
 
-When a component begins initialization, data regarding its state is collected, merged, and saved. In reverse order of priority, the data is collected from the following three sources:
+When a component is initialized, the initial state is collected from multiple sources, merged, and assigned to [`this.state`](../api/component.md#state). In reverse order of priority, the data is collected from the following three sources:
 
 1\. The [`defaultState`](../api/component.md#defaultstate) from the class definition.
 
@@ -132,20 +173,49 @@ new FrozenYogurt('#root', { flavor: 'Vanilla' });
 
 <br />
 
-By the time [`setup`](../api/component.md#setup) is called, the data from the sources above have been merged and are available on `this.state`. While in this method, `this.state` can by set directly. Ultimately, whatever the state is at the end of this method, will be the initial state of the component. Keep in mind that assignments to `this.state` extend the existing object, they do not replace it.
+---
+
+## Setting the Initial State
+
+If needed, the state can by set directly from within the [`setup`](../api/component.md#setup) method. This is not always necessary, but it can be useful for setting state properties dynamically.
 
 :::info
 
-Sometimes, initial state properties must be set dynamically (e.g. referencing the viewport width to determine the initial layout of a component). This is the appropriate place to perform that logic. Alternatively, calling `setState` from [`update`](../api/component.md#update) would also be appropriate (if the logic can wait until after the initial render).
+Setting the state this way replaces the entire state object; giving you complete control over the initial state of the component. Whatever this property is set to, will be the initial state of the component. If used, make sure to spread the state object to preserve the other values.
 
 :::
+
+<Tabs>
+<TabItem value="js" label="JavaScript" default>
 
 ```js
 class FrozenYogurt extends Component {
     setup() {
         this.state = {
-            flavor: 'Vanilla',
+            ...this.state, // extend the state
+            large: window.innerWidth > 500,
         };
     }
 }
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript" default>
+
+```ts
+type State = {
+    large: boolean;
+};
+
+class FrozenYogurt extends Component<State> {
+    protected setup(): void {
+        this.state = {
+            ...this.state, // extend the state
+            large: window.innerWidth > 500,
+        };
+    }
+}
+```
+
+</TabItem>
+</Tabs>

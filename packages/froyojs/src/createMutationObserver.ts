@@ -1,8 +1,10 @@
+import type { ComponentMutationObserver } from './types';
+
 function createMutationObserver(
     target: Node,
     callback: MutationCallback,
     options: MutationObserverInit
-) {
+): ComponentMutationObserver {
     const observer = new MutationObserver(callback);
 
     observer.observe(target, options);

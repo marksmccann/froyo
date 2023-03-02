@@ -1,10 +1,8 @@
-// manually declare this module for smaller bundle
+// "checkPropTypes" must be imported directly for produce
+// the smallest bundle size, however types do not exist for
+// that export so the module must be declared manually
 declare module 'prop-types/checkPropTypes' {
-    export default function checkPropTypes(
-        typeSpecs: any,
-        values: any,
-        location: string,
-        componentName: string,
-        getStack?: () => any
-    ): void;
+    import { checkPropTypes } from '@types/prop-types';
+
+    export default checkPropTypes;
 }

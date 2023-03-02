@@ -2,7 +2,7 @@ import { Component, createElement } from 'froyojs';
 import { render, cleanup } from '../src/pure';
 
 describe('render and cleanup', () => {
-    class Foo extends Component {
+    class Foo extends Component<{ text: string }> {
         render() {
             const { rootElement, state } = this;
 
@@ -143,5 +143,21 @@ describe('render and cleanup', () => {
             result.rerender('#foo');
             result.destroy();
         }).not.toThrow();
+    });
+
+    it('should instantiate multiple instances', () => {
+        const { queryByText } = render(
+            `
+            <div id="foo1"></div>
+            <div id="foo2"></div>
+        `,
+            () => [
+                new Foo('#foo1', { text: '1' }),
+                new Foo('#foo2', { text: '2' }),
+            ]
+        );
+
+        expect(queryByText('1')).toBeInTheDocument();
+        expect(queryByText('2')).toBeInTheDocument();
     });
 });

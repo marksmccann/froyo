@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 
 import Component from './Component';
+import type { ComponentConstructorList } from './types';
 
-function createInitializer(componentList: {
-    [key: string]: { new (root: string | Element): Component };
-}) {
-    return function initialize() {
+function createInitializer<T>(
+    componentList: { [s: string]: any } & ComponentConstructorList<T>
+) {
+    return function initialize(): T[] {
         const rootElements = document.querySelectorAll('[data-initialize]');
-        const instances: Component[] = [];
+        const instances: T[] = [];
 
-        Array.from(rootElements).forEach((rootElement) => {
+        rootElements.forEach((rootElement) => {
             const name = rootElement.getAttribute('data-initialize') || '';
 
             if (

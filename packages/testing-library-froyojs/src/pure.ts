@@ -30,14 +30,14 @@ export interface RenderOptions<
 
 const renderedContainers: Map<HTMLElement, RenderResult> = new Map();
 
-function render(
-    html: string,
-    initialize?: (() => any) | null,
+function render<H extends string, T extends Component>(
+    html: H,
+    initialize?: (() => T | T[]) | null,
     options: RenderOptions = {}
 ): RenderResult {
     const { queries } = options;
     const { container, baseElement: base } = options;
-    let instances: Component[] = [];
+    let instances: T[] = [];
     let containerElement: HTMLElement;
     let baseElement: HTMLElement;
 
@@ -68,13 +68,13 @@ function render(
     containerElement.innerHTML = html.trim();
 
     if (initialize) {
-        // the number of instances that already exist
-        const instancesBefore = Component.instances.length;
+        const result = initialize();
 
-        initialize();
-
-        // retrieve the instances that were just created
-        instances = Component.instances.reverse().slice(instancesBefore * -1);
+        if (Array.isArray(result)) {
+            instances = result;
+        } else {
+            instances = [result];
+        }
     }
 
     const data: RenderResult = {

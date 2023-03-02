@@ -1,10 +1,10 @@
 # External Control
 
-This guide explores a technique for controlling a component externally.
+This guide outlines a technique for controlling a component externally.
 
 ## Introduction
 
-By default, Froyo components update their own state internally, as they respond to events. However, there are times it may be necessary to hijack this behavior so it can be controlled manually. For example, you may want to perform an asynchronous request before opening a modal.
+By default, Froyo components update their own state internally as they respond to events. However, there are times it may be necessary to hijack this behavior so it can be controlled manually. For example, you may want to perform an asynchronous request before opening a modal.
 
 <br />
 
@@ -16,7 +16,7 @@ To enable external control, define an optional state property that expects a fun
 
 ```js
 class Modal extends Component {
-    handleOpenClick() {
+    open() {
         if (this.props.onOpen) {
             this.props.onOpen(true);
         } else {

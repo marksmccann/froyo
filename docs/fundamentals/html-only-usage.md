@@ -91,32 +91,6 @@ After initialization the `data-initial-state` attribute will be removed.
 
 ---
 
-## Retrieving Component Instances
-
-If one has access to the [`Component`](../api/component.md) class, it is possible to retrieve any component instance. The [`instances`](../api/component.md#instances) class property returns an immutable array of all active component instances. This feature is particularly useful for recalling instances that were created by an `initializer` in a different scope.
-
-```js
-console.log(Component.instances); // [Component, Component, ...]
-```
-
-This array can then be searched or filtered to find specific instance(s), for example:
-
-```js
-// search for an instance with a specific root element
-const myYogurt = Component.instances.find(
-    (instance) => instance.rootElement.id === 'my-yogurt'
-);
-
-// filter for instances created by a specific constructor
-const allYogurts = Component.instances.filter(
-    (instance) => instance instanceof FrozenYogurt
-);
-```
-
-<br />
-
----
-
 ## Initializing an Entire Library
 
 Create an initializer for an entire library by importing all of the components at once.

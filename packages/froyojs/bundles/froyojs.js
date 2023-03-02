@@ -168,61 +168,45 @@
 
     /* eslint-disable no-console */
     var _Component_components, _Component_elements, _Component_initialized, _Component_listeners, _Component_observers, _Component_rootElement, _Component_state;
-    // stores references to component instances
-    const instances = new Set();
     class Component {
-        static get instances() {
-            return Array.from(instances);
-        }
         get components() {
-            return Object.fromEntries(__classPrivateFieldGet(this, _Component_components, "f"));
+            return { ...__classPrivateFieldGet(this, _Component_components, "f") };
         }
-        set components(newComponents) {
-            Object.entries(newComponents).forEach(([key, value]) => {
+        set components(components) {
+            const valid = Object.entries(components).every(([key, value]) => {
                 if (!(value instanceof Component)) {
                     console.error(`Warning: component "${key}" is not an instance of "Component"`);
-                    return;
+                    return false;
                 }
-                if (__classPrivateFieldGet(this, _Component_components, "f").has(key)) {
-                    __classPrivateFieldGet(this, _Component_components, "f").get(key)?.destroy();
-                }
-                __classPrivateFieldGet(this, _Component_components, "f").set(key, value);
+                return true;
             });
+            if (valid)
+                __classPrivateFieldSet(this, _Component_components, { ...components }, "f");
         }
         get displayName() {
-            const { name, displayName } = this.constructor;
+            const Subclass = this.constructor;
+            const { name, displayName } = Subclass;
             return displayName || name;
         }
         get elements() {
             return { ...__classPrivateFieldGet(this, _Component_elements, "f") };
         }
-        set elements(newElements) {
-            Object.entries(newElements).forEach(([key, value]) => {
-                if (value instanceof Node || value === null) {
-                    __classPrivateFieldGet(this, _Component_elements, "f")[key] = value;
-                    return;
-                }
-                if (value instanceof NodeList || value instanceof HTMLCollection) {
-                    __classPrivateFieldGet(this, _Component_elements, "f")[key] = Array.from(value);
-                    return;
-                }
-                console.error(`Warning: value assigned to "elements.${key}" is not a valid DOM node`);
-            });
+        set elements(elements) {
+            __classPrivateFieldSet(this, _Component_elements, { ...elements }, "f");
         }
         get listeners() {
-            return Object.fromEntries(__classPrivateFieldGet(this, _Component_listeners, "f"));
+            return { ...__classPrivateFieldGet(this, _Component_listeners, "f") };
         }
-        set listeners(newListeners) {
-            Object.entries(newListeners).forEach(([key, value]) => {
+        set listeners(listeners) {
+            const valid = Object.entries(listeners).every(([key, value]) => {
                 if (typeof value?.destroy !== 'function') {
                     console.error(`Warning: listener "${key}" is missing a "destroy" function`);
-                    return;
+                    return false;
                 }
-                if (__classPrivateFieldGet(this, _Component_listeners, "f").has(key)) {
-                    __classPrivateFieldGet(this, _Component_listeners, "f").get(key)?.destroy();
-                }
-                __classPrivateFieldGet(this, _Component_listeners, "f").set(key, value);
+                return true;
             });
+            if (valid)
+                __classPrivateFieldSet(this, _Component_listeners, { ...listeners }, "f");
         }
         get initialized() {
             return __classPrivateFieldGet(this, _Component_initialized, "f");
@@ -233,21 +217,24 @@
         get state() {
             return { ...__classPrivateFieldGet(this, _Component_state, "f") };
         }
-        set state(newState) {
+        set state(state) {
             if (this.initialized) {
                 console.error('Warning: state can only be updated via "setState" after initialization');
                 return;
             }
-            this.setState(newState);
+            this.setState(state);
         }
         constructor(root, initialState = {}) {
-            _Component_components.set(this, new Map());
+            // @ts-expect-error
+            _Component_components.set(this, {});
+            // @ts-expect-error
             _Component_elements.set(this, {});
             _Component_initialized.set(this, false);
-            _Component_listeners.set(this, new Map());
+            // @ts-expect-error
+            _Component_listeners.set(this, {});
             _Component_observers.set(this, new Set());
             _Component_rootElement.set(this, void 0);
-            _Component_state.set(this, {});
+            _Component_state.set(this, void 0);
             let htmlInitialState = {};
             let rootElement = null;
             if (typeof root === 'string') {
@@ -272,34 +259,36 @@
                 }
             }
             // merge and set initial states before setup
-            this.state = { ...htmlInitialState, ...initialState };
+            this.setState({ ...htmlInitialState, ...initialState });
             if (this.setup) {
                 this.setup();
             }
             if (this.validate) {
                 this.subscribe(this.validate.bind(this));
-                this.validate(this.state, {}, this);
+                this.validate.call(this, this.state, this.state);
             }
             if (this.render) {
                 this.subscribe(this.render.bind(this));
-                this.render(this.state, {}, this);
+                this.render.call(this, this.state, this.state);
             }
             if (this.update !== undefined) {
                 this.subscribe(this.update.bind(this));
-                this.update(this.state, {}, this);
+                this.update.call(this, this.state, this.state);
             }
             __classPrivateFieldSet(this, _Component_initialized, true, "f");
-            instances.add(this);
         }
         destroy() {
             __classPrivateFieldGet(this, _Component_observers, "f").clear();
-            __classPrivateFieldGet(this, _Component_listeners, "f").forEach((listener) => listener.destroy());
-            __classPrivateFieldGet(this, _Component_components, "f").forEach((component) => component.destroy());
-            instances.delete(this);
+            Object.values(__classPrivateFieldGet(this, _Component_listeners, "f")).forEach((listener) => {
+                listener.destroy();
+            });
+            Object.values(__classPrivateFieldGet(this, _Component_components, "f")).forEach((component) => {
+                component.destroy();
+            });
         }
         setState(newState) {
-            const { defaultState = {}, stateTypes = {} } = this
-                .constructor;
+            const Subclass = this.constructor;
+            const { defaultState = {}, stateTypes = {} } = Subclass;
             const previousState = this.state;
             const stateChanges = {};
             // identify state properties that have changed
@@ -309,7 +298,10 @@
                 }
             });
             if (Object.keys(stateChanges).length > 0 || !this.initialized) {
-                const nextState = { ...previousState, ...stateChanges };
+                const nextState = {
+                    ...previousState,
+                    ...stateChanges,
+                };
                 // default states that are "undefined"
                 Object.keys(defaultState).forEach((key) => {
                     if (typeof nextState[key] === 'undefined') {
@@ -325,7 +317,7 @@
                 // notify observers if initialized
                 if (this.initialized) {
                     __classPrivateFieldGet(this, _Component_observers, "f").forEach((observer) => {
-                        observer(stateChanges, previousState, this);
+                        observer.call(this, stateChanges, previousState);
                     });
                 }
             }
@@ -352,7 +344,7 @@
         return function initialize() {
             const rootElements = document.querySelectorAll('[data-initialize]');
             const instances = [];
-            Array.from(rootElements).forEach((rootElement) => {
+            rootElements.forEach((rootElement) => {
                 const name = rootElement.getAttribute('data-initialize') || '';
                 if (name in componentList &&
                     componentList[name].prototype instanceof Component) {

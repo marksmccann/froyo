@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Component Validation
 
 This guide explains the concept of component validation.
@@ -14,6 +17,9 @@ Component validation is the process of making sure the component is working prop
 
 To add validation to a component, include the [`validate`](../api/component.md#validate) lifecycle method on the class definition. Use the arguments provided to this callback to filter the validators. See ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
 
+<Tabs>
+<TabItem value="js" label="JavaScript" default>
+
 ```js
 class FrozenYogurt extends Component {
     validate() {
@@ -21,6 +27,20 @@ class FrozenYogurt extends Component {
     }
 }
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript" default>
+
+```ts
+class FrozenYogurt extends Component {
+    protected validate(): void {
+        /* validate something ... */
+    }
+}
+```
+
+</TabItem>
+</Tabs>
 
 <br />
 
@@ -48,6 +68,9 @@ validate() {
 
 In addition to [type-checking](../advanced/typechecking-state.md), it can be valuable to validate that the component state is being set correctly. For example, you could check if two mutually exclusive state properties are set at the same time.
 
+<Tabs>
+<TabItem value="js" label="JavaScript" default>
+
 ```js
 validate(stateChanges) {
     if ('flavor' in stateChanges || 'topping' in stateChanges) {
@@ -57,3 +80,24 @@ validate(stateChanges) {
     }
 }
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript" default>
+
+```ts
+type State = {
+    flavor: string,
+    topping: string,
+}
+
+validate(stateChanges: Partial<State>) {
+    if ('flavor' in stateChanges || 'topping' in stateChanges) {
+        if (this.state.flavor && this.state.topping) {
+            console.error('"flavor" and "topping" cannot be set at the same time');
+        }
+    }
+}
+```
+
+</TabItem>
+</Tabs>
