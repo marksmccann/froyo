@@ -1,6 +1,6 @@
 {
     "name": "froyojs",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "A framework for building UI components with Vanilla JavaScript",
     "main": "dist/froyojs.js",
     "module": "dist/froyojs.mjs",

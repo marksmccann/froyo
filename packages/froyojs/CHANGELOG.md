@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/marksmccann/froyo/compare/froyojs@0.7.0...froyojs@0.7.1) (2023-03-19)
+
+### Bug Fixes
+
+-   cleanup distributable files + typescript usage ([541dde9](https://github.com/marksmccann/froyo/commit/541dde97cbe2d072b93ce67a4b41aa2716dc95bf))
+
 # [0.7.0](https://github.com/marksmccann/froyo/compare/froyojs@0.6.2...froyojs@0.7.0) (2023-03-02)
 
 ### Features
