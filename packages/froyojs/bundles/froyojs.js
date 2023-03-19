@@ -166,7 +166,6 @@
 
     var checkPropTypes$1 = checkPropTypes_1;
 
-    /* eslint-disable no-console */
     var _Component_components, _Component_elements, _Component_initialized, _Component_listeners, _Component_observers, _Component_rootElement, _Component_state;
     class Component {
         get components() {
@@ -225,12 +224,9 @@
             this.setState(state);
         }
         constructor(root, initialState = {}) {
-            // @ts-expect-error
             _Component_components.set(this, {});
-            // @ts-expect-error
             _Component_elements.set(this, {});
             _Component_initialized.set(this, false);
-            // @ts-expect-error
             _Component_listeners.set(this, {});
             _Component_observers.set(this, new Set());
             _Component_rootElement.set(this, void 0);
@@ -249,7 +245,6 @@
             else {
                 throw new Error('Warning: the root element must be an HTML element');
             }
-            // retrieve initial state properties from the HTML
             if (rootElement.hasAttribute('data-initial-state')) {
                 try {
                     htmlInitialState = JSON.parse(rootElement.getAttribute('data-initial-state') || '');
@@ -258,7 +253,6 @@
                     console.error('Warning: "data-initial-state" must contain valid JSON');
                 }
             }
-            // merge and set initial states before setup
             this.setState({ ...htmlInitialState, ...initialState });
             if (this.setup) {
                 this.setup();
@@ -291,7 +285,6 @@
             const { defaultState = {}, stateTypes = {} } = Subclass;
             const previousState = this.state;
             const stateChanges = {};
-            // identify state properties that have changed
             Object.entries(newState).forEach(([key, value]) => {
                 if (value !== previousState[key]) {
                     stateChanges[key] = value;
@@ -302,19 +295,15 @@
                     ...previousState,
                     ...stateChanges,
                 };
-                // default states that are "undefined"
                 Object.keys(defaultState).forEach((key) => {
                     if (typeof nextState[key] === 'undefined') {
                         nextState[key] = defaultState[key];
                     }
                 });
-                // validate data types of state in non-production
                 {
                     checkPropTypes$1(stateTypes, nextState, 'state', this.displayName);
                 }
-                // update the state
                 __classPrivateFieldSet(this, _Component_state, nextState, "f");
-                // notify observers if initialized
                 if (this.initialized) {
                     __classPrivateFieldGet(this, _Component_observers, "f").forEach((observer) => {
                         observer.call(this, stateChanges, previousState);
@@ -339,7 +328,6 @@
     }
     _Component_components = new WeakMap(), _Component_elements = new WeakMap(), _Component_initialized = new WeakMap(), _Component_listeners = new WeakMap(), _Component_observers = new WeakMap(), _Component_rootElement = new WeakMap(), _Component_state = new WeakMap();
 
-    /* eslint-disable no-console */
     function createInitializer(componentList) {
         return function initialize() {
             const rootElements = document.querySelectorAll('[data-initialize]');

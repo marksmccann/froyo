@@ -7,11 +7,6 @@ import createElement from '../src/createElement';
 import addEventListener from '../src/addEventListener';
 import createMutationObserver from '../src/createMutationObserver';
 import createMediaQueryListener from '../src/createMediaQueryListener';
-import type {
-    ComponentEventListener,
-    ComponentMediaQueryListener,
-    ComponentMutationObserver,
-} from '../src/types';
 
 describe('component', () => {
     it('should fail if root element is missing', () => {
@@ -113,9 +108,9 @@ describe('component', () => {
                 foo: HTMLElement | null;
             },
             {
-                foo: ComponentEventListener;
-                bar: ComponentMediaQueryListener;
-                baz: ComponentMutationObserver;
+                foo: ReturnType<typeof addEventListener>;
+                bar: ReturnType<typeof createMediaQueryListener>;
+                baz: ReturnType<typeof createMutationObserver>;
             },
             {
                 foo: Foo;
@@ -217,7 +212,7 @@ describe('component', () => {
         class Bar extends Component<
             {},
             {},
-            { foo: ComponentEventListener },
+            { foo: ReturnType<typeof addEventListener> },
             { foo: Foo }
         > {
             setup() {

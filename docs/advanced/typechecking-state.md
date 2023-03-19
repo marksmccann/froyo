@@ -1,6 +1,6 @@
 # Typechecking State
 
-This guide explains how to add runtime type-checking to component state.
+This guide explains how to add runtime type-checking for a component's state.
 
 ## Introduction
 

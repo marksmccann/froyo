@@ -29,10 +29,9 @@ class FrozenYogurt extends Component {
 
 ```ts
 import { Component, addEventListener } from 'froyojs';
-import type { ComponentEventListener } from 'froyojs';
 
 type Listeners = {
-    click: ComponentEventListener;
+    click: ReturnType<typeof addEventListener>;
 };
 
 class FrozenYogurt extends Component<{}, {}, Listeners> {
@@ -77,10 +76,9 @@ class FrozenYogurt extends Component {
 
 ```ts
 import { Component, createMutationObserver } from 'froyojs';
-import type { ComponentMutationObserver } from 'froyojs';
 
 type Listeners = {
-    attributeChange: ComponentMutationObserver;
+    attributeChange: ReturnType<typeof createMutationObserver>;
 };
 
 class FrozenYogurt extends Component<{}, {}, Listeners> {
@@ -114,7 +112,7 @@ import { Component, createMediaQueryListener } from 'froyojs';
 class FrozenYogurt extends Component {
     setup() {
         this.listeners = {
-            mediaChanged: createMediaQueryListener(
+            mediaChange: createMediaQueryListener(
                 '(min-width: 500px)',
                 () => {}
             ),
@@ -128,16 +126,15 @@ class FrozenYogurt extends Component {
 
 ```ts
 import { Component, createMediaQueryListener } from 'froyojs';
-import type { ComponentMediaQueryListener } from 'froyojs';
 
 type Listeners = {
-    mediaChanged: ComponentMediaQueryListener;
+    mediaChange: ReturnType<typeof createMediaQueryListener>;
 };
 
 class FrozenYogurt extends Component<{}, {}, Listeners> {
     protected setup(): void {
         this.listeners = {
-            mediaChanged: createMediaQueryListener(
+            mediaChange: createMediaQueryListener(
                 '(min-width: 500px)',
                 () => {}
             ),
@@ -237,10 +234,8 @@ class FrozenYogurt extends Component {
 <TabItem value="ts" label="TypeScript" default>
 
 ```ts
-import type { ComponentListener } from 'froyojs';
-
 type Listeners = {
-    myCustomListener: ComponentListener;
+    myCustomListener: { destroy() => void };
 };
 
 class FrozenYogurt extends Component<{}, {}, Listeners> {

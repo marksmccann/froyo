@@ -4,6 +4,7 @@ import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
+import cleanup from 'rollup-plugin-cleanup';
 
 export default [
     {
@@ -11,6 +12,7 @@ export default [
         output: {
             file: 'dist/froyojs.js',
             format: 'cjs',
+            sourcemap: true,
         },
         external: [/prop-types/],
         plugins: [
@@ -24,6 +26,7 @@ export default [
                     declarationDir: 'dts',
                 },
             }),
+            cleanup(),
         ],
     },
     {
@@ -31,9 +34,15 @@ export default [
         output: {
             file: 'dist/froyojs.mjs',
             format: 'es',
+            sourcemap: true,
         },
         external: [/prop-types/],
-        plugins: [nodeResolve({ browser: true }), commonjs(), typescript()],
+        plugins: [
+            nodeResolve({ browser: true }),
+            commonjs(),
+            typescript(),
+            cleanup(),
+        ],
     },
     {
         input: 'src/index.ts',

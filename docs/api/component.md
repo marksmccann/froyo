@@ -35,13 +35,11 @@ window.froyojs.Component;
 
 ### `Component`
 
+<!-- prettier-ignore -->
 ```ts
 abstract class Component<
     State extends Record<string, any> = {},
-    Elements extends Record<
-        string,
-        null | Node | Array<Node> | NodeList | HTMLCollection
-    > = {},
+    Elements extends Record<string, null | Node | Array<Node> | NodeList | HTMLCollection> = {},
     Listeners extends Record<string, { destroy(): void }> = {},
     Components extends Record<string, Component> = {}
 > {}
@@ -56,7 +54,7 @@ class FrozenYogurt extends Component {}
 ### `Constructor`
 
 ```ts
-new Component(root: string | Element, initialState?: Record<string, any> })
+new (root: string | Element, initialState?: Record<string, any>);
 ```
 
 The first argument of the constructor is required. It must be an HTML element or a query selector for a valid element within in the DOM. The second argument is optional and is responsible for setting the initial state of the component.

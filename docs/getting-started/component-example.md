@@ -146,13 +146,12 @@ class Tabs extends Component {
 
 ```ts
 import PropTypes from 'prop-types';
-import type { ComponentEventListener } from './types';
 import {
     Component,
     addEventListener,
     setAttributes,
     setClasses,
-} from './index';
+} from 'froyojs';
 
 type State = {
     activeTab: number;
@@ -165,7 +164,7 @@ type Elements = {
 };
 
 type Listeners = {
-    click: ComponentEventListener;
+    click: ReturnType<typeof addEventListener>;
 };
 
 class Tabs extends Component<State, Elements, Listeners> {

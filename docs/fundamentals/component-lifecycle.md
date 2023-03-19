@@ -185,9 +185,6 @@ Setting the state this way replaces the entire state object; giving you complete
 
 :::
 
-<Tabs>
-<TabItem value="js" label="JavaScript" default>
-
 ```js
 class FrozenYogurt extends Component {
     setup() {
@@ -198,24 +195,3 @@ class FrozenYogurt extends Component {
     }
 }
 ```
-
-</TabItem>
-<TabItem value="ts" label="TypeScript" default>
-
-```ts
-type State = {
-    large: boolean;
-};
-
-class FrozenYogurt extends Component<State> {
-    protected setup(): void {
-        this.state = {
-            ...this.state, // extend the state
-            large: window.innerWidth > 500,
-        };
-    }
-}
-```
-
-</TabItem>
-</Tabs>

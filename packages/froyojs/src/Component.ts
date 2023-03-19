@@ -1,19 +1,15 @@
 /* eslint-disable no-console */
 
 import checkPropTypes from 'prop-types/checkPropTypes';
-import type {
-    ComponentListeners,
-    ComponentElements,
-    ComponentRoot,
-    ComponentState,
-    ComponentComponents,
-} from './types';
 
 abstract class Component<
-    State extends ComponentState = {},
-    Elements extends ComponentElements = {},
-    Listeners extends ComponentListeners = {},
-    Components extends ComponentComponents = {}
+    State extends Record<string, any> = {},
+    Elements extends Record<
+        string,
+        null | Node | Array<Node> | NodeList | HTMLCollection
+    > = {},
+    Listeners extends Record<string, { destroy(): void }> = {},
+    Components extends Record<string, Component> = {}
 > {
     protected static readonly defaultState?: Record<string, any>;
 
@@ -119,8 +115,11 @@ abstract class Component<
         this.setState(state);
     }
 
-    constructor(root: ComponentRoot, initialState: ComponentState = {}) {
-        let htmlInitialState: ComponentState = {};
+    constructor(
+        root: string | Element,
+        initialState: Record<string, any> = {}
+    ) {
+        let htmlInitialState: Record<string, any> = {};
         let rootElement: Element | null = null;
 
         if (typeof root === 'string') {
@@ -189,7 +188,7 @@ abstract class Component<
         const Subclass = this.constructor as typeof Component;
         const { defaultState = {}, stateTypes = {} } = Subclass;
         const previousState = this.state;
-        const stateChanges: ComponentState = {};
+        const stateChanges: Record<string, any> = {};
 
         // identify state properties that have changed
         Object.entries(newState).forEach(([key, value]) => {
@@ -199,7 +198,7 @@ abstract class Component<
         });
 
         if (Object.keys(stateChanges).length > 0 || !this.initialized) {
-            const nextState: ComponentState = {
+            const nextState: Record<string, any> = {
                 ...previousState,
                 ...stateChanges,
             };

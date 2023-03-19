@@ -1,11 +1,14 @@
 /* eslint-disable no-console */
 
 import Component from './Component';
-import type { ComponentConstructorList } from './types';
 
-function createInitializer<T>(
-    componentList: { [s: string]: any } & ComponentConstructorList<T>
-) {
+type ComponentList<T> = {
+    [K in keyof T]: {
+        new (root: string | Element, initialState?: Record<string, any>): T[K];
+    };
+} & Record<string, any>;
+
+function createInitializer<T>(componentList: ComponentList<T>) {
     return function initialize(): T[] {
         const rootElements = document.querySelectorAll('[data-initialize]');
         const instances: T[] = [];

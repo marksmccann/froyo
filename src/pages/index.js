@@ -12,10 +12,7 @@ export default function Home() {
     const { siteConfig } = useDocusaurusContext();
 
     return (
-        <Layout
-            title="Hello"
-            description="An ultra lightweight framework for building UI components."
-        >
+        <Layout title="Hello" description={siteConfig.tagline}>
             <header className={clsx('hero hero--primary', styles.heroBanner)}>
                 <div className="container margin-bottom--lg">
                     <img src="/froyo/img/logo.svg" alt="Froyo Logo" />
@@ -42,8 +39,8 @@ export default function Home() {
                             <div>
                                 <h3>No sugar added</h3>
                                 <p>
-                                    Build UI components with 100%, all natural,
-                                    vanilla JavaScript; no setup required.
+                                    Build components with 100%, all natural,
+                                    vanilla JavaScript. No setup required.
                                 </p>
                             </div>
                         </div>
@@ -51,8 +48,9 @@ export default function Home() {
                             <div>
                                 <h3>A low-fat alternative</h3>
                                 <p>
-                                    Weighing-in at 2k (gzipped), Froyo is a
-                                    fraction of the size of other UI frameworks.
+                                    Weighing-in at less than 2k (gzipped), Froyo
+                                    is a fraction of the size of other
+                                    frameworks.
                                 </p>
                             </div>
                         </div>
@@ -60,8 +58,9 @@ export default function Home() {
                             <div>
                                 <h3>Treat yourself</h3>
                                 <p>
-                                    Construct user interfaces effortlessly
-                                    without JavaScript, directly from the HTML.
+                                    Froyo is universally compatible with all
+                                    browsers and can be integrated into any
+                                    system.
                                 </p>
                             </div>
                         </div>

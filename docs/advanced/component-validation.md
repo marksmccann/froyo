@@ -22,7 +22,7 @@ To add validation to a component, include the [`validate`](../api/component.md#v
 
 ```js
 class FrozenYogurt extends Component {
-    validate() {
+    validate(stateChanges, previousState) {
         /* validate something ... */
     }
 }
@@ -33,7 +33,10 @@ class FrozenYogurt extends Component {
 
 ```ts
 class FrozenYogurt extends Component {
-    protected validate(): void {
+    protected validate(
+        stateChanges: Partial<State>,
+        previousState: State
+    ): void {
         /* validate something ... */
     }
 }
