@@ -47,8 +47,8 @@ window.froyojs.createMutationObserver;
 
 ```ts
 function addEventListener(
-    target: EventTarget,
-    type: keyof HTMLElementEventMap,
+    target: HTMLElement | Window | Document,
+    type: string,
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions
 ): {

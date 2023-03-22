@@ -4,7 +4,10 @@ import Component from './Component';
 
 type ComponentList<T> = {
     [K in keyof T]: {
-        new (root: string | Element, initialState?: Record<string, any>): T[K];
+        new (
+            root: string | HTMLElement,
+            initialState?: Record<string, any>
+        ): T[K];
     };
 } & Record<string, any>;
 

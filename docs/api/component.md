@@ -54,7 +54,7 @@ class FrozenYogurt extends Component {}
 ### `Constructor`
 
 ```ts
-new (root: string | Element, initialState?: Record<string, any>);
+new (root: string | HTMLElement, initialState?: Record<string, any>);
 ```
 
 The first argument of the constructor is required. It must be an HTML element or a query selector for a valid element within in the DOM. The second argument is optional and is responsible for setting the initial state of the component.

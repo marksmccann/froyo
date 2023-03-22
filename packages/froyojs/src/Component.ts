@@ -32,7 +32,7 @@ abstract class Component<
         (stateChanges: Partial<State>, previousState: State) => void
     > = new Set();
 
-    #rootElement: Element;
+    #rootElement: HTMLElement;
 
     #state!: State;
 
@@ -116,19 +116,19 @@ abstract class Component<
     }
 
     constructor(
-        root: string | Element,
+        root: string | HTMLElement,
         initialState: Record<string, any> = {}
     ) {
         let htmlInitialState: Record<string, any> = {};
-        let rootElement: Element | null = null;
+        let rootElement: HTMLElement | null = null;
 
         if (typeof root === 'string') {
             rootElement = document.body.querySelector(root);
-        } else if (root instanceof Element) {
+        } else if (root instanceof HTMLElement) {
             rootElement = root;
         }
 
-        if (rootElement instanceof Element) {
+        if (rootElement instanceof HTMLElement) {
             this.#rootElement = rootElement;
         } else {
             throw new Error(

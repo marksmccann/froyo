@@ -236,10 +236,10 @@
             if (typeof root === 'string') {
                 rootElement = document.body.querySelector(root);
             }
-            else if (root instanceof Element) {
+            else if (root instanceof HTMLElement) {
                 rootElement = root;
             }
-            if (rootElement instanceof Element) {
+            if (rootElement instanceof HTMLElement) {
                 __classPrivateFieldSet(this, _Component_rootElement, rootElement, "f");
             }
             else {
