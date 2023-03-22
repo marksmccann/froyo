@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/marksmccann/froyo/compare/froyojs@0.7.1...froyojs@0.7.2) (2023-03-22)
+
+### Bug Fixes
+
+-   improve typings for Component and addEventListener ([3d0e6e9](https://github.com/marksmccann/froyo/commit/3d0e6e9a870d8bfde0dd2f04538077391e3005f6))
+
 ## [0.7.1](https://github.com/marksmccann/froyo/compare/froyojs@0.7.0...froyojs@0.7.1) (2023-03-19)
 
 ### Bug Fixes
