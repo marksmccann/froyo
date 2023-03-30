@@ -56,7 +56,7 @@ function addEventListener(
 };
 ```
 
-Adds an event listener to the specified target element via [EventTarget.addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). It returns an object with a `destroy` function that removes the listener when called.
+Adds an event listener to an element and returns a `destroy` function to remove it.
 
 ```js
 class MyComponent extends Component {
