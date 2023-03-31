@@ -2,24 +2,24 @@
 
 import Component from './Component';
 
-type ComponentList<T> = {
-    [K in keyof T]: {
-        new (
-            root: string | HTMLElement,
-            initialState?: Record<string, any>
-        ): T[K];
-    };
-} & Record<string, any>;
+type Constructor = new (
+    root: string | HTMLElement,
+    initialState?: Record<string, any>
+) => Component;
 
-function createInitializer<T>(componentList: ComponentList<T>) {
-    return function initialize(): T[] {
-        const rootElements = document.querySelectorAll('[data-initialize]');
-        const instances: T[] = [];
+function createInitializer<T extends Record<string, Constructor>>(
+    componentList: T
+) {
+    return function initialize(): Array<Component> {
+        const rootElements =
+            document.querySelectorAll<HTMLElement>('[data-initialize]');
+        const instances: Array<Component> = [];
 
         rootElements.forEach((rootElement) => {
-            const name = rootElement.getAttribute('data-initialize') || '';
+            const name = rootElement.getAttribute('data-initialize');
 
             if (
+                name &&
                 name in componentList &&
                 componentList[name].prototype instanceof Component
             ) {

@@ -9,5 +9,4 @@ TODO:
 - add code of conduct
 - add dependency licenses to package?
 - update "any" types to "unknown"?
-- fix "createInitializer" types
 - add tsdoc comments
