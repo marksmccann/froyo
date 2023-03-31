@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/marksmccann/froyo/compare/froyojs@0.7.2...froyojs@0.7.3) (2023-03-31)
+
+### Bug Fixes
+
+-   improve typings for createInitializer tool ([cbaff63](https://github.com/marksmccann/froyo/commit/cbaff634a394e51e253ebedc80056b07663a0454))
+
 ## [0.7.2](https://github.com/marksmccann/froyo/compare/froyojs@0.7.1...froyojs@0.7.2) (2023-03-22)
 
 ### Bug Fixes
