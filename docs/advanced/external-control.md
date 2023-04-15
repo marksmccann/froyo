@@ -2,49 +2,58 @@
 
 This guide outlines a technique for controlling a component externally.
 
-## Introduction
+## Enabling external control
 
-By default, Froyo components update their own state internally as they respond to events. However, there are times it may be necessary to hijack this behavior so it can be controlled manually. For example, you may want to perform an asynchronous request before opening a modal.
+In some use cases, it may be useful to give consumers the ability to manually control the state of a component externally. To accomplish this, define an optional state property that expects a function. As a matter of convention, this property should begin with "on". Then, call this function (when it exists) when the component state is supposed to change.
 
-<br />
+:::tip
 
----
-
-## Enabling External Control
-
-To enable external control, define an optional state property that expects a function. As a matter of convention, this property should begin with "on". By wrapping `this.setState` in a condition, you can then favor the function over `this.setState` when it exists.
-
-```js
-class Modal extends Component {
-    open() {
-        if (this.props.onOpen) {
-            this.props.onOpen(true);
-        } else {
-            this.setState({ open: true });
-        }
-    }
-}
-```
-
-<br />
-
----
-
-## Taking External Control
-
-To take control of a component, provide the designated function to the state. After doing so, it becomes your responsibility to update the state so it remains functional.
-
-:::info
-
-If you just need to monitor and respond to state changes, the ["Observer Pattern"](./observer-pattern.md) is a better solution.
+Use the [observer pattern](./observer-pattern.md) instead of this option if you only need to respond to state changes.
 
 :::
 
 ```js
-const instance = new Modal(rootElement, {
-    onOpen: (open) => {
-        // do something before updating the state ...
-        instance.setState({ open });
+defineComponent({
+    state: {
+        open: {
+            type: Boolean,
+            default: false,
+        },
+        onOpen: {
+            type: Function,
+            default: null,
+        },
+    },
+    data: {
+        handleOpen() {
+            if (this.onOpen) {
+                this.onOpen(true);
+            } else {
+                this.open = true;
+            }
+        },
+    },
+    events: {
+        $root() {
+            return {
+                click: this.handleOpen,
+            };
+        },
+    },
+});
+```
+
+This will then allow the consumer to "take control" of the component by providing the `onOpen` state. They are now responsible for updating the state of the component; allowing them to perform tasks (e.g. asynchronous requests) before the state of the component is updated.
+
+```js
+const instance = new Modal('#root', {
+    // take control of the "open" state
+    onOpen: () => {
+        // the "open" state changed. Do something,
+        // like perform an asynchronous request ...
+
+        // then, update the state
+        instance.setState({ open: true });
     },
 });
 ```
@@ -53,10 +62,22 @@ const instance = new Modal(rootElement, {
 
 ---
 
-## Private State Properties
+## Readonly state properties
 
-In Froyo, the concept of private state does not exist. Every property in state can be read or changed externally. If a particular state property exists for internal component management, and should not be updated externally, make sure to communicate that to the consumer in the API documentation.
+By default, [state properties](../api/define-component.md#state) are public. This means that consumers can both read and set their value. However, there are times where a particular state property is only intended to be used internally. In these cases, the property can be set to `readonly`. This will allow consumers to read the value of the state, but they will be unable to set it. Any attempt to do so, via the [setState](../api/define-component.md#setstate) method, will result in the update being ignored and a warning being thrown (in non-production environments).
 
 ```js
-instance.state.someInternalState; // available externally
+defineComponent({
+    state: {
+        readonlyState: {
+            readonly: true, // <-- consumers cannot set value
+        },
+    },
+});
+```
+
+```js
+const instance = new FrozenYogurt('#root');
+
+instance.setState({ readonlyState: false }); // <-- will not work
 ```

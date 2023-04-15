@@ -3,47 +3,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
-import cleanup from 'rollup-plugin-cleanup';
+import filesize from 'rollup-plugin-filesize';
 
 export default [
-    {
-        input: 'src/index.ts',
-        output: {
-            file: 'dist/froyojs.js',
-            format: 'cjs',
-            sourcemap: true,
-        },
-        external: [/prop-types/],
-        plugins: [
-            nodeResolve({ browser: true }),
-            commonjs(),
-            typescript({
-                target: 'es2020',
-                filterRoot: 'src',
-                compilerOptions: {
-                    declaration: true,
-                    declarationDir: 'dts',
-                },
-            }),
-            cleanup(),
-        ],
-    },
-    {
-        input: 'src/index.ts',
-        output: {
-            file: 'dist/froyojs.mjs',
-            format: 'es',
-            sourcemap: true,
-        },
-        external: [/prop-types/],
-        plugins: [
-            nodeResolve({ browser: true }),
-            commonjs(),
-            typescript(),
-            cleanup(),
-        ],
-    },
     {
         input: 'src/index.ts',
         output: {
@@ -80,12 +42,8 @@ export default [
                     'process.env.NODE_ENV': JSON.stringify('production'),
                 },
             }),
+            filesize(),
             terser(),
         ],
-    },
-    {
-        input: 'dist/dts/index.d.ts',
-        output: [{ file: 'dist/froyojs.d.ts', format: 'es' }],
-        plugins: [dts.default()],
     },
 ];

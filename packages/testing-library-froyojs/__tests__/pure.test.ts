@@ -1,14 +1,19 @@
-import { Component, createElement } from 'froyojs';
+import { defineComponent } from 'froyojs';
 import { render, cleanup } from '../src/pure';
 
 describe('render and cleanup', () => {
-    class Foo extends Component<{ text: string }> {
-        render() {
-            const { rootElement, state } = this;
-
-            rootElement.innerHTML = state.text || 'foo';
-        }
-    }
+    const Foo = defineComponent<{ text: string }>({
+        state: {
+            text: {
+                default: 'foo',
+            },
+        },
+        render: {
+            $root() {
+                return this.text;
+            },
+        },
+    });
 
     afterEach(() => {
         cleanup();
@@ -42,7 +47,7 @@ describe('render and cleanup', () => {
     });
 
     it('should support a custom container', () => {
-        const container = createElement('div');
+        const container = document.createElement('div');
         const result = render('<div id="foo"></div>', () => new Foo('#foo'), {
             container: document.body.appendChild(container),
         });
@@ -53,7 +58,7 @@ describe('render and cleanup', () => {
     });
 
     it('should remove custom container from body when destroyed', () => {
-        const container = createElement('div');
+        const container = document.createElement('div');
         const result = render('<div id="foo"></div>', () => new Foo('#foo'), {
             container: document.body.appendChild(container),
         });
@@ -66,7 +71,7 @@ describe('render and cleanup', () => {
     });
 
     it('should support a custom base element', () => {
-        const baseElement = createElement('div');
+        const baseElement = document.createElement('div');
         const result = render(
             '<div class="foo"></div>',
             () => new Foo('.foo'),
@@ -90,7 +95,7 @@ describe('render and cleanup', () => {
     });
 
     it('should retrieve data from previously rendered container', () => {
-        const container = createElement('div');
+        const container = document.createElement('div');
         const result1 = render('<div id="foo"></div>', () => new Foo('#foo'), {
             container: document.body.appendChild(container),
         });
@@ -140,6 +145,7 @@ describe('render and cleanup', () => {
         result.destroy();
 
         expect(() => {
+            // @ts-expect-error
             result.rerender('#foo');
             result.destroy();
         }).not.toThrow();

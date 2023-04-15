@@ -1,33 +1,51 @@
 # Typechecking State
 
-This guide explains how to add runtime type-checking for a component's state.
+This guide explains how to add runtime [type-checking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) for a component's state.
 
-## Introduction
+## Adding type checks
 
-[Type checking](https://www.geeksforgeeks.org/type-checking-in-compiler-design/) is the process of verifying and enforcing constraints of types in values. It can be very helpful for catching bugs during the development process. If you have done [typechecking in React](https://reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper), this is likely a familiar concept. In fact, Froyo leverages the same [prop-types](https://github.com/facebook/prop-types) library as React.
+Add a type check to a [state option](../api/define-component.md#state) by including the `type` property. It's value must be one of the constructors listed below. Once added, the component will throw a warning in non-production environments if the value does not match that type (aside from `null` or `undefined`).
+
+The type can be any of the following constructors:
+
+-   String
+-   Number
+-   Boolean
+-   Array
+-   Object
+-   Date
+-   Function
+-   A custom class or constructor function
+
+```js
+defineComponent({
+    state: {
+        flavor: {
+            type: String, // value must be a `string`
+        },
+    },
+});
+```
 
 <br />
 
 ---
 
-## Adding Typechecking
+## Requiring state values
 
-To add runtime typechecking to a component, add the [`stateTypes`](../api/component.md#statetypes) property to the class definition. When this property exists, the component will automatically type-check the state in non-production environments. View the [prop-types](https://github.com/facebook/prop-types) documentation for a full list of available validators.
-
-:::info
-
-The property should be defined with a [getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) so that it is read-only and cannot be updated accidentally.
-
-:::
+If that value must be provided by the consumer, add the `required` property. When `true`, the component will throw a warning in non-production environments if `undefined`. Alternatively, consider setting a `default` value to ensure the property always has an explicitly defined value.
 
 ```js
-import PropTypes from 'prop-types';
-
-class FrozenYogurt extends Component {
-    static get stateTypes() {
-        return {
-            flavor: PropTypes.string,
-        };
-    }
-}
+defineComponent({
+    props: {
+        requiredState: {
+            type: Boolean,
+            required: true, // <-- the value cannot be `undefined`
+        },
+        defaultedState: {
+            type: Number,
+            default: 100, // <-- the value will be this, if `undefined`
+        },
+    },
+});
 ```

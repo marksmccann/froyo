@@ -32,13 +32,13 @@ Let's begin with a basic HTML 5 template; copy it to a HTML file and open it in 
 </html>
 ```
 
-### Add the Root Element
+### Add the root element
 
 Add an element to the body content which will serve as the component's root element.
 
 :::info
 
-Every Froyo component is required to have a root element. The root element is any HTML element, typically attached to the DOM. This element serves as the foundation of the component; it is used to instantiate it and is stored on the instance as [`this.rootElement`](../api/component.md#rootelement).
+Every Froyo component is required to have a root element. The root element can be any element type and it is typically attached to the DOM.
 
 :::
 
@@ -56,14 +56,14 @@ Add the following script to the bottom of the document to import the latest deve
 <body>
     ...
     <!-- highlight-start -->
-    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.js"></script>
     <!-- highlight-end -->
 </body>
 ```
 
-### Add Script Tag
+### Add script tag
 
-Add an empty script tag to the bottom of the document. This is where we will be working.
+Lastly, add an empty script tag to the bottom of the document. This is where we will be working.
 
 ```html
 <body>
@@ -78,29 +78,23 @@ Add an empty script tag to the bottom of the document. This is where we will be 
 
 Goal: Learn how to define a component and get it to render some content.
 
-### Define the Component Class
+### Define a new component
 
-Create a new component by extending the `Component` class.
-
-:::info
-
-Components are defined with [ES6 class syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) which is supported by modern browsers.
-
-:::
+Define a new component by calling the `defineComponent` function. This will return a constructor for our component.
 
 ```html
 <script>
-    class FrozenYogurt extends froyojs.Component {}
+    const FrozenYogurt = froyojs.defineComponent({});
 </script>
 ```
 
-### Initialize the Component
+### Initialize the component
 
-Now that we've defined a component class, let's initialize it with the root element.
+Now that we've defined a component, let's initialize it with the root element.
 
 ```html
 <script>
-    class FrozenYogurt extends froyojs.Component {}
+    const FrozenYogurt = froyojs.defineComponent({});
 
     /* highlight-start */
     const instance = new FrozenYogurt(document.getElementById('root'));
@@ -108,86 +102,84 @@ Now that we've defined a component class, let's initialize it with the root elem
 </script>
 ```
 
-The first argument of the constructor alternatively supports a query selector. Let's shorten the statement to this:
+The first argument of the constructor alternatively supports a raw query selector. Let's shorten the statement to this:
 
 ```js
 const instance = new FrozenYogurt('#root');
 ```
 
-### Render Something
+### Render something
 
-Next, add a `render` method so that it does something &mdash; let's render a string within the root element.
-
-:::info
-
-The [`render`](../api/component.md#render) method is called during the [component lifecycle](../fundamentals/component-lifecycle.md) and is where all DOM updates should be handled.
-
-:::
+We defined a component, but it doesn't do anything yet. Let's make the component render something in the root element. We do this by adding a method named `$root` to the [render option](../api/define-component.md#render). By returning a string we can render text within the content of the element.
 
 ```js
-class FrozenYogurt extends froyojs.Component {
+const FrozenYogurt = froyojs.defineComponent({
     /* highlight-start */
-    render() {
-        this.rootElement.innerHTML = 'Vanilla is the best flavor.';
-    }
+    render: {
+        $root() {
+            return 'The best flavor is: Vanilla';
+        },
+    },
     /* highlight-end */
-}
+});
 ```
 
 After initializing, the root element should look like this:
 
 ```html
-<div id="root">Vanilla is the best flavor.</div>
+<div id="root">The best flavor is: Vanilla</div>
 ```
 
-### Render Something with State
+### Declare the component state
 
-We can make the message dynamic by applying a value from the component's internal state.
-
-:::info
-
-Every instance of component has an internal "state"; a simple object that stores data relevant to the instance. The data from this object is used to control the behavior of the component relative to its values. This concept is known as the [state pattern](https://en.wikipedia.org/wiki/State_pattern) in software development. See ["Component Lifecycle"](../fundamentals/component-lifecycle.md) to learn more.
-
-:::
+Next, let's make the content dynamic. We do this by binding the content of the root element to the component's state. Declare a new state property by adding an entry to the [state option](../api/define-component.md#state) called `flavor` and set its default value to "Vanilla".
 
 ```js
-class FrozenYogurt extends froyojs.Component {
-    render() {
-        // highlight-next-line
-        this.rootElement.innerHTML = `${this.state.flavor} is the best flavor.`;
-    }
+const FrozenYogurt = froyojs.defineComponent({
+    /* highlight-start */
+    state: {
+        flavor: {
+            default: 'Vanilla',
+        },
+    },
+    /* highlight-end */
+});
+```
+
+### Render something with state
+
+Now, let's apply the newly defined state to the root element. The state property can be retrieved from the `this` keyword. Replace "Vanilla" with `this.flavor` to make the message dynamic.
+
+```js
+$root() {
+    // highlight-next-line
+    return `The best flavor is: ${this.flavor}.`;
 }
 ```
 
-To initialize the component with state, pass an object as the second argument of the constructor. This sets the initial state of the instance.
+Now that the content of the root element is bound to the state, we can control it. To test this, pass an object as the second argument of the constructor and set the initial value of `flavor` to "Chocolate".
 
 ```js
 const instance = new FrozenYogurt('#root', { flavor: 'Chocolate' });
 ```
 
-:::info
-
-Alternatively, the initial state can also be set by with the `data-initial-state` attribute on the root element. See ["Determining the Initial State"](../fundamentals/component-lifecycle.md#determining-the-initial-state) to learn more.
-
-:::
-
-This time, the rendered output should be:
+As a result, the rendered output should now be:
 
 ```html
-<div id="root">Chocolate is the best flavor.</div>
+<div id="root">The best flavor is: Chocolate</div>
 ```
 
 ## 3. Adding Functionality
 
 Goal: Learn how make the component functional.
 
-### Update the Initial HTML
+### Update the initial HTML
 
-Start by adding some content to the root element to work with.
+Let's start by adding some content to the root element to work with.
 
 :::info
 
-As a general rule, static content or markup structure that takes up visual space on the page, should be included in the markup before the component is initialized in order to avoid [cumulative layout shift](https://web.dev/cls/) as much as possible. That is why we are adding this new markup directly in the HTML instead of using the component to generate it.
+While this content could easily be generated with JavaScript, it is a good practice for static content to be included manually in the HTML. This gives consumers the ability to customize the content and it will reduce the effects of [cumulative layout shift](https://web.dev/cls/) which can have a degrading impact in SEO evaluations.
 
 :::
 
@@ -195,140 +187,121 @@ As a general rule, static content or markup structure that takes up visual space
 <div id="root">
     <!-- highlight-start -->
     <button>Toggle</button><br />
-    The best flavor is: <span class="flavor">Vanilla<span>.
+    The best flavor is: <span class="text">Vanilla<span>.
     <!-- highlight-end -->
 </div>
 ```
 
-### Add the `Setup` Method
+### Declare DOM nodes
 
-We now need to grab DOM elements and add an event listener. However, before we can do that, we need a place to put that logic &mdash; the [`setup`](../api/component.md#setup) method. This method is called once during initialization and is the designated location for performing setup tasks like those previously mentioned.
+To access these newly defined elements in our component, add two entries to the [nodes option](../api/define-component.md#nodes). Set the `type` of each node to "query" and provide a `selector`; this tells the component to search for a match within the root element and save it to the instance.
 
 ```js
-class FrozenYogurt extends froyojs.Component {
-    // highlight-start
-    setup() {
-        /* setup tasks go here */
-    }
-    // highlight-end
-
-    render() {
-        this.rootElement.innerHTML = `The best flavor flavor is ${this.state.flavor}.`;
-    }
-}
+const FrozenYogurt = froyojs.defineComponent({
+    /* highlight-start */
+    nodes: {
+        button: {
+            type: 'query',
+            selector: 'button',
+        },
+        text: {
+            type: 'query',
+            selector: '.text',
+        },
+    },
+    /* highlight-end */
+});
 ```
 
-### Save Element References
+### Rendering the flavor
 
-As a matter of convention, references to DOM elements should be retrieved and stored in an object assigned to [`this.elements`](../api/component.md#elements). This keeps the component organized and makes the elements easily accessible.
+Next, remove the `$root` entry from `render` so that we do not overwrite our new content. Replace it with an entry for `text`; every property declared in `nodes` can have a corresponding entry in `render`. Return `this.flavor` from the function to apply the value to its content.
 
 ```js
-setup() {
-    // highlight-start
-    this.elements = {
-        button: this.rootElement.querySelector('button');
-        flavor: this.rootElement.querySelector('.flavor');
+const FrozenYogurt = froyojs.defineComponent({
+    /* highlight-start */
+    render: {
+        text() {
+            return this.flavor;
+        },
+    },
+    /* highlight-end */
+});
+```
+
+### Add the event listener
+
+Now, let's add an event listener to the button element. Just like `render`, every property declared in `nodes` can have a corresponding entry in the [events option](../api/define-component.md#events). Define the event listener by adding an entry to `events` called "button". This property must be a function that returns an object of events. Add a "click" property to this object with an empty function as its value.
+
+```js
+const FrozenYogurt = froyojs.defineComponent({
+    /* highlight-start */
+    events: {
+        button() {
+            return {
+                click: () => {},
+            };
+        },
+    },
+    /* highlight-end */
+});
+```
+
+### Update the state
+
+To make the component functional, we need to update the state when the button is clicked. In this case, we want to toggle the value of `flavor` between "Vanilla" and "Chocolate". We can do this by setting `this.flavor` directly.
+
+```js
+button() {
+    return {
+        click: () => {
+            this.flavor = this.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
+        },
     };
-    // highlight-end
-}
+},
 ```
 
-### Add Event Listener
+### Put it all together
 
-Event listeners should also be created in `setup`. Create them with the [`addEventListener`](../api/listener-helpers.md#addeventlistener) utility and store the result in an object assigned to [`this.listeners`](../api/component.md#listeners).
+At this point, the component should be fully functional. The component should look like the following and the flavor should toggle when the button is pressed.
 
-:::info
-
-Event handlers should typically be defined on the instance as a class method, with a name that begins with "handle". This keeps the component organized and avoids unnecessary clutter in `setup`. Note that the method is [bound to the instance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind) so that `this` refers to the component instance instead of the event target.
-
-:::
-
+<!-- prettier-ignore -->
 ```js
-setup() {
-    this.elements = {
-        button: this.rootElement.querySelector('button');
-        flavor: this.rootElement.querySelector('.flavor');
-    };
-
-    // highlight-start
-    this.listeners = {
-        click: froyojs.addEventListener(
-            this.elements.button,
-            'click',
-            this.handleClick.bind(this),
-        );
-    };
-    // highlight-end
-}
-
-// highlight-start
-handleClick() {
-    /* do something when the button is clicked */
-}
-// highlight-end
-```
-
-### Update the State
-
-With few exceptions, event callbacks should be used exclusively to update the component's state. In this case, we are going to toggle the value of `flavor` between "Vanilla" and "Chocolate".
-
-```js
-handleClick() => {
-    // highlight-start
-    this.setState({ flavor: 'Vanilla' && 'Chocolate' });
-    // highlight-end
-};
-```
-
-### Put It All Together
-
-At this point, the component should be fully functional and should look like this:
-
-```js
-class FrozenYogurt extends froyojs.Component {
-    setup() {
-       this.elements = {
-            button: this.rootElement.querySelector('button');
-            flavor: this.rootElement.querySelector('.flavor');
-        };
-
-        this.listeners = {
-            click: froyojs.addEventListener(
-                this.elements.button,
-                'click',
-                this.handleClick.bind(this),
-            );
-        };
-    }
-
-    handleClick() => {
-        this.setState({ flavor: 'Vanilla' && 'Chocolate' });
-    };
-
-    render() {
-        this.rootElement.innerHTML = `The best flavor flavor is ${this.state.flavor}.`;
-    }
-}
-```
-
-When initialized the component should render "Chocolate".
-
-```js
-const instance = new FrozenYogurt('#root', { flavor: 'Chocolate' });
-```
-
-```html
-The best flavor is: <span class="flavor">Chocolate</span>.
-```
-
-And when the button is clicked, it should render "Vanilla".
-
-```html
-The best flavor is: <span class="flavor">Vanilla</span>.
+const FrozenYogurt = froyojs.defineComponent({
+    state: {
+        flavor: {
+            default: 'Vanilla',
+        },
+    },
+    nodes: {
+        button: {
+            type: 'query',
+            selector: 'button',
+        },
+        text: {
+            type: 'query',
+            selector: '.text',
+        },
+    },
+    events: {
+        button() {
+            return {
+                click: () => {
+                    this.flavor = this.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
+                },
+            };
+        },
+    },
+    render: {
+        text() {
+            return this.flavor;
+        },
+    },
+});
 ```
 
 ## 4. Conclusion
 
 Goal: Start building your own components!
 
-You have now created a functional UI component with Froyo. The fundamental concepts you have learned are universally applicable and can scale to support very complex components. You can start building your own. However, there is more to learn. We encourage working your way through the following guides to learn more.
+You have now created a functional component with Froyo. The fundamental concepts you have learned are universally applicable and can scale to support very complex components. You can start building your own. However, there is more to learn. We encourage working your way through the following guides to learn more.

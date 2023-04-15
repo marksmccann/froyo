@@ -32,11 +32,6 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'fundamentals/handling-updates',
-                    label: 'Handling Updates',
-                },
-                {
-                    type: 'doc',
                     id: 'fundamentals/component-lifecycle',
                     label: 'Component Lifecycle',
                 },
@@ -47,8 +42,8 @@ module.exports = {
                 },
                 {
                     type: 'doc',
-                    id: 'fundamentals/creating-listeners',
-                    label: 'Creating Listeners',
+                    id: 'fundamentals/handling-events',
+                    label: 'Handling Events',
                 },
                 {
                     type: 'doc',
@@ -66,11 +61,6 @@ module.exports = {
                     type: 'doc',
                     id: 'advanced/typechecking-state',
                     label: 'Typechecking State',
-                },
-                {
-                    type: 'doc',
-                    id: 'advanced/component-validation',
-                    label: 'Component Validation',
                 },
                 {
                     type: 'doc',
@@ -95,23 +85,13 @@ module.exports = {
             items: [
                 {
                     type: 'doc',
-                    id: 'api/component',
-                    label: 'Component',
+                    id: 'api/define-component',
+                    label: 'Define Component',
                 },
                 {
                     type: 'doc',
                     id: 'api/create-initializer',
                     label: 'Create Initializer',
-                },
-                {
-                    type: 'doc',
-                    id: 'api/dom-helpers',
-                    label: 'DOM Helpers',
-                },
-                {
-                    type: 'doc',
-                    id: 'api/listener-helpers',
-                    label: 'Listener Helpers',
                 },
             ],
         },

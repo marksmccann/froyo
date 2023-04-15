@@ -1,26 +1,16 @@
 # Observer Pattern
 
-This guide introduces the concept of the observer pattern.
+This guide introduces the concept of the [observer pattern](https://en.wikipedia.org/wiki/Observer_pattern).
 
-## Introduction
+## Subscribing to instance
 
-The [observer pattern](https://en.wikipedia.org/wiki/Observer_pattern) is a software design pattern in which an object maintains a list of dependents, called observers, and notifies them automatically of any state changes.
-
-In Froyo, an observer is a callback function that is [subscribed to the instance](#subscribing-to-instance). When the state of the component changes, this function will be called in the order it was subscribed (after the [lifecycle methods](../fundamentals/component-lifecycle.md#the-lifecycle-methods)). This observer can be used to perform any number of actions. The arguments provided to the observer can be used to filter the actions. See ["Handling Updates"](../fundamentals/handling-updates.md) to learn more.
-
-<br />
-
----
-
-## Subscribing to Instance
-
-To subscribe an observer to the instance, create a callback function and pass it to the [`subscribe`](../api/component.md#subscribe) method.
+It is possible for external processes to respond to internal state changes of a component instance. This is done by subscribing to a specific state property via the [`subscribe`](../api/define-component.md#subscribe) method. This method takes the name of the state property to be monitored along with a callback function (known as an observer). When the state value changes, this function will be called with the current and previous value of the property.
 
 ```js
 const instance = new FrozenYogurt(rootElement);
 
-instance.subscribe(() => {
-    /* the state changed, do something ... */
+instance.subscribe('<some-state>', (value, previousValue) => {
+    /* The value changed, do something ... */
 });
 ```
 
@@ -28,13 +18,13 @@ instance.subscribe(() => {
 
 ---
 
-## Removing the Observer
+## Removing an observer
 
-An individual observer can be removed from the instance via the [`unsubscribe`](../api/component.md#unsubscribe) method. The function passed to `unsubscribe` must be a direct reference to the same function passed to `subscribe`. This method is rarely necessary because all observers are automatically removed when the component is destroyed.
+An individual observer can be removed from the instance via the [`unsubscribe`](../api/define-component.md#unsubscribe) method. To successfully work, the provided function must be the same as the one passed to `subscribe`. When the component instance is [destroyed](../api/define-component.md#destroy), all observers are removed automatically.
 
 ```js
 function myObserver() {}
 
-instance.subscribe(myObserver);
-instance.unsubscribe(myObserver);
+instance.subscribe('<some-state>', myObserver);
+instance.unsubscribe('<some-state>', myObserver);
 ```
