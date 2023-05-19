@@ -1,6 +1,6 @@
 {
     "name": "froyojs",
-    "version": "0.7.3",
+    "version": "1.0.0-alpha.0",
     "description": "Build user interfaces with Vanilla JavaScript",
     "main": "dist/index.js",
     "module": "dist/index.mjs",

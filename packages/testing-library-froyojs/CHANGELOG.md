@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.0](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.5.3...testing-library-froyojs@1.0.0-alpha.0) (2023-05-19)
+
+### Features
+
+-   rearchitect framework ([47e3251](https://github.com/marksmccann/froyo/commit/47e3251ed12b0b1990d5b5ebe6b4d70e68ba5ea0))
+
+### BREAKING CHANGES
+
+-   the framework has been rebuilt from the ground up with a new API.
+
 ## [0.5.3](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@0.5.2...testing-library-froyojs@0.5.3) (2023-03-31)
 
 **Note:** Version bump only for package testing-library-froyojs
