@@ -7,7 +7,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Froyo',
-    tagline: 'A framework for building UI components with Vanilla JavaScript',
+    // The "Vanilla" JavaScript Framework
+    tagline: 'Build user interfaces with Vanilla JavaScript',
     url: 'https://marksmccann.github.io',
     baseUrl: '/froyo/',
     onBrokenLinks: 'throw',

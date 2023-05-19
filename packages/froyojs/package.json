@@ -1,19 +1,20 @@
 {
     "name": "froyojs",
     "version": "0.7.3",
-    "description": "A framework for building UI components with Vanilla JavaScript",
-    "main": "dist/froyojs.js",
-    "module": "dist/froyojs.mjs",
-    "types": "dist/froyojs.d.ts",
+    "description": "Build user interfaces with Vanilla JavaScript",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
     "exports": {
-        "import": "./dist/froyojs.mjs",
-        "require": "./dist/froyojs.js",
-        "types": "./dist/froyojs.d.ts"
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts"
     },
     "scripts": {
         "prebuild": "npm run clean",
-        "build": "rollup -c --bundleConfigAsCjs",
-        "postbuild": "rm -rf dist/dts",
+        "build": "npm run build:module && npm run build:bundle",
+        "build:module": "tsup src/index.ts --format cjs,esm --dts",
+        "build:bundle": "rollup -c --bundleConfigAsCjs",
         "clean": "rm -rf dist"
     },
     "author": "Mark McCann <marksmccann@gmail.com>",
@@ -45,8 +46,9 @@
         "@rollup/plugin-terser": "^0.3.0",
         "@rollup/plugin-typescript": "^11.0.0",
         "rollup": "^3.10.0",
-        "rollup-plugin-cleanup": "^3.2.1",
-        "rollup-plugin-dts": "^5.2.0",
+        "rollup-plugin-filesize": "^10.0.0",
+        "tsup": "^6.7.0",
+        "type-fest": "^3.9.0",
         "typescript": "^4.9.5"
     }
 }

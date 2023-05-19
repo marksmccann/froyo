@@ -1,43 +1,18 @@
 /* eslint-disable no-console */
 
-import { Component } from 'froyojs';
 import { getQueriesForElement } from '@testing-library/dom';
-import type { Queries, BoundFunction, queries } from '@testing-library/dom';
-
-export type RenderResult<
-    Q extends Queries = typeof queries,
-    Container extends Element | DocumentFragment = HTMLElement,
-    BaseElement extends Element | DocumentFragment = Container
-> = {
-    container: Container;
-    baseElement: BaseElement;
-    rerender: (
-        root: HTMLElement | string,
-        newState?: { [key: string]: any }
-    ) => void;
-    destroy: () => void;
-} & { [P in keyof Q]: BoundFunction<Q[P]> };
-
-export interface RenderOptions<
-    Q extends Queries = typeof queries,
-    Container extends Element | DocumentFragment = HTMLElement,
-    BaseElement extends Element | DocumentFragment = Container
-> {
-    container?: Container;
-    baseElement?: BaseElement;
-    queries?: Q;
-}
+import type { RenderOptions, RenderResult, ComponentInstance } from './types';
 
 const renderedContainers: Map<HTMLElement, RenderResult> = new Map();
 
-function render<H extends string, T extends Component>(
-    html: H,
-    initialize?: (() => T | T[]) | null,
+function render<TComponent extends ComponentInstance>(
+    html: string,
+    initialize?: (() => TComponent | TComponent[]) | null,
     options: RenderOptions = {}
-): RenderResult {
+): RenderResult<TComponent> {
     const { queries } = options;
     const { container, baseElement: base } = options;
-    let instances: T[] = [];
+    let instances: TComponent[] = [];
     let containerElement: HTMLElement;
     let baseElement: HTMLElement;
 
@@ -81,10 +56,7 @@ function render<H extends string, T extends Component>(
         baseElement,
         container: containerElement,
         ...getQueriesForElement(baseElement, queries),
-        rerender(
-            root: HTMLElement | string,
-            newState: { [key: string]: any } = {}
-        ) {
+        rerender(root, newState = {}) {
             let rootElement: Element;
 
             if (typeof root === 'string') {
@@ -96,7 +68,7 @@ function render<H extends string, T extends Component>(
             }
 
             const component = instances.find(
-                (instance) => rootElement === instance.rootElement
+                (instance) => rootElement === instance.root
             );
 
             if (!component) {

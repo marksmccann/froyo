@@ -3,98 +3,48 @@ import TabItem from '@theme/TabItem';
 
 # Component Lifecycle
 
-This guide introduces the concept of the component lifecycle.
+This guide introduces the concept of state and the component lifecycle.
 
-## The Lifecycle Methods
+## Declaring state
 
-When a component is initialized, or when the state changes, a series of "lifecycle" methods are called in a particular order. Each method has a designated responsibility relative to its position in the lifecycle.
+The first step to making any component dynamic is to declare a state. Each property declared in `state` is reactive; when changed, the component will update and reflect the new value. To declare state, add entries to the [state option](../api/define-component.md#state). Each key represents the name of the property and the value must be a configuration object.
 
-The methods are: [`setup`](../api/component.md#setup), [`validate`](../api/component.md#validate), [`render`](../api/component.md#render), [`update`](../api/component.md#update), [`destroy`](../api/component.md#destroy).
-
-When initialized, these methods are called once in this order:
-
-1. `setup`
-1. `validate`
-1. `render`
-1. `update`
-
-Every time the component state is updated (via [`setState`](../api/component.md#setstate)), these methods are called in this order:
-
-1. `validate`
-1. `render`
-1. `update`
-
-When the component needs to be removed, `destroy` must be called manually.
-
-<br />
-
----
-
-## Adding Lifecycle Methods to a Class
-
-When defining a component, the lifecycle methods are optional, except for `render`. Add the others to the class on an as-needed basis. See the [API reference](../api/component.md#instance-methods) to learn more.
+Once a state property has been declared, it will be accessible throughout the component options via the `this` keyword. Additionally, an entry for it can be added to the [hooks option](../api/define-component.md#hooks).
 
 <Tabs>
 <TabItem value="js" label="JavaScript" default>
 
 ```js
-class FrozenYogurt extends Component {
-    setup() {
-        /* perform setup tasks */
-    }
-
-    validate() {
-        /* perform validation before render */
-    }
-
-    render() {
-        /* perform DOM updates */
-    }
-
-    update() {
-        /* perform updates after render */
-    }
-
-    destroy() {
-        /* perform cleanup tasks */
-
-        super.destroy(); // cleanup the parent
-    }
-}
+defineComponent({
+    state: {
+        stateName: {
+            type: String, // specifies expected type for runtime type checking
+            default: '...', // specifies a default value
+            required: true, // defines if the property is required
+            readonly: true, // defines if the property is readonly
+        },
+    },
+});
 ```
 
 </TabItem>
 <TabItem value="ts" label="TypeScript" default>
 
 ```ts
-type State = {};
-
-class FrozenYogurt extends Component<State> {
-    protected setup(): void {
-        /* perform setup tasks */
-    }
-
-    protected validate(
-        stateChanges: Partial<State>,
-        previousState: State
-    ): void {
-        /* perform validation before render */
-    }
-
-    protected render(stateChanges: Partial<State>, previousState: State): void {
-        /* perform DOM updates */
-    }
-
-    protected update(stateChanges: Partial<State>, previousState: State): void {
-        /* perform updates after render */
-    }
-
-    public destroy(): void {
-        /* perform cleanup tasks */
-
-        super.destroy(); // cleanup the parent
-    }
-}
+defineComponent<{
+    state: {
+        stateName: string;
+    };
+}>({
+    state: {
+        stateName: {
+            type: String, // specifies expected type for runtime type checking
+            default: '...', // specifies a default value
+            required: true, // defines if the property is required
+            readonly: true, // defines if the property is readonly
+        },
+    },
+});
 ```
 
 </TabItem>
@@ -104,68 +54,131 @@ class FrozenYogurt extends Component<State> {
 
 ---
 
-## Setting State Correctly
+## Lifecycle hooks
 
-Outside of the [`setup`](../api/component.md#setup) method, `this.state` cannot be set directly. In fact, if you attempt to do so, it will not work and an error message will log to the console.
+The lifecycle hooks are reserved properties that belong to the [hooks option](../api/define-component.md#hooks). As the name implies, these functions hook into the component lifecycle and are called at a specific time during that lifecycle.
 
-```js
-// Incorrect
-this.state = { flavor: 'Vanilla' };
-```
+Each of these methods have a designated role and can be used to perform various tasks:
 
-Setting the value of a specific state property also will not work, but an error will not be logged.
+-   **`$setup`**: Called once when the component initializes. Useful for setup tasks, like constructing the initial markup, setting the initial state, and/or adding custom listeners.
+-   **`$teardown`**: Called once when the component is destroyed. Useful for cleanup tasks, like deconstructing the markup, reverting the state, and/or removing custom listeners.
 
 ```js
-// Incorrect
-this.state.flavor = 'Vanilla';
-```
-
-Instead, use [`setState`](../api/component.md#setstate) which will update the state and kick-off the component lifecycle.
-
-:::info
-
-`setState` will only kick-off the component lifecycle if there were changes to the state. The [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (e.g. `===`) is used to determine which values have changed. This means that objects and arrays must be replaced in order for their changes to be recognized.
-
-:::
-
-```js
-// Correct
-this.setState({ flavor: 'Vanilla' });
+defineComponent({
+    hooks: {
+        $setup() {
+            // setup tasks ...
+        },
+        $teardown() {
+            // teardown tasks ...
+        },
+    },
+});
 ```
 
 <br />
 
 ---
 
-## Determining the Initial State
+## State hooks
 
-When a component is initialized, the initial state is collected from multiple sources, merged, and assigned to [`this.state`](../api/component.md#state). In reverse order of priority, the data is collected from the following three sources:
-
-1\. The [`defaultState`](../api/component.md#defaultstate) from the class definition.
+Once state properties have been declared in `state`, an entry for them can be added to the [hooks option](../api/define-component.md#hooks). The entry must have the exact same name as the state property and must be a function. As the name implies, these functions hook into the component state and will be called whenever the value of that state changes. The current and previous value are passed as the first and second argument respectively.
 
 ```js
-class FrozenYogurt extends Component {
-    static get defaultState() {
-        return {
-            flavor: 'Vanilla',
-        };
-    }
-}
+defineComponent({
+    state: {
+        flavor: {
+            default: 'Vanilla',
+        },
+    },
+    hooks: {
+        flavor(value) {
+            if (value === 'Vanilla') {
+                // "flavor" is "Vanilla", do something ...
+            } else {
+                // "flavor" is not "Vanilla", do something else ...
+            }
+        },
+    },
+});
 ```
 
-2\. The `data-initial-state` HTML attribute on the root element.
+<br />
+
+---
+
+## Setting the state
+
+Setting any state property will trigger an update of the component and all relevant methods and hooks will be called to reflect the new value. While this behavior is universal, the method for setting the state varies between the component definition and the component instance.
 
 :::info
 
-The value of this attribute must be valid JSON. See ["HTML-only Usage"](./html-only-usage.md) to learn more about this feature and its particular usefulness when paired with the ["Create Initializer"](../api/create-initializer.md) tool.
+The [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (e.g. `===`) is used to determine changed values. This means that objects and arrays must be replaced in order for their changes to be recognized.
 
 :::
 
-```html
-<div data-initial-state='{"flavor": "vanilla"}'></div>
+To set the state internally, via the **component definition**, apply new values directly to individual properties on the `this` keyword from within the `events` and/or `hooks` options.
+
+```js
+const FrozenYogurt = defineComponent({
+    state: {
+        flavor: {
+            default: 'Vanilla',
+        },
+    },
+    nodes: {
+        button: {
+            type: 'element',
+            tagName: 'button',
+        },
+    },
+    events: {
+        button() {
+            return {
+                click: () => {
+                    this.flavor = 'Chocolate'; // <-- sets the state
+                },
+            };
+        },
+    },
+});
 ```
 
-3\. The `initialState` passed to the second argument of the constructor.
+To set the state externally, via the **component instance**, use the [setState](../api/define-component.md#setstate) class method.
+
+```js
+const instance = new FrozenYogurt('#root');
+
+instance.setState({ flavor: 'Chocolate' });
+```
+
+<br />
+
+---
+
+## Determining the initial state
+
+When a component is initialized, the initial state is collected from multiple sources, merged, and applied to [`this`](../api/define-component.md#this). In reverse order of priority, the data is collected from the following three sources:
+
+1\. The [`default`](../api/define-component.md#state) value from the class definition.
+
+```js
+defineComponent({
+    state: {
+        flavor: {
+            default: 'Vanilla',
+        },
+    },
+});
+```
+
+2\. The `data-state` HTML attribute on the root element. See ["HTML-only Usage"](./html-only-usage.md) to learn more about this feature.
+
+```html
+<div data-state='{"flavor": "vanilla"}'></div>
+```
+
+3\. The state object passed to the second argument of the constructor.
 
 ```js
 new FrozenYogurt('#root', { flavor: 'Vanilla' });
@@ -175,23 +188,21 @@ new FrozenYogurt('#root', { flavor: 'Vanilla' });
 
 ---
 
-## Setting the Initial State
+## Setting the initial state
 
-If needed, the state can by set directly from within the [`setup`](../api/component.md#setup) method. This is not always necessary, but it can be useful for setting state properties dynamically.
-
-:::info
-
-Setting the state this way replaces the entire state object; giving you complete control over the initial state of the component. Whatever this property is set to, will be the initial state of the component. If used, make sure to spread the state object to preserve the other values.
-
-:::
+If needed, state can by set directly within the [`$setup`](../api/define-component.md#hooks) hook. This is uncommon, but it can be useful for setting dynamic state properties. Setting the state from `$setup` will not trigger a component update and hooks will not be called. However, it will replace the value of any previously determined state and it will ultimately determine the initial state of the component.
 
 ```js
-class FrozenYogurt extends Component {
-    setup() {
-        this.state = {
-            ...this.state, // extend the state
-            large: window.innerWidth > 500,
-        };
-    }
-}
+defineComponent({
+    state: {
+        large: {
+            default: false,
+        },
+    },
+    hooks: {
+        setup() {
+            this.large = window.innerWidth > 500,
+        },
+    },
+});
 ```
