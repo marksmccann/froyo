@@ -29,7 +29,7 @@
         "frozen yogurt"
     ],
     "peerDependencies": {
-        "froyojs": "^0.7.3"
+        "froyojs": "^1.0.0-alpha.0"
     },
     "dependencies": {
         "@testing-library/dom": "^8.20.0"

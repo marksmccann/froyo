@@ -16,3 +16,4 @@ TODO:
 - "methods" instead of "data"
 - warn when there are naming conflicts on "this"
 - warn when readonly states are set at instantiation
+- update testing library build process (tsup?)
