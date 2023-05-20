@@ -417,8 +417,14 @@ The value of each property must be an object with a `type` property matching one
     -   `value` (optional): Specifies the initial text value of the node.
 -   **`element`**: Creates a new HTML element with the following options:
     -   `tagName`: Specifies the type of element to be created.
+    -   `className`: Specifies a CSS class name to add to the element.
+    -   `content`: Specifies a string to render within the element.
+    -   `attributes`: Specifies an object of attributes to add to the element.
 -   **`svg`**: Creates a new SVG element with the following options:
     -   `tagName`: Specifies the type of element to be created.
+    -   `className`: Specifies a CSS class name to add to the element.
+    -   `content`: Specifies a string to render within the element.
+    -   `attributes`: Specifies an object of attributes to add to the element.
 -   **`query`**: Retrieves an element from the DOM with the following options:
     -   `selector`: Specifies the CSS selector used to find the element.
     -   `optional` (optional): Defines if the element is optional. If enabled, a warning will not be thrown if no element is found.
@@ -443,10 +449,16 @@ const FrozenYogurt = defineComponent({
         cone: {
             type: 'element',
             tagName: 'div',
+            className: 'cone',
         },
         logo: {
             type: 'svg',
-            tagName: 'path',
+            tagName: 'svg',
+            content: '<path />',
+            attributes: {
+                width: '25px',
+                height: '25px',
+            },
         },
         topping: {
             type: 'query',
@@ -483,10 +495,16 @@ const FrozenYogurt = defineComponent<{
         cone: {
             type: 'element',
             tagName: 'div',
+            className: 'cone',
         },
         logo: {
             type: 'svg',
-            tagName: 'path',
+            tagName: 'svg',
+            content: '<path />',
+            attributes: {
+                width: '25px',
+                height: '25px',
+            },
         },
         topping: {
             type: 'query',

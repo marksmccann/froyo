@@ -332,10 +332,26 @@
                             node = document.createTextNode(option.value || '');
                         }
                         else if (type === 'element' && option.tagName) {
+                            const { className, attributes = {}, content } = option;
                             node = document.createElement(option.tagName);
+                            if (className)
+                                node.classList.add(className);
+                            if (content)
+                                node.innerHTML = content;
+                            Object.entries(attributes).forEach((entry) => {
+                                node.setAttribute(...entry);
+                            });
                         }
                         else if (type === 'svg' && option.tagName) {
+                            const { className, attributes = {}, content } = option;
                             node = document.createElementNS('http://www.w3.org/2000/svg', option.tagName);
+                            if (className)
+                                node.classList.add(className);
+                            if (content)
+                                node.innerHTML = content;
+                            Object.entries(attributes).forEach((entry) => {
+                                node.setAttribute(...entry);
+                            });
                         }
                         else if (type === 'query' && option.selector) {
                             const { selector, optional } = option;

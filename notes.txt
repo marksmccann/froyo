@@ -10,3 +10,9 @@ TODO:
 - add dependency licenses to package?
 - update "any" types to "unknown"?
 - add tsdoc comments
+
+- custom state validation functions
+- "custom" dom nodes with "node" attribute
+- "methods" instead of "data"
+- warn when there are naming conflicts on "this"
+- warn when readonly states are set at instantiation

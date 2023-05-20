@@ -50,10 +50,16 @@ type NodeOption<T extends ComponentNode = ComponentNode> =
     | {
           type: 'element';
           tagName: GetTagNameFromElement<T>;
+          className?: string;
+          attributes?: Record<string, string>;
+          content?: string;
       }
     | {
           type: 'svg';
           tagName: GetTagNameFromElement<T>;
+          className?: string;
+          attributes?: Record<string, string>;
+          content?: string;
       }
     | {
           type: 'query';

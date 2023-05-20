@@ -23,11 +23,17 @@ defineComponent({
         },
         svgElement: {
             type: 'svg',
-            tagName: 'path',
+            tagName: 'svg',
+            content: '<path />',
+            attributes: {
+                width: '25px',
+                height: '25px',
+            },
         },
         htmlElement: {
             type: 'element',
             tagName: 'div',
+            className: 'foo',
         },
     },
 });
@@ -40,22 +46,28 @@ defineComponent({
 defineComponent<{
     nodes: {
         textNode: Text;
-        svgElement: SVGPathElement;
+        svgElement: SVGElement;
         htmlElement: HTMLDivElement;
     };
 }>({
     nodes: {
-        someTextNode: {
+        textNode: {
             type: 'text',
             value: '',
         },
-        someSVGElement: {
+        svgElement: {
             type: 'svg',
-            tagName: 'path',
+            tagName: 'svg',
+            content: '<path />',
+            attributes: {
+                width: '25px',
+                height: '25px',
+            },
         },
-        someHTMLElement: {
+        htmlElement: {
             type: 'element',
             tagName: 'div',
+            className: 'foo',
         },
     },
 });

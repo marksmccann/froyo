@@ -180,4 +180,39 @@ describe('nodes', () => {
         div.remove();
         instance.destroy();
     });
+
+    it('should add static data to elements', () => {
+        const Foo = defineComponent({
+            nodes: {
+                svg: {
+                    type: 'svg',
+                    tagName: 'svg',
+                    className: 'foo',
+                    attributes: { 'data-foo': 'bar' },
+                    content: 'foo',
+                },
+                element: {
+                    type: 'element',
+                    tagName: 'div',
+                    className: 'foo',
+                    attributes: { 'data-foo': 'bar' },
+                    content: 'foo',
+                },
+            },
+            hooks: {
+                $setup() {
+                    expect(this.svg).toHaveClass('foo');
+                    expect(this.svg).toHaveAttribute('data-foo', 'bar');
+                    expect(this.svg).toHaveTextContent('foo');
+                    expect(this.element).toHaveClass('foo');
+                    expect(this.element).toHaveAttribute('data-foo', 'bar');
+                    expect(this.element).toHaveTextContent('foo');
+                },
+            },
+        });
+
+        const instance = new Foo(document.createElement('div'));
+
+        instance.destroy();
+    });
 });
