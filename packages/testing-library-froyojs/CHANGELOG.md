@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.2](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@1.0.0-alpha.1...testing-library-froyojs@1.0.0-alpha.2) (2023-05-20)
+
+### Bug Fixes
+
+-   update froyojs peer dependency ([8432e1a](https://github.com/marksmccann/froyo/commit/8432e1af80582ebcf31e3bfb035c2118fdf94158))
+
 # [1.0.0-alpha.1](https://github.com/marksmccann/froyo/compare/testing-library-froyojs@1.0.0-alpha.0...testing-library-froyojs@1.0.0-alpha.1) (2023-05-20)
 
 **Note:** Version bump only for package testing-library-froyojs
