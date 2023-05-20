@@ -388,10 +388,16 @@ type NodeOption =
     | {
           type: 'element';
           tagName: string;
+          className?: string;
+          attributes?: Record<string, string>;
+          content?: string;
       }
     | {
           type: 'svg';
           tagName: string;
+          className?: string;
+          attributes?: Record<string, string>;
+          content?: string;
       }
     | {
           type: 'query';
