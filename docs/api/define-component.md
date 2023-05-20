@@ -314,7 +314,7 @@ The value of each property must be an object with the following options:
 -   **`type`** (optional): Specifies the expected type. Can be one of the following native constructors: `String`, `Number`, `Boolean`, `Array`, `Object`, `Date`, `Function`, or any custom constructor function. The value of each state is compared to this type and a warning will be thrown in non-production environments if it does not match.
 -   **`default`** (optional): Specifies a default value. The property will be set to this value automatically when the value is `undefined`.
 -   **`required`** (optional): Defines if the state property is required. In non-production environments, a warning will be thrown if the property value is `undefined`.
--   **`readonly`** (optional): Defines if the state property is readonly. If enabled, consumers will be able to read the value of the property, but will not be able to update the value of the property externally via the [`setState` method](#setstate).
+-   **`readonly`** (optional): Defines if the state property is readonly. If enabled, consumers will be able to read the value of the property, but will not be able to update the value of the property externally.
 
 #### Example
 

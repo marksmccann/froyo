@@ -151,13 +151,17 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                 logError('E15', { name: displayName });
             }
 
-            Object.keys(stateOptions).forEach((property) => {
+            Object.entries(stateOptions).forEach(([property, option]) => {
                 let value: any;
 
                 if (property in htmlState) value = htmlState[property];
                 if (property in state) value = state[property];
 
-                $this[property] = value;
+                if (value !== undefined && option.readonly) {
+                    logError('E21', { name: displayName, property });
+                } else {
+                    $this[property] = value;
+                }
             });
 
             Object.entries(nodeOptions).forEach(([property, option]) => {

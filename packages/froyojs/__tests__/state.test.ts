@@ -97,12 +97,12 @@ describe('state', () => {
             name: 'Foo',
             state: { foo: { readonly: true } },
         });
-        const instance = new Foo(document.createElement('div'));
+        const instance = new Foo(document.createElement('div'), { foo: 'foo' });
 
         instance.setState({ foo: 'foo' });
 
         expect(instance.state.foo).toBeUndefined();
-        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
         expect(consoleErrorSpy).toHaveBeenCalledWith(
             getErrorMessage('E21', { name: 'Foo', property: 'foo' })
         );
