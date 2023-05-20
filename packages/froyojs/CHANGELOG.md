@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.2](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.1...froyojs@1.0.0-alpha.2) (2023-05-20)
+
+### Bug Fixes
+
+-   prevent readonly state updates at instantiation ([55cfa33](https://github.com/marksmccann/froyo/commit/55cfa33289b728c8996feb7526898dc276106d1e))
+
 # [1.0.0-alpha.1](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.0...froyojs@1.0.0-alpha.1) (2023-05-20)
 
 ### Features
