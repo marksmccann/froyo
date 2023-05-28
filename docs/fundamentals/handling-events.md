@@ -157,7 +157,7 @@ The lifecycle hooks can be used add custom events and unconventional listeners l
 
 ```js
 defineComponent({
-    data: {
+    methods: {
         handleCustomEvent() {}
         handleMutationObserver() {}
         handleMediaQueryChange() {}
@@ -194,7 +194,7 @@ defineComponent<{
     handleMutationObserver(): void,
     handleMediaQueryChange(): void,
 }>({
-    data: {
+    methods: {
         handleCustomEvent() {}
         handleMutationObserver() {}
         handleMediaQueryChange() {}

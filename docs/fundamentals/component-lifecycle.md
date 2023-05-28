@@ -159,7 +159,7 @@ instance.setState({ flavor: 'Chocolate' }); // <-- sets the "flavor" state
 
 ## Determining the initial state
 
-When a component is initialized, the initial state is collected from multiple sources, merged, and applied to [`this`](../api/define-component.md#this). In reverse order of priority, the data is collected from the following three sources:
+When a component is initialized, the initial state is collected from multiple sources, merged, and applied to `this.$state`. In reverse order of priority, the data is collected from the following three sources:
 
 1\. The [`default`](../api/define-component.md#state) value from the class definition.
 
@@ -191,7 +191,7 @@ new FrozenYogurt('#root', { flavor: 'Vanilla' });
 
 ## Setting the initial state
 
-If needed, state can by set directly within the [`$setup`](../api/define-component.md#hooks) hook. This is uncommon, but it can be useful for setting dynamic state properties. Setting the state from `$setup` will not trigger a component update and hooks will not be called. However, component instances declared in the [components option](../api/define-component.md#components) will be updated. Keep in mind that setting the state this way will replace the value of any previously determined state and it will ultimately determine the initial state of the component.
+If needed, state can by set directly within the [`$setup`](../api/define-component.md#hooks) hook. This is uncommon, but it can be useful for setting dynamic state properties. Setting the state from `$setup` will not trigger a component update and hooks will not be called. However, relevant component instances declared in the [components option](../api/define-component.md#components) will be updated. Keep in mind that setting the state this way will replace the value of any previously determined state and it will ultimately determine the initial state of the component.
 
 ```js
 defineComponent({

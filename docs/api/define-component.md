@@ -562,7 +562,7 @@ interface ComponentOptions {
 
 The `methods` option takes an object with each each key representing the name of the property and each value being a function.
 
-Each function declared on this property is automatically bound to the [internal component instance](#this).
+Each function declared on this property is added to `this` and is automatically bound to the [internal component instance](#this).
 
 #### Example
 
@@ -581,6 +581,11 @@ const FrozenYogurt = defineComponent({
             this.$state.lickCount++;
         },
     },
+    hooks: {
+        $setup() {
+            this.lickIceCream();
+        },
+    },
 });
 ```
 
@@ -590,9 +595,7 @@ const FrozenYogurt = defineComponent({
 ```ts
 const FrozenYogurt = defineComponent<
     $root: HTMLElement,
-    $state: {
-        lickCount: number;
-    },
+    $state: { lickCount: number },
     lickIceCream(): void;
 >({
     state: {
@@ -603,6 +606,11 @@ const FrozenYogurt = defineComponent<
     methods: {
         lickIceCream() {
             this.$state.lickCount++;
+        },
+    },
+    hooks: {
+        $setup() {
+            this.lickIceCream();
         },
     },
 });

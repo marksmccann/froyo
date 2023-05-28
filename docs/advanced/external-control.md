@@ -24,7 +24,7 @@ defineComponent({
             default: null,
         },
     },
-    data: {
+    methods: {
         handleOpen() {
             if (this.$state.onOpen) {
                 this.$state.onOpen(true);
