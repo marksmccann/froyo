@@ -64,7 +64,7 @@ const instance = new Modal('#root', {
 
 ## Readonly state properties
 
-By default, [state properties](../api/define-component.md#state) are public. This means that consumers can both read and set their value. However, there are times where a particular state property is only intended to be used internally. In these cases, the property can be set to `readonly`. This will allow consumers to read the value of the state, but they will be unable to set it. Any attempt to do so, the update will be ignored and a warning being thrown (in non-production environments).
+By default, [state properties](../api/define-component.md#state) are public. This means that consumers can both read and set their value. However, there are times where a particular state property is only intended to be used internally. In these cases, the property can be set to `readonly`. This will allow consumers to read the value of the state, but they will be unable to set it. Any attempt to do will be ignored and a warning will be thrown in non-production environments.
 
 ```js
 defineComponent({
