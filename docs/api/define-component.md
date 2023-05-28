@@ -475,7 +475,7 @@ const FrozenYogurt = defineComponent({
         napkins: {
             type: 'query-all',
             selector: '.napkin',
-            scope: document,
+            scope: () => document,
         },
         spoon: {
             type: 'custom',
@@ -526,7 +526,7 @@ const FrozenYogurt = defineComponent<{
         napkins: {
             type: 'query-all',
             selector: '.napkin',
-            scope: document,
+            scope: () => document,
         },
         spoon: {
             type: 'custom',
