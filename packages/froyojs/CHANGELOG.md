@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.4](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.3...froyojs@1.0.0-alpha.4) (2023-05-28)
+
+### Bug Fixes
+
+-   remove unused prop-types dependencies ([1539ec4](https://github.com/marksmccann/froyo/commit/1539ec4bd912f65bb279fb6bd57f8d6d7b904a5f))
+
 # [1.0.0-alpha.3](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.2...froyojs@1.0.0-alpha.3) (2023-05-28)
 
 ### Features
