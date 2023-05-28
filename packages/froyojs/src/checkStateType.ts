@@ -1,11 +1,11 @@
-import type { StateOptionList, StateOption } from './types';
+import type { StateOption } from './types';
 import logError from './logError';
 
 const simpleTypes = /^(String|Number|Boolean|Function|Symbol|BigInt)$/;
 const mainTypes =
     /^(String|Number|Boolean|Function|Symbol|BigInt|Object|Array|null)$/;
 
-function getType(value: StateOption['type']): string {
+function getType(value: StateOption<any>['type']): string {
     let typeName = '';
 
     if (value) {
@@ -21,7 +21,7 @@ function getType(value: StateOption['type']): string {
 function checkStateType(
     property: string,
     value: any,
-    option: StateOptionList[keyof StateOptionList]
+    option: StateOption<any>
 ): void {
     const { type, required } = option;
 

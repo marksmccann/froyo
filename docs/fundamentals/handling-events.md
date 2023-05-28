@@ -71,7 +71,7 @@ defineComponent({
 
 ## Handling multiple elements
 
-For nodes that are an array (via the `query-all` type), the events will be assigned directly to each element. Also, the index of the array will be passed as the first argument and can be used to differentiate each element.
+For nodes that are an array (via the `query-all` or `custom` type), the events will be assigned directly to each element. Also, the index of the array will be passed as the first argument and can be used to differentiate each element.
 
 ```js
 defineComponent({
@@ -97,16 +97,16 @@ defineComponent({
 
 ---
 
-## Moving handlers to `data`
+## Moving handlers to `methods`
 
-When desired, event handlers can be moved to the [data option](../api/define-component.md#data) and referenced via the `this` keyword. This can be useful when handlers contain a lot of logic and become unwieldy.
+When desired, event handlers can be moved to the [methods option](../api/define-component.md#methods) and referenced via the `this` keyword. This can be useful when handlers contain a lot of logic and become unwieldy.
 
 <Tabs>
 <TabItem value="js" label="JavaScript" default>
 
 ```js
 defineComponent({
-    data: {
+    methods: {
         handleClick() {},
     },
     events: {
@@ -124,11 +124,11 @@ defineComponent({
 
 ```ts
 defineComponent<{
-    data: {
-        handleClick(): void;
-    };
+    $root: Element;
+    $state: {};
+    handleClick(): void;
 }>({
-    data: {
+    methods: {
         handleClick() {},
     },
     events: {
@@ -186,13 +186,13 @@ defineComponent({
 
 ```ts
 defineComponent<{
-    data: {
-        handleCustomEvent(): void,
-        handleMutationObserver(): void,
-        handleMediaQueryChange(): void,
-        mutationObserver: MutationObserver,
-        mediaQueryList: MediaQueryList,
-    },
+    $root: Element;
+    $state: {};
+    mutationObserver: MutationObserver,
+    mediaQueryList: MediaQueryList,
+    handleCustomEvent(): void,
+    handleMutationObserver(): void,
+    handleMediaQueryChange(): void,
 }>({
     data: {
         handleCustomEvent() {}

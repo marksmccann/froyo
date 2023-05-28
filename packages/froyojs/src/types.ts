@@ -1,333 +1,227 @@
-import type {
-    Constructor,
-    ConditionalKeys,
-    Simplify,
-    SetRequired,
-} from 'type-fest';
+/* eslint-disable @typescript-eslint/naming-convention */
 
-/* state */
+import type { Constructor, Simplify, ConditionalKeys } from 'type-fest';
 
-type StateType<T> = T extends string
-    ? Constructor<String>
-    : T extends boolean
-    ? Constructor<Boolean>
-    : T extends number
-    ? Constructor<Number>
-    : Constructor<T>;
-
-export type StateOption<T = any> = {
-    type?: StateType<T>;
-    default?: T;
+export type StateOption<T> = {
+    type?: T extends string
+        ? Constructor<String>
+        : T extends boolean
+        ? Constructor<Boolean>
+        : T extends number
+        ? Constructor<Number>
+        : Constructor<T>;
+    default?: T | null;
     required?: true;
     readonly?: true;
 };
 
-export type ComponentState = Record<string, any>;
-
-export type StateOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    [K in keyof T['state']]: StateOption<T['state'][K]>;
-};
-
-/* nodes */
-
-type GetTagNameFromElement<T extends ComponentNode> = T extends SVGElement
-    ? ConditionalKeys<SVGElementTagNameMap, T>
-    : T extends HTMLElement
-    ? ConditionalKeys<HTMLElementTagNameMap, T>
-    : string;
-
-export type ComponentNode = Text | Element | Element[] | null;
-
-export type ComponentNodes = Record<string, ComponentNode>;
-
-type NodeOption<T extends ComponentNode = ComponentNode> =
-    | {
-          type: 'text';
-          value?: string;
-      }
-    | {
-          type: 'element';
-          tagName: GetTagNameFromElement<T>;
-          className?: string;
-          attributes?: Record<string, string>;
-          content?: string;
-      }
-    | {
-          type: 'svg';
-          tagName: GetTagNameFromElement<T>;
-          className?: string;
-          attributes?: Record<string, string>;
-          content?: string;
-      }
-    | {
-          type: 'query';
-          selector: string;
-          optional?: true;
-          scope?: Element | Document;
-      }
-    | {
-          type: 'query-all';
-          selector: string;
-          optional?: true;
-          scope?: Element | Document;
-      };
-
-export type NodeOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    [K in keyof T['nodes']]: Simplify<
-        T['nodes'][K] extends Text
-            ? Extract<NodeOption, { type: 'text' }>
-            : T['nodes'][K] extends Array<infer U extends Element>
-            ? Extract<NodeOption<U>, { type: 'query-all' }>
-            : T['nodes'][K] extends SVGElement
-            ? Extract<NodeOption<T['nodes'][K]>, { type: 'svg' }>
-            : T['nodes'][K] extends HTMLElement
-            ?
-                  | Omit<
-                        Extract<NodeOption<T['nodes'][K]>, { type: 'element' }>,
-                        'optional'
-                    >
-                  | Omit<
-                        Extract<NodeOption<T['nodes'][K]>, { type: 'query' }>,
-                        'optional'
-                    >
-            : T['nodes'][K] extends Element | null
-            ? null extends T['nodes'][K]
-                ? SetRequired<
-                      Extract<NodeOption<T['nodes'][K]>, { type: 'query' }>,
-                      'optional'
-                  >
-                : Omit<
-                      Extract<NodeOption<T['nodes'][K]>, { type: 'query' }>,
-                      'optional'
-                  >
-            : NodeOption
-    >;
-};
-
-/* data */
-
-export type ComponentData = Record<string, any>;
-
-export type DataOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    [K in keyof T['data']]: T['data'][K];
-};
-
-/* this */
-
-export type ComponentThis<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    $root: T['root'];
-} & T['state'] &
-    T['nodes'] &
-    T['data'];
-
-/* class */
-
-export type ComponentRoot = string | Element;
-
-export type ComponentObserver<T = any> = (
-    this: void,
-    value: T,
-    previousValue: T
-) => void;
-
-export interface ComponentInstance<
-    T extends ComponentTypes = ComponentTypes,
-    N extends NormalizedComponentTypes = NormalizedComponentTypes<T>,
-    S extends ComponentState = N['state']
-> {
-    get state(): S;
-    get root(): N['root'];
-    destroy(): void;
-    setState(stateChanges: Partial<S>): void;
-    subscribe<P extends keyof S, O extends ComponentObserver<S[P]>>(
-        property: P,
-        observer: O
-    ): void;
-    unsubscribe<P extends keyof S, O extends ComponentObserver<S[P]>>(
-        property: P,
-        observer: O
-    ): void;
-}
-
-export interface ComponentConstructor<
-    T extends ComponentTypes = ComponentTypes,
-    N extends NormalizedComponentTypes = NormalizedComponentTypes<T>
-> {
-    $$typeof: symbol;
-    new (
-        root: ComponentRoot,
-        state?: Partial<N['state']>
-    ): ComponentInstance<T>;
-    get displayName(): string;
-}
-
-/* components */
-
-export type ComponentComponents = Record<string, any>;
-
-type ComponentOption<
-    C extends ComponentConstructor,
-    S = ConstructorParameters<C>[1]
-> = {
-    constructor: C;
-    root: ComponentRoot;
-    state?: S;
-    subscribe?: {
-        [K in keyof Required<S>]?: ComponentObserver<Required<S>[K]>;
+type NodeOptionMap<T extends Element> = {
+    text: {
+        type: 'text';
+        value?: string;
+    };
+    svg: {
+        type: 'svg';
+        tagName: ConditionalKeys<SVGElementTagNameMap, T>;
+        className?: string;
+        attributes?: Record<string, string>;
+        content?: string;
+    };
+    element: {
+        type: 'element';
+        tagName: ConditionalKeys<HTMLElementTagNameMap, T>;
+        className?: string;
+        attributes?: Record<string, string>;
+        content?: string;
+    };
+    query: {
+        type: 'query';
+        selector: string;
+        optional?: true;
+        scope?: ($root: Element) => Element | Document;
+    };
+    queryAll: {
+        type: 'query-all';
+        selector: string;
+        optional?: true;
+        scope?: ($root: Element) => Element | Document;
+    };
+    custom: {
+        type: 'custom';
+        node: (
+            $root: Element
+        ) => ComponentNode | NodeListOf<Element> | HTMLCollection;
     };
 };
 
-export type ComponentOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    [K in keyof T['components']]: (
-        this: ComponentThis<T>
-    ) => Simplify<ComponentOption<T['components'][K]>>;
+type NodeOption<T> = T extends Text
+    ? NodeOptionMap<any>['text' | 'custom']
+    : T extends Array<infer U extends Element>
+    ? NodeOptionMap<U>['queryAll' | 'custom']
+    : T extends SVGElement
+    ? NodeOptionMap<T>['svg' | 'query' | 'custom']
+    : T extends HTMLElement
+    ? NodeOptionMap<T>['element' | 'query' | 'custom']
+    : T extends Element
+    ? NodeOptionMap<T>['query' | 'custom']
+    : never;
+
+type MethodOption<T, TThis extends ComponentThis> = T extends ComponentMethod
+    ? T & ThisType<TThis>
+    : never;
+
+type ComponentOption<T extends ComponentInstance<any>> = {
+    constructor: ComponentConstructor<T>;
+    root: string | Element;
+    state?: Partial<T['state']>;
+    subscribe?: {
+        [K in keyof T['state']]?: ComponentObserver<T['state'][K]>;
+    };
 };
 
-/* events */
-
-export type EventOption<T extends Record<any, any> = Record<string, any>> = {
-    [K in keyof T]?: T[K] extends Event
-        ? (event: T[K]) => void
-        : (...args: T[K]) => void;
+type EventOptionResult<T extends GlobalEventHandlersEventMap> = {
+    [K in keyof T]?: (event: T[K]) => void;
 };
 
-type EventOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    $window: (this: ComponentThis<T>) => EventOption<WindowEventMap>;
-    $document: (this: ComponentThis<T>) => EventOption<DocumentEventMap>;
-    $root: (this: ComponentThis<T>) => EventOption<HTMLElementEventMap>;
-} & {
-    [K in keyof T['nodes']]: T['nodes'][K] extends Array<infer U>
-        ? U extends HTMLElement
-            ? (
-                  this: ComponentThis<T>,
-                  index: number
-              ) => EventOption<HTMLElementEventMap>
-            : (this: ComponentThis<T>, index: number) => EventOption
-        : T['nodes'][K] extends HTMLElement
-        ? (this: ComponentThis<T>) => EventOption<HTMLElementEventMap>
-        : (this: ComponentThis<T>, index: number | undefined) => EventOption;
-};
-
-/* render */
-
-export type ElementClasses = Record<string, boolean>;
-
-export type ElementContent = string;
+// prettier-ignore
+type EventOption<
+    TNode extends ComponentNode | Window | Document,
+    TThis extends ComponentThis
+> = TNode extends Window
+    ? (this: TThis) => Simplify<EventOptionResult<WindowEventMap>>
+    : TNode extends Document
+    ? (this: TThis) => Simplify<EventOptionResult<DocumentEventMap>>
+    : TNode extends HTMLElement
+    ? (this: TThis) => Simplify<EventOptionResult<HTMLElementEventMap>>
+    : TNode extends Array<HTMLElement>
+    ? (this: TThis, index: number) => Simplify<EventOptionResult<HTMLElementEventMap>>
+    : TNode extends Array<Element>
+    ? (this: TThis, index: number) => Record<string, (event: Event) => void>
+    : TNode extends Node
+    ? (this: TThis) => Record<string, (event: Event) => void>
+    : never;
 
 export type ElementAttributes = Record<
     string,
     string | boolean | null | undefined
 >;
 
+export type ElementClasses = Record<string, boolean>;
+
 export type ElementStyle = Record<string, string | null | undefined>;
 
-type RenderOptionText = string;
-
-type RenderOptionElement =
-    | {
-          attributes?: ElementAttributes;
-          classes?: ElementClasses;
-          content?: ElementContent;
-      }
-    | string;
-
-type RenderOptionHTMLElement =
-    | {
-          attributes?: ElementAttributes;
-          classes?: ElementClasses;
-          content?: ElementContent;
-          style?: ElementStyle;
-      }
-    | string;
-
-export type RenderOption<T extends ComponentThis = ComponentThis> = (
-    this: T,
-    index: number | undefined
-) => RenderOptionText | RenderOptionHTMLElement;
-
-type RenderOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    $root: (this: ComponentThis<T>) => RenderOptionHTMLElement;
-} & {
-    [K in keyof T['nodes']]: T['nodes'][K] extends Array<infer U>
-        ? U extends HTMLElement
-            ? (this: ComponentThis<T>, index: number) => RenderOptionHTMLElement
-            : (this: ComponentThis<T>, index: number) => RenderOptionElement
-        : T['nodes'][K] extends HTMLElement
-        ? (this: ComponentThis<T>) => RenderOptionHTMLElement
-        : T['nodes'][K] extends Element
-        ? (this: ComponentThis<T>) => RenderOptionElement
-        : T['nodes'][K] extends Text
-        ? (this: ComponentThis<T>) => RenderOptionText
-        : RenderOption<ComponentThis<T>>;
+// prettier-ignore
+type RenderOptionElement<T extends Element> = {
+    attributes?: ElementAttributes;
+    classes?: Record<string, boolean>;
+    content?: string;
+    style?: T extends HTMLElement ? ElementStyle : never;
 };
 
-/* hooks */
+export type RenderOption<
+    TNode extends ComponentNode,
+    TThis extends ComponentThis
+> = TNode extends Text
+    ? (this: TThis) => string
+    : TNode extends Element
+    ? (this: TThis) => string | Simplify<RenderOptionElement<TNode>>
+    : TNode extends Array<infer U extends Element>
+    ? (this: TThis, index: number) => string | Simplify<RenderOptionElement<U>>
+    : never;
 
-export type ComponentLifecycleHook<T extends ComponentThis = ComponentThis> = (
-    this: T
+type HookOption<
+    TStateValue,
+    TThis extends ComponentThis
+> = ComponentStateHook<TStateValue> & ThisType<TThis>;
+
+type FilterOptions<TThis extends ComponentThis, TMatch> = Pick<
+    TThis,
+    ConditionalKeys<Omit<TThis, '$state' | '$root'>, TMatch>
+>;
+
+export type ComponentNode = Text | Element | Element[] | null;
+
+export type ComponentMethod = (...args: any) => any;
+
+export type ComponentStateHook<T> = (value: T, previousValue: T) => void;
+
+export type ComponentObserver<T> = (
+    this: void,
+    value: T,
+    previousValue: T
 ) => void;
 
-export type ComponentStateHook<
-    T extends ComponentThis = ComponentThis,
-    V = any
-> = (this: T, value: V, previousValue: V) => void;
+export type ComponentThis = {
+    $root: Element;
+    $state: Record<string, any>;
+} & Record<string, any>;
 
-type HookOptionList<
-    T extends NormalizedComponentTypes = NormalizedComponentTypes
-> = {
-    $setup: ComponentLifecycleHook<ComponentThis<T>>;
-    $teardown: ComponentLifecycleHook<ComponentThis<T>>;
-} & {
-    [K in keyof T['state']]: ComponentStateHook<
-        ComponentThis<T>,
-        T['state'][K]
-    >;
-};
-
-/* options */
-
-export type ComponentTypes = {
-    root?: Element;
-    state?: ComponentState;
-    nodes?: ComponentNodes;
-    data?: ComponentData;
-    components?: ComponentComponents;
-};
-
-type NormalizedComponentTypes<T extends ComponentTypes = any> = {
-    root: undefined extends T['root'] ? Element : T['root'];
-    state: undefined extends T['state'] ? ComponentState : T['state'];
-    nodes: undefined extends T['nodes'] ? ComponentNodes : T['nodes'];
-    data: undefined extends T['data'] ? ComponentData : T['data'];
-    components: undefined extends T['components']
-        ? ComponentComponents
-        : T['components'];
-};
-
+// prettier-ignore
 export type ComponentOptions<
-    T extends ComponentTypes = ComponentTypes,
-    N extends NormalizedComponentTypes<T> = NormalizedComponentTypes<T>
+    TThis extends ComponentThis,
+    _TState = TThis['$state'],
+    _TNodes extends Record<string, ComponentNode> = FilterOptions<TThis, Exclude<ComponentNode, null>>,
+    _TMethods extends Record<string, ComponentMethod> = FilterOptions<TThis, ComponentMethod>,
+    _TComponents extends Record<string, ComponentInstance<any>> = FilterOptions<TThis, ComponentInstance<any>>
 > = {
     name?: string;
-    state?: StateOptionList<N>;
-    nodes?: NodeOptionList<N>;
-    data?: DataOptionList<N>;
-    components?: ComponentOptionList<N>;
-    events?: Partial<EventOptionList<N>>;
-    render?: Partial<RenderOptionList<N>>;
-    hooks?: Partial<HookOptionList<N>>;
-} & ThisType<ComponentThis<N>>;
+    state?: { [K in keyof _TState]: Simplify<StateOption<_TState[K]>> };
+    nodes?: { [K in keyof _TNodes]?: Simplify<NodeOption<_TNodes[K]>> };
+    methods?: { [K in keyof _TMethods]?: MethodOption<_TMethods[K], TThis> };
+    components?: {
+        [K in keyof _TComponents]?: (
+            this: TThis
+        ) => ComponentOption<_TComponents[K]>;
+    };
+    events?: {
+        $window?: EventOption<Window, TThis>;
+        $document?: EventOption<Document, TThis>;
+        $root?: EventOption<TThis['$root'], TThis>;
+    } & {
+        [K in keyof _TNodes]?: EventOption<_TNodes[K], TThis>;
+    };
+    render?: {
+        $root?: RenderOption<TThis['$root'], TThis>;
+    } & {
+        [K in keyof _TNodes]?: RenderOption<_TNodes[K], TThis>;
+    };
+    hooks?: {
+        $setup?: (this: TThis) => void;
+        $teardown?: (this: TThis) => void;
+    } & {
+        [K in keyof _TState]?: HookOption<_TState[K], TThis>;
+    };
+} & ThisType<TThis>;
+
+// prettier-ignore
+export type ComponentNormalizedOptions = {
+    name: string;
+    state: Record<string, StateOption<any>>;
+    nodes: Record<string, NodeOptionMap<any>[keyof NodeOptionMap<any>]>;
+    methods: Record<string, ComponentMethod>;
+    components: Record<string, () => ComponentOption<ComponentInstance<any>>>;
+    events: Record<string, (index?: number) => Record<string, () => void>>;
+    render: Record<string, (index?: number) => string | RenderOptionElement<any>>;
+    hooks: Record<string, (value?: any, previousValue?: any) => void>;
+};
+
+export interface ComponentInstance<T extends ComponentThis> {
+    get root(): T['$root'];
+    get state(): T['$state'];
+    destroy(): void;
+    setState(stateChanges: Partial<T['$state']>): void;
+    subscribe<K extends keyof T['$state']>(
+        property: K,
+        observer: ComponentObserver<T['$state'][K]>
+    ): void;
+    unsubscribe<K extends keyof T['$state']>(
+        property: K,
+        observer: ComponentObserver<T['$state'][K]>
+    ): void;
+}
+
+export interface ComponentConstructor<T extends ComponentInstance<any>> {
+    get $$typeof(): symbol;
+    get displayName(): string;
+    new (root: string | Element, state?: Partial<T['state']>): T;
+}

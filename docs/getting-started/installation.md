@@ -25,14 +25,14 @@ yarn add froyojs
 ## Browser (CDN)
 
 <Tabs>
-<TabItem value="production" label="Prod" default>
+<TabItem value="production" label="Production" default>
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.min.js"></script>
 ```
 
 </TabItem>
-<TabItem value="development" label="Dev">
+<TabItem value="development" label="Development">
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/marksmccann/froyo@latest/packages/froyojs/bundles/froyojs.js"></script>

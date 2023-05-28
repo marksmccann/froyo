@@ -1,10 +1,9 @@
-import type { EventOption } from './types';
 import logError from './logError';
 
 function attachEvents<
     N extends string,
     T extends Node | Document | (Window & typeof globalThis),
-    E extends EventOption
+    E extends Record<string, (...args: any) => any>
 >(name: N, target: T, events: E) {
     const cleanup: Set<() => void> = new Set();
 

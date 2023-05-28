@@ -44,6 +44,7 @@ const Tabs = defineComponent({
         tablist: {
             type: 'query',
             selector: '.tabs__tablist',
+            attributes: { role: 'tablist' },
         },
         tabs: {
             type: 'query-all',
@@ -58,41 +59,36 @@ const Tabs = defineComponent({
         tabs(index) {
             return {
                 click: () => {
-                    this.activeTab = index;
+                    this.$state.activeTab = index;
                 },
             };
         },
     },
     render: {
-        tablist() {
-            return {
-                attributes: { role: 'tablist' },
-            };
-        },
         tabs(index) {
             return {
                 classes: {
-                    'tabs__tab--active': this.activeTab === index,
+                    'tabs__tab--active': this.$state.activeTab === index,
                 },
                 attributes: {
                     type: 'button',
                     role: 'tab',
                     id: `tab-${index}`,
                     'aria-controls': `panel-${index}`,
-                    'aria-selected': this.activeTab === index ? 'true' : 'false',
+                    'aria-selected': this.$state.activeTab === index ? 'true' : 'false',
                 },
             };
         },
         panels(index) {
             return {
                 classes: {
-                    'tabs__panel--active': this.activeTab === index,
+                    'tabs__panel--active': this.$state.activeTab === index,
                 },
                 attributes: {
                     role: 'tabpanel',
                     id: `panel-${index}`,
                     'aria-labelledby': `tab-${index}`,
-                    hidden: this.activeTab !== index,
+                    hidden: this.$state.activeTab !== index,
                 },
             };
         },
@@ -108,14 +104,11 @@ const Tabs = defineComponent({
 import { defineComponent } from 'froyojs';
 
 const Tabs = defineComponent<{
-    state: {
-        activeTab: number;
-    };
-    nodes: {
-        tablist: HTMLElement;
-        tabs: HTMLButtonElement[];
-        panels: HTMLElement[];
-    };
+    $root: HTMLElement,
+    $state: { activeTab: number };
+    tablist: HTMLElement;
+    tabs: HTMLButtonElement[];
+    panels: HTMLElement[];
 }>({
     state: {
         activeTab: {
@@ -127,6 +120,7 @@ const Tabs = defineComponent<{
         tablist: {
             type: 'query',
             selector: '.tabs__tablist',
+            attributes: { role: 'tablist' },
         },
         tabs: {
             type: 'query-all',
@@ -141,41 +135,36 @@ const Tabs = defineComponent<{
         tabs(index) {
             return {
                 click: () => {
-                    this.activeTab = index;
+                    this.$state.activeTab = index;
                 },
             };
         },
     },
     render: {
-        tablist() {
-            return {
-                attributes: { role: 'tablist' },
-            };
-        },
         tabs(index) {
             return {
                 classes: {
-                    'tabs__tab--active': this.activeTab === index,
+                    'tabs__tab--active': this.$state.activeTab === index,
                 },
                 attributes: {
                     type: 'button',
                     role: 'tab',
                     id: `tab-${index}`,
                     'aria-controls': `panel-${index}`,
-                    'aria-selected': this.activeTab === index ? 'true' : 'false',
+                    'aria-selected': this.$state.activeTab === index ? 'true' : 'false',
                 },
             };
         },
         panels(index) {
             return {
                 classes: {
-                    'tabs__panel--active': this.activeTab === index,
+                    'tabs__panel--active': this.$state.activeTab === index,
                 },
                 attributes: {
                     role: 'tabpanel',
                     id: `panel-${index}`,
                     'aria-labelledby': `tab-${index}`,
-                    hidden: this.activeTab !== index,
+                    hidden: this.$state.activeTab !== index,
                 },
             };
         },

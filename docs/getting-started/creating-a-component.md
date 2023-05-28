@@ -148,12 +148,12 @@ const FrozenYogurt = froyojs.defineComponent({
 
 ### Render something with state
 
-Now, let's apply the newly defined state to the root element. The state property can be retrieved from the `this` keyword. Replace "Vanilla" with `this.flavor` to make the message dynamic.
+Now, let's apply the newly defined state to the root element. Replace "Vanilla" with `this.$state.flavor` to make the message dynamic.
 
 ```js
 $root() {
     // highlight-next-line
-    return `The best flavor is: ${this.flavor}.`;
+    return `The best flavor is: ${this.$state.flavor}.`;
 }
 ```
 
@@ -215,14 +215,14 @@ const FrozenYogurt = froyojs.defineComponent({
 
 ### Rendering the flavor
 
-Next, remove the `$root` entry from `render` so that we do not overwrite our new content. Replace it with an entry for `text`; every property declared in `nodes` can have a corresponding entry in `render`. Return `this.flavor` from the function to apply the value to its content.
+Next, remove the `$root` entry from `render` so that we do not overwrite our new content. Replace it with an entry for our new `text` node (every property declared in `nodes` can have a corresponding entry in `render`). Return `this.$state.flavor` from the function to apply the value to its content.
 
 ```js
 const FrozenYogurt = froyojs.defineComponent({
     /* highlight-start */
     render: {
         text() {
-            return this.flavor;
+            return this.$state.flavor;
         },
     },
     /* highlight-end */
@@ -249,13 +249,13 @@ const FrozenYogurt = froyojs.defineComponent({
 
 ### Update the state
 
-To make the component functional, we need to update the state when the button is clicked. In this case, we want to toggle the value of `flavor` between "Vanilla" and "Chocolate". We can do this by setting `this.flavor` directly.
+To make the component functional, we need to update the state when the button is clicked. In this case, we want to toggle the value of `flavor` between "Vanilla" and "Chocolate". We can do this by setting `this.$state.flavor` directly.
 
 ```js
 button() {
     return {
         click: () => {
-            this.flavor = this.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
+            this.$state.flavor = this.$state.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
         },
     };
 },
@@ -287,14 +287,14 @@ const FrozenYogurt = froyojs.defineComponent({
         button() {
             return {
                 click: () => {
-                    this.flavor = this.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
+                    this.$state.flavor = this.$state.flavor === 'Vanilla' ? 'Chocolate' : 'Vanilla';
                 },
             };
         },
     },
     render: {
         text() {
-            return this.flavor;
+            return this.$state.flavor;
         },
     },
 });

@@ -26,10 +26,10 @@ defineComponent({
     },
     data: {
         handleOpen() {
-            if (this.onOpen) {
-                this.onOpen(true);
+            if (this.$state.onOpen) {
+                this.$state.onOpen(true);
             } else {
-                this.open = true;
+                this.$state.open = true;
             }
         },
     },
@@ -50,7 +50,7 @@ const instance = new Modal('#root', {
     // take control of the "open" state
     onOpen: () => {
         // the "open" state changed. Do something,
-        // like perform an asynchronous request ...
+        // like performing an asynchronous request ...
 
         // then, update the state
         instance.setState({ open: true });
@@ -78,6 +78,8 @@ defineComponent({
 
 ```js
 const instance = new FrozenYogurt('#root');
+
+console.log(instance.state.readonlyState); // <-- true
 
 instance.setState({ readonlyState: false }); // <-- will not work
 ```

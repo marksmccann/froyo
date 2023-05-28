@@ -5,14 +5,14 @@ import type { RenderOptions, RenderResult, ComponentInstance } from './types';
 
 const renderedContainers: Map<HTMLElement, RenderResult> = new Map();
 
-function render<TComponent extends ComponentInstance>(
+function render<T extends ComponentInstance>(
     html: string,
-    initialize?: (() => TComponent | TComponent[]) | null,
+    initialize?: (() => T | T[]) | null,
     options: RenderOptions = {}
-): RenderResult<TComponent> {
+): RenderResult<T> {
     const { queries } = options;
     const { container, baseElement: base } = options;
-    let instances: TComponent[] = [];
+    let instances: T[] = [];
     let containerElement: HTMLElement;
     let baseElement: HTMLElement;
 

@@ -2,12 +2,12 @@
 
 import type {
     RenderOption,
-    ComponentNode,
-    ComponentThis,
-    ElementClasses,
     ElementAttributes,
-    ElementContent,
+    ElementClasses,
     ElementStyle,
+    ComponentThis,
+    ComponentNode,
+    ComponentNormalizedOptions,
 } from './types';
 import logError from './logError';
 
@@ -62,7 +62,7 @@ function setElementClasses(
 function setElementContent(
     name: string,
     element: Element,
-    content?: ElementContent
+    content?: string
 ): void {
     if (typeof content === 'string') {
         if (element.innerHTML !== content) {
@@ -104,7 +104,7 @@ function setElementStyle(
 function renderText(
     name: string,
     node: Text,
-    value: ReturnType<RenderOption>
+    value: ReturnType<RenderOption<any, any>>
 ): void {
     if (typeof value === 'string') {
         // istanbul ignore else
@@ -119,7 +119,7 @@ function renderText(
 function renderElement(
     name: string,
     element: Element,
-    options: ReturnType<RenderOption>
+    options: ReturnType<RenderOption<any, any>>
 ): void {
     if (typeof options === 'string') {
         setElementContent(name, element, options);
@@ -133,29 +133,31 @@ function renderElement(
     }
 }
 
-function renderNodes(this: ComponentThis, tasks: Set<[string, RenderOption]>) {
-    tasks.forEach(([name, render]) => {
-        const node = this[name] as ComponentNode;
-        const isArray = Array.isArray(node);
-        let nodes: Array<Exclude<ComponentNode, any[] | null>> = [];
+function renderNode(
+    this: ComponentThis,
+    name: string,
+    render: ComponentNormalizedOptions['render'][string]
+) {
+    const node = this[name] as ComponentNode;
+    const isArray = Array.isArray(node);
+    let nodes: Array<Exclude<ComponentNode, any[] | null>> = [];
 
-        if (isArray) {
-            nodes = node;
-        } else if (node !== null) {
-            nodes.push(node);
+    if (isArray) {
+        nodes = node;
+    } else if (node !== null) {
+        nodes.push(node);
+    }
+
+    nodes.forEach((target, index) => {
+        const position = isArray ? index : undefined;
+        const result = render.call(this, position);
+
+        if (target instanceof Text) {
+            renderText(name, target, result);
+        } else {
+            renderElement(name, target, result);
         }
-
-        nodes.forEach((target, index) => {
-            const position = isArray ? index : undefined;
-            const result = render.call(this, position);
-
-            if (target instanceof Text) {
-                renderText(name, target, result);
-            } else {
-                renderElement(name, target, result);
-            }
-        });
     });
 }
 
-export default renderNodes;
+export default renderNode;

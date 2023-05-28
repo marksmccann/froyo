@@ -3,10 +3,10 @@ import { COMPONENT } from './constants';
 import logError from './logError';
 
 /**
- * Creates a function for initializing Froyo components declared in the HTML
+ * Creates a function for initializing Froyo components marked in the HTML
  * @param componentList list of named component constructors
  */
-function createInitializer<T extends ComponentConstructor>(
+function createInitializer<T extends ComponentConstructor<any>>(
     componentList: Record<string, T>
 ) {
     return function initialize(): Array<InstanceType<T>> {

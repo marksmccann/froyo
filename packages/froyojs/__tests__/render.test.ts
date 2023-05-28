@@ -11,7 +11,7 @@ describe('hooks', () => {
             },
             render: {
                 $root() {
-                    return this.foo;
+                    return this.$state.foo;
                 },
             },
         });
@@ -29,12 +29,11 @@ describe('hooks', () => {
 
     it('should render text', () => {
         const Foo = defineComponent<{
-            state: {
+            $root: Element;
+            $state: {
                 foo: string;
             };
-            nodes: {
-                text: Text;
-            };
+            text: Text;
         }>({
             state: {
                 foo: {
@@ -48,7 +47,7 @@ describe('hooks', () => {
             },
             render: {
                 text() {
-                    return this.foo;
+                    return this.$state.foo;
                 },
             },
             hooks: {
@@ -71,7 +70,12 @@ describe('hooks', () => {
 
     it('should pass index argument', () => {
         const callback = jest.fn();
-        const Foo = defineComponent({
+        const Foo = defineComponent<{
+            $root: Element;
+            $state: {};
+            foo: HTMLElement;
+            bar: HTMLElement[];
+        }>({
             nodes: {
                 foo: {
                     type: 'query',
@@ -83,6 +87,7 @@ describe('hooks', () => {
                 },
             },
             render: {
+                // @ts-expect-error
                 foo(index) {
                     callback(`query: ${index}`);
 
@@ -110,7 +115,8 @@ describe('hooks', () => {
 
     it('should render element classes', () => {
         const Foo = defineComponent<{
-            state: {
+            $root: Element;
+            $state: {
                 foo: boolean;
             };
         }>({
@@ -123,7 +129,7 @@ describe('hooks', () => {
                 $root() {
                     return {
                         classes: {
-                            foo: this.foo,
+                            foo: this.$state.foo,
                         },
                     };
                 },
@@ -143,7 +149,8 @@ describe('hooks', () => {
 
     it('should render element attributes', () => {
         const Foo = defineComponent<{
-            state: {
+            $root: Element;
+            $state: {
                 foo: boolean;
             };
         }>({
@@ -157,9 +164,9 @@ describe('hooks', () => {
                     return {
                         attributes: {
                             /* eslint-disable jest/no-conditional-in-test */
-                            'data-foo': this.foo ? 'bar' : null,
-                            'data-bar': this.foo ? 'bar' : undefined,
-                            hidden: this.foo,
+                            'data-foo': this.$state.foo ? 'bar' : null,
+                            'data-bar': this.$state.foo ? 'bar' : undefined,
+                            hidden: this.$state.foo,
                             /* eslint-enable jest/no-conditional-in-test */
                         },
                     };
@@ -184,7 +191,8 @@ describe('hooks', () => {
 
     it('should render element styles', () => {
         const Foo = defineComponent<{
-            state: {
+            $root: HTMLElement;
+            $state: {
                 foo: boolean;
             };
         }>({
@@ -198,9 +206,9 @@ describe('hooks', () => {
                     return {
                         style: {
                             /* eslint-disable jest/no-conditional-in-test */
-                            display: this.foo ? 'none' : 'block',
-                            color: this.foo ? 'red' : undefined,
-                            background: this.foo ? 'white' : null,
+                            display: this.$state.foo ? 'none' : 'block',
+                            color: this.$state.foo ? 'red' : undefined,
+                            background: this.$state.foo ? 'white' : null,
                             /* eslint-enable jest/no-conditional-in-test */
                         },
                     };
@@ -229,9 +237,9 @@ describe('hooks', () => {
             .mockImplementation(() => {});
 
         const Foo = defineComponent<{
-            nodes: {
-                svg: SVGElement;
-            };
+            $root: Element;
+            $state: {};
+            svg: SVGElement;
         }>({
             nodes: {
                 svg: {
@@ -268,7 +276,8 @@ describe('hooks', () => {
 
     it('should render element content', () => {
         const Foo = defineComponent<{
-            state: {
+            $root: Element;
+            $state: {
                 foo: string;
             };
         }>({
@@ -280,7 +289,7 @@ describe('hooks', () => {
             render: {
                 $root() {
                     return {
-                        content: this.foo,
+                        content: this.$state.foo,
                     };
                 },
             },

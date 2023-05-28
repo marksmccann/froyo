@@ -24,16 +24,18 @@
         E15: '{{ name }}: the "data-state" attribute must contain valid JSON',
         E16: '{{ name }}: missing required node "{{ property }}". No element was found with selector "{{ selector }}"',
         E17: '{{ name }}: missing required node "{{ property }}". No elements were found with selector "{{ selector }}"',
-        E18: '{{ name }}: Found unknown event option: "{{ property }}"',
-        E19: '{{ name }}: Found unknown hook option: "{{ property }}"',
-        E20: '{{ name }}: Found unknown render option: "{{ property }}"',
-        E21: '{{ name }}: Cannot set readonly state "{{ property }}"',
-        E22: '{{ name }}: Failed to set unknown state "{{ property }}"',
-        E23: '{{ name }}: Failed to subscribe to unknown state property "{{ property }}"',
-        E24: '{{ name }}: Failed to subscribe to "{{ property }}". Expected a function',
-        E25: '{{ name }}: Failed to unsubscribe from unknown state property "{{ property }}"',
-        E26: '{{ name }}: Failed to unsubscribe from "{{ property }}". Expected a function',
-        E27: '{{ name }}: Failed to subscribe to "{{ property }}" on component {{ component }}. Expected a function',
+        E18: '{{ name }}: found unknown event option: "{{ property }}"',
+        E19: '{{ name }}: found unknown hook option: "{{ property }}"',
+        E20: '{{ name }}: found unknown render option: "{{ property }}"',
+        E21: '{{ name }}: cannot set readonly state "{{ property }}"',
+        E22: '{{ name }}: failed to set unknown state "{{ property }}"',
+        E23: '{{ name }}: failed to subscribe to unknown state property "{{ property }}"',
+        E24: '{{ name }}: failed to subscribe to "{{ property }}". Expected a function',
+        E25: '{{ name }}: failed to unsubscribe from unknown state property "{{ property }}"',
+        E26: '{{ name }}: failed to unsubscribe from "{{ property }}". Expected a function',
+        E27: '{{ name }}: found invalid component option "{{ property }}. Expected a valid component constructor."',
+        E28: '{{ name }}: found invalid method option "{{ property }}. Expected a function"',
+        E29: '{{ name }}: failed to subscribe to "{{ property }}" on component "{{ component }}". Expected a function.',
     };
     function getErrorMessage(name, tokens) {
         let message = ERRORS[name];
@@ -174,27 +176,25 @@
             logError('E08', { name });
         }
     }
-    function renderNodes(tasks) {
-        tasks.forEach(([name, render]) => {
-            const node = this[name];
-            const isArray = Array.isArray(node);
-            let nodes = [];
-            if (isArray) {
-                nodes = node;
+    function renderNode(name, render) {
+        const node = this[name];
+        const isArray = Array.isArray(node);
+        let nodes = [];
+        if (isArray) {
+            nodes = node;
+        }
+        else if (node !== null) {
+            nodes.push(node);
+        }
+        nodes.forEach((target, index) => {
+            const position = isArray ? index : undefined;
+            const result = render.call(this, position);
+            if (target instanceof Text) {
+                renderText(name, target, result);
             }
-            else if (node !== null) {
-                nodes.push(node);
+            else {
+                renderElement(name, target, result);
             }
-            nodes.forEach((target, index) => {
-                const position = isArray ? index : undefined;
-                const result = render.call(this, position);
-                if (target instanceof Text) {
-                    renderText(name, target, result);
-                }
-                else {
-                    renderElement(name, target, result);
-                }
-            });
         });
     }
 
@@ -227,49 +227,55 @@
 
     function defineComponent(options) {
         var _a;
-        const displayName = options.name || 'Unnamed component';
-        const stateOptions = (options.state || {});
-        const nodeOptions = (options.nodes || {});
-        const dataOptions = (options.data || {});
-        const componentOptions = (options.components || {});
-        const eventOptions = (options.events || {});
-        const renderOptions = (options.render || {});
-        const hookOptions = (options.hooks || {});
         const cleanupTasks = new Set();
-        const renderTasks = new Set();
         const stateHooks = new Map();
-        const components = new Set();
+        const renderTasks = new Set();
+        const componentInstances = new Set();
         const observers = new Set();
+        const $this = {};
         let ready = false;
-        const $this = new Proxy({}, {
+        const $options = {
+            name: options.name || 'Unnamed component',
+            state: options.state || {},
+            nodes: options.nodes || {},
+            methods: options.methods || {},
+            components: options.components || {},
+            events: options.events || {},
+            render: options.render || {},
+            hooks: options.hooks || {},
+        };
+        $this.$state = new Proxy({}, {
             set(target, property, value) {
                 const previousValue = target[property];
-                const isState = property in stateOptions;
                 let hasChanged = value !== previousValue;
                 let nextValue = value;
-                if (isState && nextValue === undefined) {
-                    nextValue = stateOptions[property].default;
+                if (nextValue === undefined) {
+                    nextValue = $options.state[property].default;
                     hasChanged = nextValue !== previousValue;
                 }
                 {
-                    if (isState && (!ready || (ready && hasChanged))) {
-                        checkStateType(property, nextValue, stateOptions[property]);
+                    if (!ready || (ready && hasChanged)) {
+                        checkStateType(property, nextValue, $options.state[property]);
                     }
                 }
                 target[property] = nextValue;
-                if (ready && isState && hasChanged) {
+                if (ready && hasChanged) {
                     const stateHook = stateHooks.get(property);
-                    renderNodes.call(target, renderTasks);
+                    renderTasks.forEach(([name, render]) => {
+                        renderNode.call($this, name, render);
+                    });
                     if (stateHook) {
-                        stateHook.call(target, value, previousValue);
+                        stateHook.call($this, value, previousValue);
                     }
                     observers.forEach(([name, observer]) => {
                         if (property === name) {
                             observer.call(undefined, value, previousValue);
                         }
                     });
-                    components.forEach(([name, instance]) => {
-                        const { state } = componentOptions[name].call(target);
+                }
+                if (!ready || (ready && hasChanged)) {
+                    componentInstances.forEach(([name, instance]) => {
+                        const { state } = $options.components[name].call($this);
                         if (state)
                             instance.setState(state);
                     });
@@ -279,19 +285,13 @@
         });
         return _a = class Component {
                 static get displayName() {
-                    return displayName;
+                    return $options.name;
                 }
                 get root() {
                     return $this.$root;
                 }
                 get state() {
-                    const state = {};
-                    Object.keys(stateOptions).forEach((property) => {
-                        if (property in $this) {
-                            state[property] = $this[property];
-                        }
-                    });
-                    return state;
+                    return { ...$this.$state };
                 }
                 constructor(root, state = {}) {
                     let rootElement = null;
@@ -306,7 +306,7 @@
                         $this.$root = rootElement;
                     }
                     else {
-                        throw new Error(`${displayName}: the component root must be a valid HTML element`);
+                        throw new Error(`${$options.name}: the component root must be a valid HTML element`);
                     }
                     try {
                         const value = rootElement.getAttribute('data-state');
@@ -315,22 +315,22 @@
                         }
                     }
                     catch {
-                        logError('E15', { name: displayName });
+                        logError('E15', { name: $options.name });
                     }
-                    Object.entries(stateOptions).forEach(([property, option]) => {
+                    Object.entries($options.state).forEach(([property, option]) => {
                         let value;
                         if (property in htmlState)
                             value = htmlState[property];
                         if (property in state)
                             value = state[property];
                         if (value !== undefined && option.readonly) {
-                            logError('E21', { name: displayName, property });
+                            logError('E21', { name: $options.name, property });
                         }
                         else {
-                            $this[property] = value;
+                            $this.$state[property] = value;
                         }
                     });
-                    Object.entries(nodeOptions).forEach(([property, option]) => {
+                    Object.entries($options.nodes).forEach(([property, option]) => {
                         const { type } = option;
                         let node = null;
                         if (type === 'text') {
@@ -360,11 +360,14 @@
                         }
                         else if (type === 'query' && option.selector) {
                             const { selector, optional } = option;
-                            const scope = option.scope || $this.$root;
+                            let scope = $this.$root;
+                            if (option.scope) {
+                                scope = option.scope($this.$root);
+                            }
                             node = scope.querySelector(selector);
                             if (!node && !optional) {
                                 logError('E16', {
-                                    name: displayName,
+                                    name: $options.name,
                                     property,
                                     selector,
                                 });
@@ -372,26 +375,67 @@
                         }
                         else if (type === 'query-all' && option.selector) {
                             const { selector, optional } = option;
-                            const scope = option.scope || $this.$root;
+                            let scope = $this.$root;
+                            if (option.scope) {
+                                scope = option.scope($this.$root);
+                            }
                             node = Array.from(scope.querySelectorAll(selector));
                             if (node.length === 0 && !optional) {
                                 logError('E17', {
-                                    name: displayName,
+                                    name: $options.name,
                                     property,
                                     selector,
                                 });
                             }
                         }
+                        else if (type === 'custom' &&
+                            typeof option.node === 'function') {
+                            const customNode = option.node.call(undefined, $this.$root);
+                            if (customNode instanceof NodeList ||
+                                customNode instanceof HTMLCollection) {
+                                node = Array.from(customNode);
+                            }
+                            else {
+                                node = customNode;
+                            }
+                        }
                         $this[property] = node;
                     });
-                    Object.entries(dataOptions).forEach(([property, option]) => {
-                        let value = option;
+                    Object.entries($options.methods).forEach(([property, option]) => {
                         if (typeof option === 'function') {
-                            value = option.bind($this);
+                            $this[property] = option.bind($this);
                         }
-                        $this[property] = value;
+                        else {
+                            logError('E28', { name: $options.name, property });
+                        }
                     });
-                    Object.entries(eventOptions).forEach(([property, option]) => {
+                    Object.entries($options.components).forEach(([property, option]) => {
+                        const config = option.call($this);
+                        const { constructor, subscribe } = config;
+                        if (constructor.$$typeof === COMPONENT) {
+                            const instance = new constructor(config.root, config.state);
+                            if (subscribe) {
+                                Object.entries(subscribe).forEach(([name, callback]) => {
+                                    if (callback) {
+                                        instance.subscribe(name, callback);
+                                    }
+                                    else {
+                                        logError('E29', {
+                                            name: $options.name,
+                                            component: constructor.displayName,
+                                            property,
+                                        });
+                                    }
+                                });
+                            }
+                            componentInstances.add([property, instance]);
+                            cleanupTasks.add(() => instance.destroy());
+                        }
+                        else {
+                            logError('E27', { name: $options.name, property });
+                        }
+                    });
+                    Object.entries($options.events).forEach(([property, option]) => {
                         let targets = [];
                         const node = $this[property];
                         if (property === '$window') {
@@ -407,60 +451,44 @@
                             targets.push(node);
                         }
                         else {
-                            logError('E18', { name: displayName, property });
+                            logError('E18', { name: $options.name, property });
                         }
                         targets.forEach((target, index) => {
-                            const position = Array.isArray(node) ? index : undefined;
-                            const events = option.call($this, position);
+                            let events;
+                            if (Array.isArray(node)) {
+                                events = option.call($this, index);
+                            }
+                            else {
+                                events = option.call($this);
+                            }
                             cleanupTasks.add(attachEvents(property, target, events));
                         });
                     });
-                    Object.entries(componentOptions).forEach(([property, option]) => {
-                        const config = option.call($this);
-                        const { constructor, subscribe } = config;
-                        const instance = new constructor(config.root, config.state);
-                        if (subscribe) {
-                            Object.entries(subscribe).forEach(([name, callback]) => {
-                                if (typeof callback === 'function') {
-                                    instance.subscribe(name, callback);
-                                }
-                                else {
-                                    logError('E27', {
-                                        name: displayName,
-                                        component: constructor.displayName,
-                                        property: name,
-                                    });
-                                }
-                            });
-                        }
-                        components.add([property, instance]);
-                        cleanupTasks.add(() => instance.destroy());
-                    });
-                    Object.entries(hookOptions).forEach(([property, option]) => {
+                    Object.entries($options.hooks).forEach(([property, option]) => {
                         if (property === '$setup') {
                             option.call($this);
                         }
                         else if (property === '$teardown') {
                             cleanupTasks.add(option.bind($this));
                         }
-                        else if (property in stateOptions) {
-                            const value = $this[property];
-                            option.call($this, value, value);
+                        else if (property in $options.state) {
+                            const value = $this.$state[property];
                             stateHooks.set(property, option);
+                            option.call($this, value, value);
                         }
                         else {
-                            logError('E19', { name: displayName, property });
+                            logError('E19', { name: $options.name, property });
                         }
                     });
-                    Object.entries(renderOptions).forEach(([property, option]) => {
+                    Object.entries($options.render).forEach(([property, option]) => {
                         if (property in $this) {
                             renderTasks.add([property, option]);
+                            renderNode.call($this, property, option);
                         }
                         else {
-                            logError('E20', { name: displayName, property });
+                            logError('E20', { name: $options.name, property });
                         }
                     });
-                    renderNodes.call($this, renderTasks);
                     ready = true;
                 }
                 destroy() {
@@ -468,27 +496,27 @@
                 }
                 setState(stateChanges) {
                     Object.entries(stateChanges).forEach(([property, value]) => {
-                        if (property in stateOptions) {
-                            if (stateOptions[property].readonly) {
-                                logError('E21', { name: displayName, property });
+                        if (property in $options.state) {
+                            if ($options.state[property].readonly) {
+                                logError('E21', { name: $options.name, property });
                             }
                             else {
-                                $this[property] = value;
+                                $this.$state[property] = value;
                             }
                         }
                         else {
-                            logError('E22', { name: displayName, property });
+                            logError('E22', { name: $options.name, property });
                         }
                     });
                 }
                 subscribe(property, observer) {
                     const name = String(property);
-                    if (!(property in $this)) {
-                        logError('E23', { name: displayName, property: name });
+                    if (!(property in $options.state)) {
+                        logError('E23', { name: $options.name, property: name });
                         return;
                     }
                     if (typeof observer !== 'function') {
-                        logError('E24', { name: displayName, property: name });
+                        logError('E24', { name: $options.name, property: name });
                         return;
                     }
                     const result = Array.from(observers).find((entry) => entry[0] === property && entry[1] === observer);
@@ -498,12 +526,12 @@
                 }
                 unsubscribe(property, observer) {
                     const name = String(property);
-                    if (!(property in $this)) {
-                        logError('E25', { name: displayName, property: name });
+                    if (!(property in $options.state)) {
+                        logError('E25', { name: $options.name, property: name });
                         return;
                     }
                     if (typeof observer !== 'function') {
-                        logError('E26', { name: displayName, property: name });
+                        logError('E26', { name: $options.name, property: name });
                         return;
                     }
                     const result = Array.from(observers).find((entry) => entry[0] === property && entry[1] === observer);

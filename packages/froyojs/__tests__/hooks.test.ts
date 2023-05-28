@@ -11,7 +11,7 @@ describe('hooks', () => {
             },
             hooks: {
                 $setup() {
-                    callback(this.foo);
+                    callback(this.$state.foo);
                 },
             },
         });
@@ -33,7 +33,7 @@ describe('hooks', () => {
             },
             hooks: {
                 $teardown() {
-                    callback(this.foo);
+                    callback(this.$state.foo);
                 },
             },
         });
@@ -55,7 +55,7 @@ describe('hooks', () => {
             },
             hooks: {
                 foo() {
-                    callback(this.foo);
+                    callback(this.$state.foo);
                 },
             },
         });

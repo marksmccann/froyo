@@ -9,7 +9,7 @@ This guide introduces the concept of state and the component lifecycle.
 
 The first step to making any component dynamic is to declare a state. Each property declared in `state` is reactive; when changed, the component will update and reflect the new value. To declare state, add entries to the [state option](../api/define-component.md#state). Each key represents the name of the property and the value must be a configuration object.
 
-Once a state property has been declared, it will be accessible throughout the component options via the `this` keyword. Additionally, an entry for it can be added to the [hooks option](../api/define-component.md#hooks).
+Once a state property has been declared, it will be accessible throughout the component options via `this.$state`. Additionally, an entry for it can be added to the [hooks option](../api/define-component.md#hooks).
 
 <Tabs>
 <TabItem value="js" label="JavaScript" default>
@@ -32,8 +32,9 @@ defineComponent({
 
 ```ts
 defineComponent<{
-    state: {
-        stateName: string;
+    $root: Element;
+    $state: {
+        stateName: string; // specifies type
     };
 }>({
     state: {
@@ -109,7 +110,7 @@ defineComponent({
 
 ## Setting the state
 
-Setting any state property will trigger an update of the component and all relevant methods and hooks will be called to reflect the new value. While this behavior is universal, the method for setting the state varies between the component definition and the component instance.
+Setting any state property will trigger an update of the component and all relevant methods and hooks will be called to reflect the new value. While this behavior is universal, the method for setting the state varies between the **component definition** and the **component instance**.
 
 :::info
 
@@ -117,7 +118,7 @@ The [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/Java
 
 :::
 
-To set the state internally, via the **component definition**, apply new values directly to individual properties on the `this` keyword from within the `events` and/or `hooks` options.
+To set the state internally, via the **component definition**, apply new values directly to individual properties on `this.$state` from within the `events` and/or `hooks` options.
 
 ```js
 const FrozenYogurt = defineComponent({
@@ -136,7 +137,7 @@ const FrozenYogurt = defineComponent({
         button() {
             return {
                 click: () => {
-                    this.flavor = 'Chocolate'; // <-- sets the state
+                    this.$state.flavor = 'Chocolate'; // <-- sets the "flavor" state
                 },
             };
         },
@@ -149,7 +150,7 @@ To set the state externally, via the **component instance**, use the [setState](
 ```js
 const instance = new FrozenYogurt('#root');
 
-instance.setState({ flavor: 'Chocolate' });
+instance.setState({ flavor: 'Chocolate' }); // <-- sets the "flavor" state
 ```
 
 <br />
@@ -190,7 +191,7 @@ new FrozenYogurt('#root', { flavor: 'Vanilla' });
 
 ## Setting the initial state
 
-If needed, state can by set directly within the [`$setup`](../api/define-component.md#hooks) hook. This is uncommon, but it can be useful for setting dynamic state properties. Setting the state from `$setup` will not trigger a component update and hooks will not be called. However, it will replace the value of any previously determined state and it will ultimately determine the initial state of the component.
+If needed, state can by set directly within the [`$setup`](../api/define-component.md#hooks) hook. This is uncommon, but it can be useful for setting dynamic state properties. Setting the state from `$setup` will not trigger a component update and hooks will not be called. However, component instances declared in the [components option](../api/define-component.md#components) will be updated. Keep in mind that setting the state this way will replace the value of any previously determined state and it will ultimately determine the initial state of the component.
 
 ```js
 defineComponent({
@@ -201,7 +202,7 @@ defineComponent({
     },
     hooks: {
         setup() {
-            this.large = window.innerWidth > 500,
+            this.$state.large = window.innerWidth > 500,
         },
     },
 });
