@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.3](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.2...froyojs@1.0.0-alpha.3) (2023-05-28)
+
+### Features
+
+-   refactor type arguments ([9745ab4](https://github.com/marksmccann/froyo/commit/9745ab400322a56df77586bdd20d22e0f4bdf04f))
+
+### BREAKING CHANGES
+
+-   -   moved state properties from `this` to `this.$state`
+
+*   type argument for `defineComponent` now defines types for `this`
+*   changed the "scope" option on query node types to a function
+
 # [1.0.0-alpha.2](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.1...froyojs@1.0.0-alpha.2) (2023-05-20)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 {
     "name": "testing-library-froyojs",
-    "version": "1.0.0-alpha.3",
+    "version": "1.0.0-alpha.4",
     "description": "A package that extends DOM Testing Library to work with Froyo",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -35,7 +35,7 @@
         "@testing-library/dom": "^8.20.0"
     },
     "devDependencies": {
-        "froyojs": "^1.0.0-alpha.2",
+        "froyojs": "^1.0.0-alpha.3",
         "tsup": "^6.7.0",
         "typescript": "^4.9.5"
     }
