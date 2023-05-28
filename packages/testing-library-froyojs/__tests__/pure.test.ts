@@ -2,7 +2,10 @@ import { defineComponent } from 'froyojs';
 import { render, cleanup } from '../src/pure';
 
 describe('render and cleanup', () => {
-    const Foo = defineComponent<{ text: string }>({
+    const Foo = defineComponent<{
+        $root: Element;
+        $state: { text: string };
+    }>({
         state: {
             text: {
                 default: 'foo',
@@ -10,7 +13,7 @@ describe('render and cleanup', () => {
         },
         render: {
             $root() {
-                return this.text;
+                return this.$state.text;
             },
         },
     });
