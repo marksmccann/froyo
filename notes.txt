@@ -1,20 +1,15 @@
 TODO:
 
 - eslint plugin package
-- Add "prepare" lifecycle for tasks that perform before render? replace validate?
 - add coverage badge
 - automate releases with notes
 - add contributing docs
 - add health badge: https://snyk.io/advisor/npm-package/froyojs
 - add code of conduct
 - add dependency licenses to package?
-- update "any" types to "unknown"?
-- add tsdoc comments
 
-- custom state validation functions
-- "custom" dom nodes with "node" attribute
-- "methods" instead of "data"
-- warn when there are naming conflicts on "this"
+- custom state/node validation functions?
+- warn when there are naming conflicts on "this"?
 - update testing library build process (tsup?)
 - finish tests
 - get localhost to work

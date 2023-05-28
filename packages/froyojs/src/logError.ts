@@ -30,7 +30,9 @@ export type ComponentErrorTokenMap = {
     E18: 'name' | 'property'; // unknown events option
     E19: 'name' | 'property'; // unknown hook option
     E20: 'name' | 'property'; // unknown render option
-    E27: 'name' | 'component' | 'property'; // invalid component subscription
+    E27: 'name' | 'property'; // invalid component option
+    E28: 'name' | 'property'; // invalid method option
+    E29: 'name' | 'component' | 'property'; // invalid component subscription
 
     // instance
     E21: 'name' | 'property'; // set readonly state
@@ -62,16 +64,18 @@ export const /*#__PURE__*/ ERRORS: Record<
         E15: '{{ name }}: the "data-state" attribute must contain valid JSON',
         E16: '{{ name }}: missing required node "{{ property }}". No element was found with selector "{{ selector }}"',
         E17: '{{ name }}: missing required node "{{ property }}". No elements were found with selector "{{ selector }}"',
-        E18: '{{ name }}: Found unknown event option: "{{ property }}"',
-        E19: '{{ name }}: Found unknown hook option: "{{ property }}"',
-        E20: '{{ name }}: Found unknown render option: "{{ property }}"',
-        E21: '{{ name }}: Cannot set readonly state "{{ property }}"',
-        E22: '{{ name }}: Failed to set unknown state "{{ property }}"',
-        E23: '{{ name }}: Failed to subscribe to unknown state property "{{ property }}"',
-        E24: '{{ name }}: Failed to subscribe to "{{ property }}". Expected a function',
-        E25: '{{ name }}: Failed to unsubscribe from unknown state property "{{ property }}"',
-        E26: '{{ name }}: Failed to unsubscribe from "{{ property }}". Expected a function',
-        E27: '{{ name }}: Failed to subscribe to "{{ property }}" on component {{ component }}. Expected a function',
+        E18: '{{ name }}: found unknown event option: "{{ property }}"',
+        E19: '{{ name }}: found unknown hook option: "{{ property }}"',
+        E20: '{{ name }}: found unknown render option: "{{ property }}"',
+        E21: '{{ name }}: cannot set readonly state "{{ property }}"',
+        E22: '{{ name }}: failed to set unknown state "{{ property }}"',
+        E23: '{{ name }}: failed to subscribe to unknown state property "{{ property }}"',
+        E24: '{{ name }}: failed to subscribe to "{{ property }}". Expected a function',
+        E25: '{{ name }}: failed to unsubscribe from unknown state property "{{ property }}"',
+        E26: '{{ name }}: failed to unsubscribe from "{{ property }}". Expected a function',
+        E27: '{{ name }}: found invalid component option "{{ property }}. Expected a valid component constructor."',
+        E28: '{{ name }}: found invalid method option "{{ property }}. Expected a function"',
+        E29: '{{ name }}: failed to subscribe to "{{ property }}" on component "{{ component }}". Expected a function.',
     };
 
 export function /*#__PURE__*/ getErrorMessage<

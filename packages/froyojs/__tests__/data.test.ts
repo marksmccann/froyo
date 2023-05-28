@@ -3,19 +3,20 @@ import defineComponent from '../src/defineComponent';
 describe('data', () => {
     it('should add properties to instance', () => {
         const Foo = defineComponent<{
-            data: {
-                foo: string;
-                bar(): string;
-            };
+            $root: Element;
+            $state: {};
+            foo: string;
+            bar(): string;
         }>({
-            data: {
-                foo: 'bar',
+            methods: {
                 bar() {
                     return this.foo;
                 },
             },
             hooks: {
                 $setup() {
+                    this.foo = 'bar';
+
                     expect(this.foo).toBe('bar');
                     expect(this.bar()).toBe('bar');
                 },

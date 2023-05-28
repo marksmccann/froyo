@@ -83,7 +83,12 @@ describe('events', () => {
 
     it('should pass index argument', () => {
         const callback = jest.fn();
-        const Foo = defineComponent({
+        const Foo = defineComponent<{
+            $root: Element;
+            $state: {};
+            foo: HTMLElement;
+            bar: HTMLElement[];
+        }>({
             nodes: {
                 foo: {
                     type: 'query',
@@ -95,6 +100,7 @@ describe('events', () => {
                 },
             },
             events: {
+                // @ts-expect-error
                 foo(index) {
                     callback(`query: ${index}`);
 

@@ -130,7 +130,10 @@ describe('instantiation', () => {
         const Foo = defineComponent({ name: 'Foo', state: { foo: {} } });
         const instance = new Foo(document.createElement('div'));
 
+        // @ts-expect-error
         instance.subscribe('foo');
+
+        // @ts-expect-error
         instance.unsubscribe('foo');
 
         expect(consoleErrorSpy).toHaveBeenCalledTimes(2);

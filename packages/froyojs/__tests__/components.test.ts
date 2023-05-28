@@ -30,9 +30,8 @@ describe('components', () => {
 
     it('should synchronize states', () => {
         const Foo = defineComponent<{
-            state: {
-                active: boolean;
-            };
+            $root: Element;
+            $state: { active: boolean };
         }>({
             state: {
                 active: {
@@ -41,17 +40,14 @@ describe('components', () => {
             },
             render: {
                 $root() {
-                    return this.active.toString();
+                    return this.$state.active.toString();
                 },
             },
         });
         const Bar = defineComponent<{
-            state: {
-                active: boolean;
-            };
-            components: {
-                foo: typeof Foo;
-            };
+            $root: Element;
+            $state: { active: boolean };
+            foo: InstanceType<typeof Foo>;
         }>({
             state: {
                 active: {
@@ -64,11 +60,11 @@ describe('components', () => {
                         constructor: Foo,
                         root: this.$root,
                         state: {
-                            active: this.active,
+                            active: this.$state.active,
                         },
                         subscribe: {
                             active: (value) => {
-                                this.active = value;
+                                this.$state.active = value;
                             },
                         },
                     };

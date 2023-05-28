@@ -35,6 +35,10 @@ defineComponent({
             tagName: 'div',
             className: 'foo',
         },
+        customElement: {
+            type: 'custom',
+            node: () => document.createElement('button'),
+        },
     },
 });
 ```
@@ -44,11 +48,12 @@ defineComponent({
 
 ```ts
 defineComponent<{
-    nodes: {
-        textNode: Text;
-        svgElement: SVGElement;
-        htmlElement: HTMLDivElement;
-    };
+    $root: Element;
+    $state: {};
+    textNode: Text;
+    svgElement: SVGElement;
+    htmlElement: HTMLDivElement;
+    customElement: HTMLButtonElement;
 }>({
     nodes: {
         textNode: {
@@ -68,6 +73,10 @@ defineComponent<{
             type: 'element',
             tagName: 'div',
             className: 'foo',
+        },
+        customElement: {
+            type: 'custom',
+            node: () => document.createElement('button'),
         },
     },
 });
@@ -118,7 +127,7 @@ defineComponent({
         elementsFromDocument: {
             type: 'query-all',
             selector: '<some selector>',
-            scope: document,
+            scope: () => document,
         },
     },
 });
@@ -129,12 +138,12 @@ defineComponent({
 
 ```ts
 defineComponent<{
-    nodes: {
-        requiredElement: HTMLElement;
-        optionalElement: HTMLElement | null;
-        elementsFromRoot: HTMLElement[];
-        elementsFromDocument: HTMLElement[];
-    };
+    $root: Element;
+    $state: {};
+    requiredElement: HTMLElement;
+    optionalElement: HTMLElement | null;
+    elementsFromRoot: HTMLElement[];
+    elementsFromDocument: HTMLElement[];
 }>({
     nodes: {
         requiredElement: {
@@ -153,7 +162,7 @@ defineComponent<{
         elementsFromDocument: {
             type: 'query-all',
             selector: '<some selector>',
-            scope: document,
+            scope: () => document,
         },
     },
 });
@@ -258,7 +267,7 @@ defineComponent({
 
 ## Handling multiple elements
 
-For nodes that are an array (via the `query-all` type), the function declared in `render` will be called for each element. The index of the array will be passed as the first argument and can be used to differentiate each element.
+For nodes that are an array (via the `query-all` or `custom` type), the function declared in `render` will be called for each element. The index of the array will be passed as the first argument and can be used to differentiate each element.
 
 ```js
 defineComponent({

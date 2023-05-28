@@ -64,10 +64,10 @@ describe('nodes', () => {
             .mockImplementation(() => {});
 
         const Foo = defineComponent<{
-            nodes: {
-                query: HTMLElement;
-                queryAll: HTMLElement[];
-            };
+            $root: Element;
+            $state: {};
+            query: HTMLElement;
+            queryAll: HTMLElement[];
         }>({
             name: 'Foo',
             nodes: {
@@ -152,7 +152,7 @@ describe('nodes', () => {
                 query2: {
                     type: 'query',
                     selector: 'div',
-                    scope: document,
+                    scope: () => document,
                 },
                 queryAll1: {
                     type: 'query-all',
@@ -161,7 +161,7 @@ describe('nodes', () => {
                 queryAll2: {
                     type: 'query-all',
                     selector: 'div',
-                    scope: document,
+                    scope: () => document,
                 },
             },
             hooks: {

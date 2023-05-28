@@ -1,25 +1,18 @@
 /* eslint-disable class-methods-use-this */
 
 import type {
-    ComponentTypes,
-    ComponentRoot,
     ComponentOptions,
-    ComponentState,
-    StateOptionList,
-    NodeOptionList,
-    DataOptionList,
-    ComponentOptionList,
-    RenderOption,
-    ComponentLifecycleHook,
-    ComponentStateHook,
+    ComponentConstructor,
     ComponentInstance,
     ComponentThis,
-    ComponentObserver,
     ComponentNode,
+    ComponentNormalizedOptions,
+    ComponentStateHook,
+    ComponentObserver,
 } from './types';
 import { COMPONENT } from './constants';
 import attachEvents from './attachEvents';
-import renderNodes from './renderNodes';
+import renderNode from './renderNode';
 import checkStateType from './checkStateType';
 import logError from './logError';
 
@@ -27,44 +20,51 @@ import logError from './logError';
  * Defines a new Froyo component
  * @param options configuration options
  */
-function defineComponent<T extends ComponentTypes = ComponentTypes>(
+function defineComponent<T extends ComponentThis = ComponentThis>(
     options: ComponentOptions<T>
-) {
-    type State = NonNullable<T['state']>;
-    type EventsOptions = NonNullable<(typeof options)['events']>;
-    type RenderOptions = NonNullable<(typeof options)['render']>;
-    type HooksOptions = NonNullable<(typeof options)['hooks']>;
-
-    const displayName = options.name || 'Unnamed component';
-    const stateOptions = (options.state || {}) as StateOptionList;
-    const nodeOptions = (options.nodes || {}) as NodeOptionList;
-    const dataOptions = (options.data || {}) as DataOptionList;
-    const componentOptions = (options.components || {}) as ComponentOptionList;
-    const eventOptions = (options.events || {}) as EventsOptions;
-    const renderOptions = (options.render || {}) as RenderOptions;
-    const hookOptions = (options.hooks || {}) as HooksOptions;
+): ComponentConstructor<ComponentInstance<T>> {
     const cleanupTasks: Set<() => void> = new Set();
-    const renderTasks: Set<[string, RenderOption]> = new Set();
-    const stateHooks: Map<string, ComponentStateHook> = new Map();
-    const components: Set<[string, ComponentInstance]> = new Set();
-    const observers: Set<[keyof State, ComponentObserver]> = new Set();
+    const stateHooks: Map<string, ComponentStateHook<any>> = new Map();
+    const renderTasks: Set<
+        [string, ComponentNormalizedOptions['render'][string]]
+    > = new Set();
+    const componentInstances: Set<[string, ComponentInstance<any>]> = new Set();
+    const observers: Set<[keyof T['$state'], ComponentObserver<any>]> =
+        new Set();
+    const $this = {} as ComponentThis;
     let ready = false;
 
-    const $this = new Proxy({} as ComponentThis, {
+    // normalize the options
+    const $options = {
+        name: options.name || 'Unnamed component',
+        state: options.state || {},
+        nodes: options.nodes || {},
+        methods: options.methods || {},
+        components: options.components || {},
+        events: options.events || {},
+        render: options.render || {},
+        hooks: options.hooks || {},
+    } as ComponentNormalizedOptions;
+
+    // create the reactive state proxy
+    $this.$state = new Proxy({} as ComponentThis['$state'], {
         set(target, property: string, value) {
             const previousValue = target[property];
-            const isState = property in stateOptions;
             let hasChanged = value !== previousValue;
             let nextValue = value;
 
-            if (isState && nextValue === undefined) {
-                nextValue = stateOptions[property].default;
+            if (nextValue === undefined) {
+                nextValue = $options.state[property].default;
                 hasChanged = nextValue !== previousValue;
             }
 
             if (process.env.NODE_ENV !== 'production') {
-                if (isState && (!ready || (ready && hasChanged))) {
-                    checkStateType(property, nextValue, stateOptions[property]);
+                if (!ready || (ready && hasChanged)) {
+                    checkStateType(
+                        property,
+                        nextValue,
+                        $options.state[property]
+                    );
                 }
             }
 
@@ -72,13 +72,15 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
             target[property] = nextValue;
             /* eslint-enable no-param-reassign */
 
-            if (ready && isState && hasChanged) {
+            if (ready && hasChanged) {
                 const stateHook = stateHooks.get(property);
 
-                renderNodes.call(target, renderTasks);
+                renderTasks.forEach(([name, render]) => {
+                    renderNode.call($this, name, render);
+                });
 
                 if (stateHook) {
-                    stateHook.call(target, value, previousValue);
+                    stateHook.call($this, value, previousValue);
                 }
 
                 observers.forEach(([name, observer]) => {
@@ -86,9 +88,11 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                         observer.call(undefined, value, previousValue);
                     }
                 });
+            }
 
-                components.forEach(([name, instance]) => {
-                    const { state } = componentOptions[name].call(target);
+            if (!ready || (ready && hasChanged)) {
+                componentInstances.forEach(([name, instance]) => {
+                    const { state } = $options.components[name].call($this);
 
                     if (state) instance.setState(state);
                 });
@@ -102,28 +106,20 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
         static readonly $$typeof = COMPONENT;
 
         static get displayName() {
-            return displayName;
+            return $options.name;
         }
 
-        public get root(): NonNullable<T['root']> {
+        public get root(): T['$root'] {
             return $this.$root;
         }
 
-        public get state() {
-            const state: Record<string, any> = {};
-
-            Object.keys(stateOptions).forEach((property) => {
-                if (property in $this) {
-                    state[property] = $this[property];
-                }
-            });
-
-            return state as State;
+        public get state(): T['$state'] {
+            return { ...$this.$state };
         }
 
-        constructor(root: ComponentRoot, state: Partial<State> = {}) {
+        constructor(root: Element | string, state: Partial<T['$state']> = {}) {
             let rootElement: Element | null = null;
-            let htmlState: ComponentState = {};
+            let htmlState: Record<string, any> = {};
 
             if (typeof root === 'string') {
                 rootElement = document.querySelector(root);
@@ -137,7 +133,7 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                 throw new Error('An unknown error has ocurred');
             } else {
                 throw new Error(
-                    `${displayName}: the component root must be a valid HTML element`
+                    `${$options.name}: the component root must be a valid HTML element`
                 );
             }
 
@@ -148,23 +144,23 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                     htmlState = JSON.parse(value);
                 }
             } catch {
-                logError('E15', { name: displayName });
+                logError('E15', { name: $options.name });
             }
 
-            Object.entries(stateOptions).forEach(([property, option]) => {
+            Object.entries($options.state).forEach(([property, option]) => {
                 let value: any;
 
                 if (property in htmlState) value = htmlState[property];
                 if (property in state) value = state[property];
 
                 if (value !== undefined && option.readonly) {
-                    logError('E21', { name: displayName, property });
+                    logError('E21', { name: $options.name, property });
                 } else {
-                    $this[property] = value;
+                    $this.$state[property] = value;
                 }
             });
 
-            Object.entries(nodeOptions).forEach(([property, option]) => {
+            Object.entries($options.nodes).forEach(([property, option]) => {
                 const { type } = option;
                 let node: ComponentNode = null;
 
@@ -197,46 +193,103 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                     });
                 } else if (type === 'query' && option.selector) {
                     const { selector, optional } = option;
-                    const scope = option.scope || $this.$root;
+                    let scope: ReturnType<NonNullable<typeof option.scope>> =
+                        $this.$root;
+
+                    if (option.scope) {
+                        scope = option.scope($this.$root);
+                    }
 
                     node = scope.querySelector(selector);
 
                     if (!node && !optional) {
                         logError('E16', {
-                            name: displayName,
+                            name: $options.name,
                             property,
                             selector,
                         });
                     }
                 } else if (type === 'query-all' && option.selector) {
                     const { selector, optional } = option;
-                    const scope = option.scope || $this.$root;
+                    let scope: ReturnType<NonNullable<typeof option.scope>> =
+                        $this.$root;
+
+                    if (option.scope) {
+                        scope = option.scope($this.$root);
+                    }
 
                     node = Array.from(scope.querySelectorAll(selector));
 
                     if (node.length === 0 && !optional) {
                         logError('E17', {
-                            name: displayName,
+                            name: $options.name,
                             property,
                             selector,
                         });
+                    }
+                } else if (
+                    type === 'custom' &&
+                    typeof option.node === 'function'
+                ) {
+                    const customNode = option.node.call(undefined, $this.$root);
+
+                    if (
+                        customNode instanceof NodeList ||
+                        customNode instanceof HTMLCollection
+                    ) {
+                        node = Array.from(customNode);
+                    } else {
+                        node = customNode;
                     }
                 }
 
                 $this[property] = node;
             });
 
-            Object.entries(dataOptions).forEach(([property, option]) => {
-                let value = option;
-
+            Object.entries($options.methods).forEach(([property, option]) => {
                 if (typeof option === 'function') {
-                    value = option.bind($this);
+                    $this[property] = option.bind($this);
+                } else {
+                    logError('E28', { name: $options.name, property });
                 }
-
-                $this[property] = value;
             });
 
-            Object.entries(eventOptions).forEach(([property, option]) => {
+            Object.entries($options.components).forEach(
+                ([property, option]) => {
+                    const config = option.call($this);
+                    const { constructor, subscribe } = config;
+
+                    if (constructor.$$typeof === COMPONENT) {
+                        const instance = new constructor(
+                            config.root,
+                            config.state
+                        );
+
+                        if (subscribe) {
+                            Object.entries(subscribe).forEach(
+                                ([name, callback]) => {
+                                    if (callback) {
+                                        instance.subscribe(name, callback);
+                                    } else {
+                                        logError('E29', {
+                                            name: $options.name,
+                                            component: constructor.displayName,
+                                            property,
+                                        });
+                                    }
+                                }
+                            );
+                        }
+
+                        componentInstances.add([property, instance]);
+                        cleanupTasks.add(() => instance.destroy());
+                    } else {
+                        logError('E27', { name: $options.name, property });
+                    }
+                }
+            );
+
+            Object.entries($options.events).forEach(([property, option]) => {
                 let targets: Parameters<typeof attachEvents>[1][] = [];
                 const node = $this[property] as ComponentNode;
 
@@ -249,101 +302,80 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
                 } else if (node) {
                     targets.push(node);
                 } else {
-                    logError('E18', { name: displayName, property });
+                    logError('E18', { name: $options.name, property });
                 }
 
                 targets.forEach((target, index) => {
-                    const position = Array.isArray(node) ? index : undefined;
-                    const events = option.call($this, position);
+                    let events: ReturnType<typeof option>;
+
+                    if (Array.isArray(node)) {
+                        events = option.call($this, index);
+                    } else {
+                        events = option.call($this);
+                    }
 
                     cleanupTasks.add(attachEvents(property, target, events));
                 });
             });
 
-            Object.entries(componentOptions).forEach(([property, option]) => {
-                const config = option.call($this);
-                const { constructor, subscribe } = config;
-                const instance = new constructor(config.root, config.state);
-
-                if (subscribe) {
-                    Object.entries(subscribe).forEach(([name, callback]) => {
-                        if (typeof callback === 'function') {
-                            instance.subscribe(name, callback);
-                        } else {
-                            logError('E27', {
-                                name: displayName,
-                                component: constructor.displayName,
-                                property: name,
-                            });
-                        }
-                    });
-                }
-
-                components.add([property, instance]);
-                cleanupTasks.add(() => instance.destroy());
-            });
-
-            Object.entries(hookOptions).forEach(([property, option]) => {
+            Object.entries($options.hooks).forEach(([property, option]) => {
                 if (property === '$setup') {
-                    (option as ComponentLifecycleHook).call($this);
+                    option.call($this);
                 } else if (property === '$teardown') {
-                    cleanupTasks.add(
-                        (option as ComponentLifecycleHook).bind($this)
-                    );
-                } else if (property in stateOptions) {
-                    const value = $this[property];
+                    cleanupTasks.add(option.bind($this));
+                } else if (property in $options.state) {
+                    const value = $this.$state[property];
 
-                    option.call($this, value, value);
                     stateHooks.set(property, option);
+                    option.call($this, value, value);
                 } else {
-                    logError('E19', { name: displayName, property });
+                    logError('E19', { name: $options.name, property });
                 }
             });
 
-            Object.entries(renderOptions).forEach(([property, option]) => {
+            Object.entries($options.render).forEach(([property, option]) => {
                 if (property in $this) {
                     renderTasks.add([property, option]);
+                    renderNode.call($this, property, option);
                 } else {
-                    logError('E20', { name: displayName, property });
+                    logError('E20', { name: $options.name, property });
                 }
             });
-
-            renderNodes.call($this, renderTasks);
 
             ready = true;
         }
 
-        destroy(): void {
+        public destroy(): void {
             cleanupTasks.forEach((cleanup) => cleanup());
         }
 
-        setState(stateChanges: Partial<State>): void {
+        public setState(stateChanges: Partial<T['$state']>): void {
             Object.entries(stateChanges).forEach(([property, value]) => {
-                if (property in stateOptions) {
-                    if (stateOptions[property].readonly) {
-                        logError('E21', { name: displayName, property });
+                if (property in $options.state) {
+                    if ($options.state[property].readonly) {
+                        logError('E21', { name: $options.name, property });
                     } else {
-                        $this[property] = value;
+                        $this.$state[property] = value;
                     }
                 } else {
-                    logError('E22', { name: displayName, property });
+                    logError('E22', { name: $options.name, property });
                 }
             });
         }
 
-        subscribe<P extends keyof State, O extends ComponentObserver<State[P]>>(
-            property: P,
-            observer?: O
-        ) {
+        public subscribe<K extends keyof T['$state']>(
+            property: K,
+            observer: ComponentObserver<T['$state'][K]>
+        ): void {
             const name = String(property);
 
-            if (!(property in $this)) {
-                logError('E23', { name: displayName, property: name });
+            if (!(property in $options.state)) {
+                logError('E23', { name: $options.name, property: name });
                 return;
             }
 
             if (typeof observer !== 'function') {
-                logError('E24', { name: displayName, property: name });
+                logError('E24', { name: $options.name, property: name });
                 return;
             }
 
@@ -356,19 +388,19 @@ function defineComponent<T extends ComponentTypes = ComponentTypes>(
             }
         }
 
-        unsubscribe<
-            P extends keyof State,
-            O extends ComponentObserver<State[P]>
-        >(property: P, observer?: O): void {
+        public unsubscribe<K extends keyof T['$state']>(
+            property: K,
+            observer: ComponentObserver<T['$state'][K]>
+        ): void {
             const name = String(property);
 
-            if (!(property in $this)) {
-                logError('E25', { name: displayName, property: name });
+            if (!(property in $options.state)) {
+                logError('E25', { name: $options.name, property: name });
                 return;
             }
 
             if (typeof observer !== 'function') {
-                logError('E26', { name: displayName, property: name });
+                logError('E26', { name: $options.name, property: name });
                 return;
             }
 
