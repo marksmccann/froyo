@@ -407,7 +407,7 @@ type NodeOption =
               | Element
               | Element[]
               | NodeListOf<Element>
-              | HTMLCollection
+              | HTMLCollectionOf<Element>
               | null;
       };
 ```

@@ -15,7 +15,7 @@ export type StateOption<T> = {
     readonly?: true;
 };
 
-type NodeOptionMap<T extends Element> = {
+type NodeOptionMap<T extends ComponentNode> = {
     text: {
         type: 'text';
         value?: string;
@@ -50,14 +50,16 @@ type NodeOptionMap<T extends Element> = {
         type: 'custom';
         node: (
             $root: Element
-        ) => ComponentNode | NodeListOf<Element> | HTMLCollection;
+        ) => T extends Array<infer U extends Element>
+            ? T | NodeListOf<U> | HTMLCollectionOf<U>
+            : T;
     };
 };
 
 type NodeOption<T> = T extends Text
-    ? NodeOptionMap<any>['text' | 'custom']
-    : T extends Array<infer U extends Element>
-    ? NodeOptionMap<U>['queryAll' | 'custom']
+    ? NodeOptionMap<T>['text' | 'custom']
+    : T extends Element[]
+    ? NodeOptionMap<T>['queryAll' | 'custom']
     : T extends SVGElement
     ? NodeOptionMap<T>['svg' | 'query' | 'custom']
     : T extends HTMLElement
@@ -197,11 +199,11 @@ export type ComponentOptions<
 export type ComponentNormalizedOptions = {
     name: string;
     state: Record<string, StateOption<any>>;
-    nodes: Record<string, NodeOptionMap<any>[keyof NodeOptionMap<any>]>;
+    nodes: Record<string, NodeOptionMap<ComponentNode>[keyof NodeOptionMap<ComponentNode>]>;
     methods: Record<string, ComponentMethod>;
     components: Record<string, () => ComponentOption<ComponentInstance<any>>>;
     events: Record<string, (index?: number) => Record<string, () => void>>;
-    render: Record<string, (index?: number) => string | RenderOptionElement<any>>;
+    render: Record<string, (index?: number) => string | RenderOptionElement<Element>>;
     hooks: Record<string, (value?: any, previousValue?: any) => void>;
 };
 

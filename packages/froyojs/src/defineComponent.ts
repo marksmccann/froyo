@@ -239,6 +239,7 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
                     ) {
                         node = Array.from(customNode);
                     } else {
+                        // @ts-expect-error
                         node = customNode;
                     }
                 }
