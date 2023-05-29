@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.5](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.4...froyojs@1.0.0-alpha.5) (2023-05-29)
+
+### Bug Fixes
+
+-   harden types for custom nodes ([1ca9898](https://github.com/marksmccann/froyo/commit/1ca9898c04ba1986c0548e2eeaf49f264c5f71fe))
+
 # [1.0.0-alpha.4](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.3...froyojs@1.0.0-alpha.4) (2023-05-28)
 
 ### Bug Fixes
