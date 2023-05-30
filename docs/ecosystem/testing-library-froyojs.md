@@ -65,7 +65,7 @@ const HelloWorld = defineComponent({
     },
     render: {
         $root() {
-            return this.message;
+            return this.$state.message;
         },
     },
 });
