@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.6](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.5...froyojs@1.0.0-alpha.6) (2023-05-30)
+
+### Bug Fixes
+
+-   correct "this" types for component options ([a65064f](https://github.com/marksmccann/froyo/commit/a65064f68dd14047ee3ac73e673f39f78542e8e7))
+-   harden condition for invalid subcomponent subscriptions ([6df4223](https://github.com/marksmccann/froyo/commit/6df42231ff189428c5de7d01cb82fe5a2abc69be))
+
 # [1.0.0-alpha.5](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.4...froyojs@1.0.0-alpha.5) (2023-05-29)
 
 ### Bug Fixes
