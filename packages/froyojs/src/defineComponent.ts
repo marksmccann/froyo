@@ -269,7 +269,7 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
                         if (subscribe) {
                             Object.entries(subscribe).forEach(
                                 ([name, callback]) => {
-                                    if (callback) {
+                                    if (typeof callback === 'function') {
                                         instance.subscribe(name, callback);
                                     } else {
                                         logError('E29', {
