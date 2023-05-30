@@ -416,7 +416,7 @@
                             const instance = new constructor(config.root, config.state);
                             if (subscribe) {
                                 Object.entries(subscribe).forEach(([name, callback]) => {
-                                    if (callback) {
+                                    if (typeof callback === 'function') {
                                         instance.subscribe(name, callback);
                                     }
                                     else {

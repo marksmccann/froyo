@@ -162,38 +162,38 @@ export type ComponentThis = {
 export type ComponentOptions<
     TThis extends ComponentThis,
     _TState = TThis['$state'],
-    _TNodes extends Record<string, ComponentNode> = FilterOptions<TThis, Exclude<ComponentNode, null>>,
+    _TNodes extends Record<string, ComponentNode> = FilterOptions<TThis, ComponentNode>,
     _TMethods extends Record<string, ComponentMethod> = FilterOptions<TThis, ComponentMethod>,
     _TComponents extends Record<string, ComponentInstance<any>> = FilterOptions<TThis, ComponentInstance<any>>
 > = {
     name?: string;
-    state?: { [K in keyof _TState]: Simplify<StateOption<_TState[K]>> };
-    nodes?: { [K in keyof _TNodes]?: Simplify<NodeOption<_TNodes[K]>> };
-    methods?: { [K in keyof _TMethods]?: MethodOption<_TMethods[K], TThis> };
+    state?: { [K in keyof _TState]: Simplify<StateOption<_TState[K]>> } & ThisType<void>;
+    nodes?: { [K in keyof _TNodes]?: Simplify<NodeOption<_TNodes[K]>> } & ThisType<void>;
+    methods?: { [K in keyof _TMethods]?: MethodOption<_TMethods[K], TThis> } & ThisType<TThis>;
     components?: {
         [K in keyof _TComponents]?: (
             this: TThis
         ) => ComponentOption<_TComponents[K]>;
-    };
+    } & ThisType<TThis>;
     events?: {
         $window?: EventOption<Window, TThis>;
         $document?: EventOption<Document, TThis>;
         $root?: EventOption<TThis['$root'], TThis>;
     } & {
         [K in keyof _TNodes]?: EventOption<_TNodes[K], TThis>;
-    };
+    } & ThisType<TThis>;
     render?: {
         $root?: RenderOption<TThis['$root'], TThis>;
     } & {
         [K in keyof _TNodes]?: RenderOption<_TNodes[K], TThis>;
-    };
+    } & ThisType<TThis>;
     hooks?: {
         $setup?: (this: TThis) => void;
         $teardown?: (this: TThis) => void;
     } & {
         [K in keyof _TState]?: HookOption<_TState[K], TThis>;
-    };
-} & ThisType<TThis>;
+    } & ThisType<TThis>;
+};
 
 // prettier-ignore
 export type ComponentNormalizedOptions = {
