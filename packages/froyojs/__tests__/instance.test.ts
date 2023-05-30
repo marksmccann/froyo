@@ -81,12 +81,32 @@ describe('instantiation', () => {
         root.remove();
     });
 
+    it('should fail if root element is invalid', () => {
+        const Foo = defineComponent({});
+
+        // @ts-expect-error
+        expect(() => new Foo()).toThrow(/root must be a valid HTML element/);
+    });
+
+    it('should fail if root element is invalid in production', () => {
+        const env = process.env.NODE_ENV;
+        process.env.NODE_ENV = 'production';
+
+        const Foo = defineComponent({});
+
+        // @ts-expect-error
+        expect(() => new Foo()).toThrow(/An unknown error has ocurred/);
+
+        process.env.NODE_ENV = env;
+    });
+
     it('should subscribe to instance', () => {
         const callback = jest.fn();
         const Foo = defineComponent({ state: { foo: { default: '' } } });
         const instance = new Foo(document.createElement('div'));
 
         instance.subscribe('foo', callback);
+        instance.subscribe('foo', callback); // subscribe twice for code coverage
         instance.setState({ foo: 'bar' });
 
         expect(callback).toHaveBeenCalledTimes(1);
@@ -143,6 +163,21 @@ describe('instantiation', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith(
             getErrorMessage('E26', { name: 'Foo', property: 'foo' })
         );
+
+        instance.destroy();
+    });
+
+    it('should be able to access static and class data', () => {
+        const Foo = defineComponent({
+            name: 'Foo',
+            state: { foo: { default: 'bar' } },
+        });
+        const rootElement = document.createElement('div');
+        const instance = new Foo(rootElement);
+
+        expect(Foo.displayName).toBe('Foo');
+        expect(instance.root).toStrictEqual(rootElement);
+        expect(instance.state).toStrictEqual({ foo: 'bar' });
 
         instance.destroy();
     });

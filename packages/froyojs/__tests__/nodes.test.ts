@@ -3,7 +3,19 @@ import { getErrorMessage } from '../src/logError';
 
 describe('nodes', () => {
     it('should add properties to instance', () => {
-        const Foo = defineComponent({
+        const Foo = defineComponent<{
+            $root: Element;
+            $state: {};
+            text: Text;
+            svg: SVGAElement;
+            element: HTMLElement;
+            query1: HTMLElement;
+            query2: HTMLElement | null;
+            queryAll1: HTMLElement[];
+            queryAll2: HTMLElement[];
+            custom1: HTMLElement;
+            custom2: HTMLElement[];
+        }>({
             nodes: {
                 text: {
                     type: 'text',
@@ -34,6 +46,14 @@ describe('nodes', () => {
                     selector: 'foo',
                     optional: true,
                 },
+                custom1: {
+                    type: 'custom',
+                    node: () => document.createElement('div'),
+                },
+                custom2: {
+                    type: 'custom',
+                    node: ($root) => $root.querySelectorAll('div'),
+                },
             },
             hooks: {
                 $setup() {
@@ -47,6 +67,9 @@ describe('nodes', () => {
                     expect(this.queryAll1[0]).toBeInstanceOf(HTMLElement);
                     expect(Array.isArray(this.queryAll2)).toBe(true);
                     expect(this.queryAll2).toHaveLength(0);
+                    expect(this.custom1).toBeInstanceOf(HTMLElement);
+                    expect(this.custom2).toHaveLength(2);
+                    expect(this.custom2[0]).toBeInstanceOf(HTMLElement);
                 },
             },
         });

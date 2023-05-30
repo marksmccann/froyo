@@ -109,4 +109,26 @@ describe('state', () => {
 
         instance.destroy();
     });
+
+    it('should fail if state is unknown', () => {
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+
+        const Foo = defineComponent({
+            name: 'Foo',
+            state: {},
+        });
+        const instance = new Foo(document.createElement('div'));
+
+        instance.setState({ foo: 'foo' });
+
+        expect(instance.state.foo).toBeUndefined();
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            getErrorMessage('E22', { name: 'Foo', property: 'foo' })
+        );
+
+        instance.destroy();
+    });
 });

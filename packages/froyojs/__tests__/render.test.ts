@@ -541,4 +541,32 @@ describe('hooks', () => {
 
         expect(() => new Foo(document.createElement('div'))).not.toThrow();
     });
+
+    it('should fail if render entry is unknown', () => {
+        const consoleErrorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+
+        const Foo = defineComponent<{
+            $root: Element;
+            $state: {};
+        }>({
+            name: 'Foo',
+            render: {
+                // @ts-expect-error
+                foo: () => {},
+            },
+        });
+        const instance = new Foo(document.createElement('div'));
+
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            getErrorMessage('E20', {
+                name: 'Foo',
+                property: 'foo',
+            })
+        );
+
+        instance.destroy();
+    });
 });
