@@ -40,16 +40,17 @@ Define a new Froyo component.
 #### Type
 
 ```ts
-function defineComponent<T extends ComponentThis>(
-    options: ComponentOptions<T>
-): ComponentConstructor;
+function defineComponent<
+    TThis extends ComponentThis,
+    TOptions extends ComponentOptions<TThis>
+>(options: TOptions): ComponentConstructor;
 ```
 
 #### Details
 
 This function requires a single argument which is an [object to configure](#configuration-options) the component. It returns a [component constructor](#constructor) which can be used to create [component instances](#component-instance).
 
-If you are using TypeScript, the generic argument expects an object which defines the types for the `this` keyword within options. When provided, this argument will add granular control, enhanced type safety, and rich autocomplete to the component options.
+If you are using TypeScript, both generic arguments are optional. Providing the first is highly recommended; it defines the types for the `this` keyword within options. When provided, this argument will add granular control, enhanced type safety, and rich autocomplete to the component options. It will also add more specific types for consumers interacting with the component constructor and instance. The second argument defines the type for the options themselves and is often unnecessary to be provided explicitly.
 
 #### Example
 

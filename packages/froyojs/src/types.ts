@@ -131,10 +131,10 @@ export type RenderOption<
     ? (this: TThis, index: number) => string | Simplify<RenderOptionElement<U>>
     : never;
 
-type HookOption<
+type HookOption<TStateValue, TThis extends ComponentThis> = ComponentStateHook<
     TStateValue,
-    TThis extends ComponentThis
-> = ComponentStateHook<TStateValue> & ThisType<TThis>;
+    TThis
+>;
 
 type FilterOptions<TThis extends ComponentThis, TMatch> = Pick<
     TThis,
@@ -145,7 +145,10 @@ export type ComponentNode = Text | Element | Element[] | null;
 
 export type ComponentMethod = (...args: any) => any;
 
-export type ComponentStateHook<T> = (value: T, previousValue: T) => void;
+export type ComponentStateHook<
+    T,
+    TThis extends ComponentThis = ComponentThis
+> = (this: TThis, value: T, previousValue: T) => void;
 
 export type ComponentObserver<T> = (
     this: void,

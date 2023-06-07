@@ -20,16 +20,17 @@ import logError from './logError';
  * Defines a new Froyo component
  * @param options configuration options
  */
-function defineComponent<T extends ComponentThis = ComponentThis>(
-    options: ComponentOptions<T>
-): ComponentConstructor<ComponentInstance<T>> {
+export default function defineComponent<
+    TThis extends ComponentThis = ComponentThis,
+    TOptions extends ComponentOptions<TThis> = ComponentOptions<TThis>
+>(options: TOptions): ComponentConstructor<ComponentInstance<TThis>> {
     const cleanupTasks: Set<() => void> = new Set();
     const stateHooks: Map<string, ComponentStateHook<any>> = new Map();
     const renderTasks: Set<
         [string, ComponentNormalizedOptions['render'][string]]
     > = new Set();
     const componentInstances: Set<[string, ComponentInstance<any>]> = new Set();
-    const observers: Set<[keyof T['$state'], ComponentObserver<any>]> =
+    const observers: Set<[keyof TThis['$state'], ComponentObserver<any>]> =
         new Set();
     const $this = {} as ComponentThis;
     let ready = false;
@@ -102,22 +103,25 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
         },
     });
 
-    return class Component implements ComponentInstance<T> {
+    return class Component implements ComponentInstance<TThis> {
         static readonly $$typeof = COMPONENT;
 
         static get displayName() {
             return $options.name;
         }
 
-        public get root(): T['$root'] {
+        public get root(): TThis['$root'] {
             return $this.$root;
         }
 
-        public get state(): T['$state'] {
+        public get state(): TThis['$state'] {
             return { ...$this.$state };
         }
 
-        constructor(root: Element | string, state: Partial<T['$state']> = {}) {
+        constructor(
+            root: Element | string,
+            state: Partial<TThis['$state']> = {}
+        ) {
             let rootElement: Element | null = null;
             let htmlState: Record<string, any> = {};
 
@@ -350,7 +354,7 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
             cleanupTasks.forEach((cleanup) => cleanup());
         }
 
-        public setState(stateChanges: Partial<T['$state']>): void {
+        public setState(stateChanges: Partial<TThis['$state']>): void {
             Object.entries(stateChanges).forEach(([property, value]) => {
                 if (property in $options.state) {
                     if ($options.state[property].readonly) {
@@ -364,9 +368,9 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
             });
         }
 
-        public subscribe<K extends keyof T['$state']>(
+        public subscribe<K extends keyof TThis['$state']>(
             property: K,
-            observer: ComponentObserver<T['$state'][K]>
+            observer: ComponentObserver<TThis['$state'][K]>
         ): void {
             const name = String(property);
 
@@ -389,9 +393,9 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
             }
         }
 
-        public unsubscribe<K extends keyof T['$state']>(
+        public unsubscribe<K extends keyof TThis['$state']>(
             property: K,
-            observer: ComponentObserver<T['$state'][K]>
+            observer: ComponentObserver<TThis['$state'][K]>
         ): void {
             const name = String(property);
 
@@ -415,5 +419,3 @@ function defineComponent<T extends ComponentThis = ComponentThis>(
         }
     };
 }
-
-export default defineComponent;
