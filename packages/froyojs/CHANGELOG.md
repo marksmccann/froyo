@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.7](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.6...froyojs@1.0.0-alpha.7) (2023-06-07)
+
+### Bug Fixes
+
+-   move options type to generic argument ([6613734](https://github.com/marksmccann/froyo/commit/66137349e25140ef4b15f74cc213f1f01e995308))
+
 # [1.0.0-alpha.6](https://github.com/marksmccann/froyo/compare/froyojs@1.0.0-alpha.5...froyojs@1.0.0-alpha.6) (2023-05-30)
 
 ### Bug Fixes
